@@ -28,7 +28,7 @@ export const labViews: Partial<Record<LearningID, [string, string, string][]>> =
 };
 
 /** Course notebooks (notebooks/<file>.ipynb) to run after the attempt; RELEASE must match the notebooks' setup cell. */
-export const NOTEBOOK_RELEASE = 'v0.1.3';
+export const NOTEBOOK_RELEASE = 'v0.1.4';
 export const notebooks: Partial<Record<LearningID, [string, string][]>> = {
   start: [['f0_jupyter_and_potentials', 'Potentials: U, H, F and G']],
   unary: [['f1_unary_by_hand_and_code', 'One component, two phases: by hand and in code'], ['f2_unary_pycalphad', 'Optional: the same model in pycalphad']],

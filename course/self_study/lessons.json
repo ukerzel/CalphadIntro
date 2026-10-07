@@ -1464,15 +1464,15 @@
           "links": [
             {
               "label": "Repository task · fit Cu–Ni interaction parameters",
-              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.3/course/materials/cuni/fitting.md"
+              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.4/course/materials/cuni/fitting.md"
             },
             {
               "label": "Repository task · Ni grain-boundary energies",
-              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.3/course/materials/boundaries/ni_twin.md"
+              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.4/course/materials/boundaries/ni_twin.md"
             },
             {
               "label": "Repository task · Cu–Ni boundary segregation",
-              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.3/course/materials/boundaries/segregation.md"
+              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.4/course/materials/boundaries/segregation.md"
             }
           ]
         }

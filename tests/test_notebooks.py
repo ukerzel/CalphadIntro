@@ -166,3 +166,28 @@ def test_database_found_in_the_setup_guide_folder(tmp_path, monkeypatch):
     monkeypatch.setenv('CALPHAD_INPUT_DIR', str(folder))
     monkeypatch.setattr(helpers, 'database_folder', lambda: tmp_path / 'empty')
     assert helpers.database('cuni') == folder / fake['file']
+
+
+def test_every_colab_link_opens_an_existing_notebook_at_the_cloned_release():
+    """Colab links in the course text and the site open the repository and version the setup cell clones."""
+    import re
+    release = next(line.split('"')[1] for line in helpers.SETUP_CELL.splitlines() if line.startswith('RELEASE = '))
+    repo = re.search(r'github\.com/([\w-]+/[\w-]+)\.git', helpers.SETUP_CELL).group(1)
+    link = re.compile(r'colab\.research\.google\.com/github/([\w-]+/[\w-]+)/blob/([^/\s]+)/notebooks/([\w.-]+\.ipynb)')
+    texts = [p for folder in ('course', 'notebooks') for p in (ROOT / folder).glob('**/*.md')]
+    texts += [p for p in (ROOT / 'README.md', ROOT / 'release' / 'templates' / 'README.template') if p.is_file()]
+    found = 0
+    for path in texts:
+        for owner, ref, name in link.findall(path.read_text(encoding='utf-8', errors='ignore')):
+            found += 1
+            where = path.relative_to(ROOT)
+            assert (owner, ref) == (repo, release), f'{where}: Colab link to {owner}@{ref}, but the setup cell clones {repo}@{release}'
+            assert (NOTEBOOKS / name).is_file(), f'{where}: Colab link to missing notebook {name}'
+    assert found >= 16
+    meta = (ROOT / 'site' / 'lib' / 'lesson-meta.ts')
+    if meta.is_file():
+        text = meta.read_text()
+        assert f"NOTEBOOK_RELEASE = '{release}'" in text
+        assert f"COLAB_REPO = '{repo}'" in (ROOT / 'site' / 'lib' / 'data.ts').read_text()
+        for name in re.findall(r"\['([\w-]+)', '", text[text.index('export const notebooks'):text.index('export const colabURL')]):
+            assert (NOTEBOOKS / f'{name}.ipynb').is_file(), f'site links missing notebook {name}'
