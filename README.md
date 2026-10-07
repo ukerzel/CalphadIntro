@@ -34,7 +34,9 @@ poetry run jupyter lab        # then open notebooks/setup_check.ipynb
 ```
 
 Details: [setup notes](course/setup.md). In Colab, the first cell of each
-notebook downloads this release and installs the tested package versions.
+notebook downloads this release and installs the tested package versions; it
+then restarts the session, which Colab reports as a crash. That is expected: run
+the first cell again, then the rest of the notebook.
 
 ## Published databases
 

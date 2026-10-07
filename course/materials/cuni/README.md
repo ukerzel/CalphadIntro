@@ -1,6 +1,6 @@
 # Task 01 — Cu–Ni equilibrium and a lightweight magnetic comparison
 
-**Notebook:** [task01_cuni_equilibria](../../../notebooks/task01_cuni_equilibria.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/task01_cuni_equilibria.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
+**Notebook:** [task01_cuni_equilibria](../../../notebooks/task01_cuni_equilibria.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/task01_cuni_equilibria.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
 
 For detailed download/member/hash and paper-access steps, use the
 [source guide](../../sources/README.md). Only open-source software and the

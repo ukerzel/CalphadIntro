@@ -29,8 +29,10 @@
 # %%
 # Setup: run this cell first. Locally it finds the course folder; in Colab it
 # downloads the tested course release and the locked package versions.
-RELEASE = "v0.1.0"
-import os, pathlib, subprocess, sys
+# In Colab, the first run then restarts the session on purpose and Colab reports
+# a crash: that is expected. Run this cell again, then the rest of the notebook.
+RELEASE = "v0.1.1"
+import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)
 if ROOT is None and "google.colab" in sys.modules:
@@ -48,8 +50,10 @@ if ROOT is None and "google.colab" in sys.modules:
             raise SystemExit("Installing the course packages failed; run this cell again.")
         (ROOT / ".colab-ready").touch()
         # Colab has already loaded its own numpy; a fresh session is needed to use the installed versions.
-        print("Installed the course's package versions. Colab now restarts this session;"
-              " when it has reconnected, run this cell again (it will not install twice).")
+        print("Installed the course's package versions. Colab now restarts this session and"
+              " reports a crash; that is expected. When it has reconnected, run this cell again"
+              " (it will not install twice), then the rest of the notebook.", flush=True)
+        time.sleep(3)
         os.kill(os.getpid(), 9)
 if ROOT is None:
     raise SystemExit("Open this notebook from the course folder (poetry run jupyter lab) or in Colab.")

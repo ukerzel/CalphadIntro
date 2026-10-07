@@ -13106,8 +13106,10 @@ Do <a href="f4_two_phases_and_diagrams.ipynb">f4</a> first: here pycalphad must 
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Setup: run this cell first. Locally it finds the course folder; in Colab it</span>
 <span class="c1"># downloads the tested course release and the locked package versions.</span>
-<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.0"</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<span class="c1"># In Colab, the first run then restarts the session on purpose and Colab reports</span>
+<span class="c1"># a crash: that is expected. Run this cell again, then the rest of the notebook.</span>
+<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.1"</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span>
              <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"pyproject.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"course"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">ROOT</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">"google.colab"</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
@@ -13125,8 +13127,10 @@ Do <a href="f4_two_phases_and_diagrams.ipynb">f4</a> first: here pycalphad must 
             <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Installing the course packages failed; run this cell again."</span><span class="p">)</span>
         <span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">".colab-ready"</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
         <span class="c1"># Colab has already loaded its own numpy; a fresh session is needed to use the installed versions.</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Installed the course's package versions. Colab now restarts this session;"</span>
-              <span class="s2">" when it has reconnected, run this cell again (it will not install twice)."</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Installed the course's package versions. Colab now restarts this session and"</span>
+              <span class="s2">" reports a crash; that is expected. When it has reconnected, run this cell again"</span>
+              <span class="s2">" (it will not install twice), then the rest of the notebook."</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">(),</span> <span class="mi">9</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">ROOT</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Open this notebook from the course folder (poetry run jupyter lab) or in Colab."</span><span class="p">)</span>
@@ -13143,7 +13147,7 @@ Do <a href="f4_two_phases_and_diagrams.ipynb">f4</a> first: here pycalphad must 
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Course release v0.1.0 · Python 3.12.14
+<pre>Course release v0.1.1 · Python 3.12.14
   numpy       2.5.3
   scipy       1.18.1
   matplotlib  3.11.2
@@ -13325,7 +13329,7 @@ have an empty phase name.</p>
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>dimensions: {'N': 1, 'P': 1, 'T': 1, 'X_B': 1, 'vertex': 3}
-GM    : -10762.730017464008
+GM    : -10762.73001746401
 Phase : ['ALPHA' 'BETA' '']
 NP    : [0.5 0.5 nan]
 X(B)  : [0.19104075 0.80895925        nan]

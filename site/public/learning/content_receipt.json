@@ -4,7 +4,7 @@
     {
       "canonical": "course/self_study/lessons.json",
       "public": "lessons.json",
-      "sha256": "669b83800db4d9369d546214da4a7eb9fb13aa62958e193a208694ec39112702"
+      "sha256": "5eff6220222a38a7e09371393c6822f4ef576d769adcc69740be7ac26388283a"
     },
     {
       "canonical": "course/self_study/generated/two_phase.json",

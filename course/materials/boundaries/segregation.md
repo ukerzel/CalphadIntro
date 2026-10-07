@@ -1,6 +1,6 @@
 # Task 04 — Cu enrichment with an open or finite reservoir
 
-**Notebook:** [task04_cuni_segregation](../../../notebooks/task04_cuni_segregation.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/task04_cuni_segregation.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
+**Notebook:** [task04_cuni_segregation](../../../notebooks/task04_cuni_segregation.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/task04_cuni_segregation.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
 
 Use this compact example after either primer or [Task 01 Cu–Ni](../cuni/README.md).
 Couple the same published FCC bulk function to an **invented boundary** and

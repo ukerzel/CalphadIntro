@@ -19,24 +19,24 @@ a self-study step.
 
 | Notebook | Classroom | Lessons | Self-study | Open |
 |---|---|---|---|---|
-| [setup_check](setup_check.ipynb) | Before the course; Task 00 part 1 | — | Before step 05 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/setup_check.ipynb) |
-| [f0_jupyter_and_potentials](f0_jupyter_and_potentials.ipynb) | Day 1 W1–W3 (optional) | Lesson 0 | Step 00 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/f0_jupyter_and_potentials.ipynb) |
-| [f1_unary_by_hand_and_code](f1_unary_by_hand_and_code.ipynb) | Day 1 W4–W6, W8; **W5 demo** | Lesson 1 | Step 01 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/f1_unary_by_hand_and_code.ipynb) |
-| [f2_unary_pycalphad](f2_unary_pycalphad.ipynb) | Day 1 W7 (**demo**); Task 00 part 2 | Lesson 2 | Step 01 (optional) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/f2_unary_pycalphad.ipynb) |
-| [f3_binary_mixing_potentials](f3_binary_mixing_potentials.ipynb) | Day 2 D1–D3 (optional demo) | Lessons 3, 4, 6 | Step 02 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/f3_binary_mixing_potentials.ipynb) |
-| [f4_two_phases_and_diagrams](f4_two_phases_and_diagrams.ipynb) | — | Lessons 5, 7 | Step 03 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/f4_two_phases_and_diagrams.ipynb) |
-| [f5_binary_pycalphad](f5_binary_pycalphad.ipynb) | Before Task 01 | Lesson 8 | Before step 05 (optional) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/f5_binary_pycalphad.ipynb) |
-| [f6_fitting_synthetic](f6_fitting_synthetic.ipynb) | Task 02 without downloads | Lesson 9 | — | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/f6_fitting_synthetic.ipynb) |
-| [f7_boundary_open_closed](f7_boundary_open_closed.ipynb) | Day 2 D4–D6, D9 (optional demo) | Lessons 11–13 | Step 04 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/f7_boundary_open_closed.ipynb) |
-| [f8_boundary_states](f8_boundary_states.ipynb) | Day 2 D7 (optional demo) | Lesson 14, Clinic D | Step 04 extension | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/f8_boundary_states.ipynb) |
-| [task01_cuni_equilibria](task01_cuni_equilibria.ipynb) | Task 01 | — | Step 05 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/task01_cuni_equilibria.ipynb) |
-| [task02_cuni_activity_fit](task02_cuni_activity_fit.ipynb) | Task 02 | — | — | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/task02_cuni_activity_fit.ipynb) |
-| [task03_ni_twin](task03_ni_twin.ipynb) | Task 03 | — | — | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/task03_ni_twin.ipynb) |
-| [task04_cuni_segregation](task04_cuni_segregation.ipynb) | Task 04 | — | — | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/task04_cuni_segregation.ipynb) |
-| [task05_ninb_sublattices](task05_ninb_sublattices.ipynb) | Task 05 | — | Step 06 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.0/notebooks/task05_ninb_sublattices.ipynb) |
+| [setup_check](setup_check.ipynb) | Before the course; Task 00 part 1 | — | Before step 05 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/setup_check.ipynb) |
+| [f0_jupyter_and_potentials](f0_jupyter_and_potentials.ipynb) | Day 1 W1–W3 (optional) | Lesson 0 | Step 00 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/f0_jupyter_and_potentials.ipynb) |
+| [f1_unary_by_hand_and_code](f1_unary_by_hand_and_code.ipynb) | Day 1 W4–W6, W8; **W5 demo** | Lesson 1 | Step 01 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/f1_unary_by_hand_and_code.ipynb) |
+| [f2_unary_pycalphad](f2_unary_pycalphad.ipynb) | Day 1 W7 (**demo**); Task 00 part 2 | Lesson 2 | Step 01 (optional) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/f2_unary_pycalphad.ipynb) |
+| [f3_binary_mixing_potentials](f3_binary_mixing_potentials.ipynb) | Day 2 D1–D3 (optional demo) | Lessons 3, 4, 6 | Step 02 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/f3_binary_mixing_potentials.ipynb) |
+| [f4_two_phases_and_diagrams](f4_two_phases_and_diagrams.ipynb) | — | Lessons 5, 7 | Step 03 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/f4_two_phases_and_diagrams.ipynb) |
+| [f5_binary_pycalphad](f5_binary_pycalphad.ipynb) | Before Task 01 | Lesson 8 | Before step 05 (optional) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/f5_binary_pycalphad.ipynb) |
+| [f6_fitting_synthetic](f6_fitting_synthetic.ipynb) | Task 02 without downloads | Lesson 9 | — | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/f6_fitting_synthetic.ipynb) |
+| [f7_boundary_open_closed](f7_boundary_open_closed.ipynb) | Day 2 D4–D6, D9 (optional demo) | Lessons 11–13 | Step 04 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/f7_boundary_open_closed.ipynb) |
+| [f8_boundary_states](f8_boundary_states.ipynb) | Day 2 D7 (optional demo) | Lesson 14, Clinic D | Step 04 extension | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/f8_boundary_states.ipynb) |
+| [task01_cuni_equilibria](task01_cuni_equilibria.ipynb) | Task 01 | — | Step 05 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/task01_cuni_equilibria.ipynb) |
+| [task02_cuni_activity_fit](task02_cuni_activity_fit.ipynb) | Task 02 | — | — | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/task02_cuni_activity_fit.ipynb) |
+| [task03_ni_twin](task03_ni_twin.ipynb) | Task 03 | — | — | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/task03_ni_twin.ipynb) |
+| [task04_cuni_segregation](task04_cuni_segregation.ipynb) | Task 04 | — | — | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/task04_cuni_segregation.ipynb) |
+| [task05_ninb_sublattices](task05_ninb_sublattices.ipynb) | Task 05 | — | Step 06 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/task05_ninb_sublattices.ipynb) |
 
 Lessons 10 and 15 and Clinics A/C have no computation; Lesson 11's counting is
-in f7. The Colab links open the `v0.1.0` release. Colab runs Python 3.13
+in f7. The Colab links open the `v0.1.1` release. Colab runs Python 3.13
 with the locked package versions (the local course environment is Python 3.12).
 
 **Primer demonstrations (instructors).** The primers stay paper-first; use a
@@ -57,7 +57,8 @@ finds the course folder; run cells from top to bottom.
 
 **Run in Colab.** Open the `.ipynb` from GitHub in Colab. The first cell
 downloads the tested course release and the locked package versions (a few
-minutes the first time; if it asks, restart the session and run it again).
+minutes the first time). It then restarts the session, which Colab reports as a
+crash; that is expected: run the first cell again, then the rest of the notebook.
 
 **Published databases** are fetched by your own session into a folder outside
 the course checkout and checked by size and SHA-256; if a download is refused,
