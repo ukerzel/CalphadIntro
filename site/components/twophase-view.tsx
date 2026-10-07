@@ -6,6 +6,7 @@ import LabFrame, { LiveStatus, Player, Readout, RecordView, Segmented } from '@/
 import { Eq } from '@/components/equation';
 import { loadLearningJSON } from '@/lib/materials';
 import { num } from '@/lib/format';
+import ScratchPart, { scratchPath } from '@/components/scratch-view';
 
 type Region = { phase: string; x: number; f: number };
 export type TwoPhaseData = {
@@ -21,7 +22,8 @@ export type TwoPhaseData = {
 export const twoPhasePath = 'self_study/generated/two_phase.json';
 const kJ = (value: number) => num(value / 1000, 0);
 
-export default function TwoPhaseView({ initialPart = 'a' }: { initialPart?: 'a' | 'b' | 'c' }) {
+export type Part = 'a' | 'b' | 'c' | 'd';
+export default function TwoPhaseView({ initialPart = 'a' }: { initialPart?: Part }) {
   const [data, setData] = useState<TwoPhaseData | null>(null), [error, setError] = useState('');
   useEffect(() => {
     let active = true;
@@ -33,8 +35,8 @@ export default function TwoPhaseView({ initialPart = 'a' }: { initialPart?: 'a' 
   return <TwoPhaseLab data={data} initialPart={initialPart} />;
 }
 
-export function TwoPhaseLab({ data, initialPart = 'a', initialIndex = 49 }: { data: TwoPhaseData; initialPart?: 'a' | 'b' | 'c'; initialIndex?: number }) {
-  const [part, setPart] = useState<'a' | 'b' | 'c'>(initialPart);
+export function TwoPhaseLab({ data, initialPart = 'a', initialIndex = 49 }: { data: TwoPhaseData; initialPart?: Part; initialIndex?: number }) {
+  const [part, setPart] = useState<Part>(initialPart);
   const [ic, setIc] = useState(14);
   const [ia, setIa] = useState(initialIndex), [ib, setIb] = useState(0);
   const [curveView, setCurveView] = useState<'mix' | 'full'>('mix');
@@ -140,8 +142,8 @@ export function TwoPhaseLab({ data, initialPart = 'a', initialIndex = 49 }: { da
   </div>;
 
   const explore = <>
-    <Segmented label="Part" value={part} onChange={setPart} options={[['a', 'A · two different phases'], ['b', 'B · one phase, two compositions'], ['c', 'C · melting and the lens']]} />
-    <div className="part-body">{part === 'a' ? partA : part === 'b' ? partB : <LensPart data={data.part_c} index={ic} onChange={setIc} />}</div>
+    <Segmented label="Part" value={part} onChange={setPart} options={[['a', 'A · two different phases'], ['b', 'B · one phase, two compositions'], ['c', 'C · melting and the lens'], ['d', 'D · from scratch and pycalphad']]} />
+    <div className="part-body">{part === 'a' ? partA : part === 'b' ? partB : part === 'c' ? <LensPart data={data.part_c} index={ic} onChange={setIc} /> : <ScratchPart />}</div>
   </>;
 
   const model = <div className="model">
@@ -150,14 +152,17 @@ export function TwoPhaseLab({ data, initialPart = 'a', initialIndex = 49 }: { da
       <Eq label="Balance (lever rule)" tex={String.raw`f_\alpha + f_\beta = 1, \qquad f_\alpha x_\alpha + f_\beta x_\beta = z \;\Rightarrow\; f_\beta = \frac{z - x_\alpha}{x_\beta - x_\alpha}`} />
       <Eq label="Coexistence (common tangent)" tex={String.raw`\mu_{\mathrm A}^{\alpha} = \mu_{\mathrm A}^{\beta}, \qquad \mu_{\mathrm B}^{\alpha} = \mu_{\mathrm B}^{\beta}`} />
       <Eq label="Part B, one phase with a mixing penalty" tex={String.raw`g = 1000 + 12000\,x - 10\,T + RT\,q(x) + \Omega\,x(1-x), \qquad T_{\mathrm c} = \frac{\Omega}{2R}`} />
+      <Eq label="Parts C and D, ideal solid and liquid (φ = SOLID or LIQUID)" tex={String.raw`g_\varphi = (1-x)\,g^\circ_{\mathrm A,\varphi} + x\,g^\circ_{\mathrm B,\varphi} + RT\,q(x), \qquad g^\circ = h - T s`} />
+      <Eq label="Part D, the two equations Newton solves" tex={String.raw`\mu_{\mathrm A}^{S} - \mu_{\mathrm A}^{L} = g^\circ_{\mathrm A,S} - g^\circ_{\mathrm A,L} + RT\ln\frac{1-x_S}{1-x_L} = 0, \qquad \mu_{\mathrm B}^{S} - \mu_{\mathrm B}^{L} = g^\circ_{\mathrm B,S} - g^\circ_{\mathrm B,L} + RT\ln\frac{x_S}{x_L} = 0`} />
     </div>
-    <p>Both parts use the course’s own invented models (foundations lessons 5–7). The curves, tangents, compositions and amounts in the lab come from a calculation stored in the repository; nothing is recalculated in your browser.</p>
+    <p>Parts A and B use the course’s invented models of foundations lessons 5–7; parts C and D use an invented ideal solid and liquid, with A from step 01. Part D solves the part C model at 1400 K four ways and also with pycalphad from a short database. The curves, tangents, compositions and amounts in the lab come from a calculation stored in the repository; nothing is recalculated in your browser.</p>
   </div>;
 
   return <LabFrame kicker="Step 03 · interactive lab" title="Why two phases?"
-    conditions={['100000 Pa', '1 mol atoms', 'part A: ALPHA and BETA at 1000 K', 'part B: one phase, 600–1300 K', 'part C: solid and liquid, 950–1850 K']}
+    conditions={['100000 Pa', '1 mol atoms', 'part A: ALPHA and BETA at 1000 K', 'part B: one phase, 600–1300 K', 'part C: solid and liquid, 950–1850 K', 'part D: part C at 1400 K, z = 0.40']}
     explore={explore} model={model}
-    record={<RecordView value={part === 'a' ? state : { ...row, GM: `${row.GM.length} values on x = 0.01…0.99`, GM_mix: `${row.GM_mix.length} values on x = 0.01…0.99` }} href={`/learning/${twoPhasePath}`} note="The numbers behind the current view." />} />;
+    record={part === 'd' ? <RecordView value={{ part: 'D', file: scratchPath, holds: 'every frame of the four methods and the pycalphad results' }} href={`/learning/${scratchPath}`} note="Part D reads its own file." />
+      : <RecordView value={part === 'a' ? state : { ...row, GM: `${row.GM.length} values on x = 0.01…0.99`, GM_mix: `${row.GM_mix.length} values on x = 0.01…0.99` }} href={`/learning/${twoPhasePath}`} note="The numbers behind the current view." />} />;
 }
 
 /** Part C: invented ideal solid and liquid; the touching points at each T draw the lens. Exported values only. */

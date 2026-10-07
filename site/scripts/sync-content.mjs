@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import katex from 'katex';
 const repo=fileURLToPath(new URL('../../',import.meta.url));
-const moduleAssets={cuni:['course/materials/cuni/phase_diagram.png','course/materials/cuni/energy_magnetism.png','course/materials/cuni/results.json','course/self_study/generated/cuni_grid.json'],ninb:['course/materials/ninb/phase_diagram.png','course/materials/ninb/results.json','course/self_study/generated/ninb_grid.json','course/self_study/generated/mu_structure.json'],twophase:['course/self_study/generated/two_phase.json'],boundary:['course/self_study/generated/boundary_views.json']};
+const moduleAssets={cuni:['course/materials/cuni/phase_diagram.png','course/materials/cuni/energy_magnetism.png','course/materials/cuni/results.json','course/self_study/generated/cuni_grid.json'],ninb:['course/materials/ninb/phase_diagram.png','course/materials/ninb/results.json','course/self_study/generated/ninb_grid.json','course/self_study/generated/mu_structure.json'],twophase:['course/self_study/generated/two_phase.json','course/self_study/generated/from_scratch.json'],boundary:['course/self_study/generated/boundary_views.json']};
 export const assetPaths=Object.values(moduleAssets).flat();
 const ids=['start','unary','binary','twophase','boundary','cuni','ninb'];
 const publicAsset=path=>'/learning/'+path.replace('course/','');

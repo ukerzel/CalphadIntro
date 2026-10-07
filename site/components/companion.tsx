@@ -134,7 +134,7 @@ export default function Companion() {
   const current = route.page === 'lesson' ? route.id : null;
   const labContent = (id: LearningID, view?: string) => {
     if (id === 'cuni' || id === 'ninb') return <MaterialExplorer id={id} />;
-    if (id === 'twophase') return <TwoPhaseView key={view ?? 'default'} initialPart={view === 'part-b' ? 'b' : view === 'part-c' ? 'c' : 'a'} />;
+    if (id === 'twophase') return <TwoPhaseView key={view ?? 'default'} initialPart={view === 'part-b' ? 'b' : view === 'part-c' ? 'c' : view === 'part-d' ? 'd' : 'a'} />;
     if (id === 'start') return <EnergyLadder />;
     if (!isView(id)) return null;
     if (error) return <div className="notice" role="alert"><h2>Data unavailable</h2><p>{error}. Rebuild from the checked repository exports.</p></div>;

@@ -4,12 +4,17 @@
     {
       "canonical": "course/self_study/lessons.json",
       "public": "lessons.json",
-      "sha256": "d85227ad8d03e82a677a8160cf8e1b87d2ceb64a76d32706679255ef3044d0c4"
+      "sha256": "ea2bf5b28a0adeca49612a3097a75eb4cd41dfded43d89cf5c7ea8ed7f44bb94"
     },
     {
       "canonical": "course/self_study/generated/two_phase.json",
       "public": "self_study/generated/two_phase.json",
       "sha256": "c11bd9d751af706f67ee783c8a83a5085c16bc1830ac06906fa34d77bd6743d2"
+    },
+    {
+      "canonical": "course/self_study/generated/from_scratch.json",
+      "public": "self_study/generated/from_scratch.json",
+      "sha256": "648a1b7292a25651cc36f599442d3909186e62c116cf785fd0e0037202d34976"
     },
     {
       "canonical": "course/self_study/generated/boundary_views.json",

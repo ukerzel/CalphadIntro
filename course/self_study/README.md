@@ -11,7 +11,7 @@ self-checks and omits classroom clock times. Detailed lessons remain optional.
 | start (00) | foundations/lesson_00.md; primer/worksheet.md W0–W3 |
 | unary (01) | primer/worksheet.md and answers.md W4–W8 |
 | binary (02) | primer_day2/worksheet.md and answers.md D1–D3 |
-| twophase (03) | foundations/lesson_05_two_phase.md, lesson_06_chemical_potential.md, lesson_07_regular_solution.md |
+| twophase (03) | foundations/lesson_05_two_phase.md, lesson_06_chemical_potential.md, lesson_07_regular_solution.md; part D: notebooks/f4b_lens_from_scratch.py |
 | boundary (04) | primer_day2/worksheet.md and answers.md D4–D10 |
 | cuni (05) | materials/cuni/README.md and answers.md; setup.md; sources/README.md |
 | ninb (06) | materials/ninb/README.md and answers.md; setup.md; sources/README.md |

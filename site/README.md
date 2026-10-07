@@ -42,8 +42,8 @@ uses Node built-ins and KaTeX and validates it before copying:
 - links and images only to an allowlist of course outputs: the Cu–Ni and Ni–Nb
   phase-diagram figures, the Cu–Ni energy/magnetism figure and the
   `results.json` files from `course/materials/`, and
-  the generated `two_phase`, `boundary_views`, `cuni_grid`, `ninb_grid` and
-  `mu_structure` JSON files from `course/self_study/generated/`.
+  the generated `two_phase`, `from_scratch`, `boundary_views`, `cuni_grid`,
+  `ninb_grid` and `mu_structure` JSON files from `course/self_study/generated/`.
 
 It then writes the narration and those assets to `public/learning/` with
 `content_receipt.json`, which lists each canonical path and its SHA-256. The
@@ -51,6 +51,9 @@ material explorers check that receipt before displaying a file.
 
 The generated JSON files come from scripts in `course/self_study/`:
 `two_phase_export.py` (the invented ideal melting lens of step 03 part C),
+`from_scratch_export.py` (step 03 part D: that lens at 1400 K solved four ways
+from scratch, frame by frame, and by pycalphad from a ten-line database in the
+script, as in notebook f4b),
 `boundary_export.py` (the step 04 tangent picture and δ iteration),
 `grid_export.py` (the clickable Cu–Ni and Ni–Nb phase maps; it needs the
 databases each learner fetches, and only the calculated grids are committed)
@@ -89,7 +92,7 @@ One static page with hash routes, so every state can be linked:
   Inline figures (`components/lesson-figures.tsx`, `calphad-figures.tsx`,
   `energy-ladder.tsx`, `constraints-figure.tsx`, `mu-structure.tsx`) reuse the
   labs' exported files. Every step stays open; there is no grading.
-- **Labs** (`components/{unary,binary,twophase,boundary}-view.tsx`,
+- **Labs** (`components/{unary,binary,twophase,boundary}-view.tsx`, `scratch-view.tsx`,
   `boundary-views.tsx`, `phase-map.tsx`): Explore / Model / Data tabs; drag on
   a chart, use the keyboard slider or play a sweep through exported rows; the
   Data tab shows the selected row verbatim. Lab views are listed in

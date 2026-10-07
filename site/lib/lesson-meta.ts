@@ -21,14 +21,14 @@ export const labViews: Partial<Record<LearningID, [string, string, string][]>> =
   start: [['ladder', 'Energy ladder', 'U, H, F and G as bars you change with T, S, p and V.']],
   unary: [['crossing', 'Solid and liquid g(T)', 'Drag through the melting crossing.'], ['fractions', 'Phase-fraction line', 'g_mix against the liquid fraction at one T.']],
   binary: [['tangent', 'Curve, tangent and μ', 'The tangent at x and where it meets x = 0 and x = 1.'], ['slope', 'Exchange slope', 'μB − μA and where its sign changes.']],
-  twophase: [['part-a', 'Part A · two different phases', 'Common tangent, split band and lever arms.'], ['part-b', 'Part B · one phase, two compositions', 'The regular-solution gap and its T–x diagram.'], ['part-c', 'Part C · melting and the lens', 'Solid and liquid curves and the lens they draw.']],
+  twophase: [['part-a', 'Part A · two different phases', 'Common tangent, split band and lever arms.'], ['part-b', 'Part B · one phase, two compositions', 'The regular-solution gap and its T–x diagram.'], ['part-c', 'Part C · melting and the lens', 'Solid and liquid curves and the lens they draw.'], ['part-d', 'Part D · from scratch and pycalphad', 'Four ways to the same equilibrium, side by side with pycalphad.']],
   boundary: [['cells', 'Open and closed cells', 'Occupancy, atom ledgers and where the B atoms go.'], ['tangent', 'Tangent picture · δ slider', 'Bulk curve, reservoir tangent and φ as a vertical gap.'], ['iteration', 'Closed cell by hand', 'The hand iteration, round by round.']],
   cuni: [['map', 'Clickable Cu–Ni phase diagram', 'Click any T and x: phases, amounts, tie line; play a cooling path.'], ['samples', 'Saved samples at x(Ni) = 0.5', 'Magnetic on and off at 600, 1500, 1540 and 1600 K.']],
   ninb: [['map', 'Clickable Ni–Nb phase diagram', 'Click any T and x; amounts in mol atoms or formula units.'], ['formula', 'One division, on the right basis', 'Formula energies divided by atoms per formula.'], ['sites', 'Build a formula unit', 'δ and μ site boxes you fill with Ni or Nb.'], ['mu-structure', 'Where the μ-phase atoms sit', 'A crystal sketch linked to the site boxes.']],
 };
 
 /** Course notebooks (notebooks/<file>.ipynb) to run after the attempt; RELEASE must match the notebooks' setup cell. */
-export const NOTEBOOK_RELEASE = 'v0.1.2';
+export const NOTEBOOK_RELEASE = 'v0.1.3';
 export const notebooks: Partial<Record<LearningID, [string, string][]>> = {
   start: [['f0_jupyter_and_potentials', 'Potentials: U, H, F and G']],
   unary: [['f1_unary_by_hand_and_code', 'One component, two phases: by hand and in code'], ['f2_unary_pycalphad', 'Optional: the same model in pycalphad']],

@@ -116,6 +116,17 @@ test('μ and δ are always marked where they name phases or the boundary prefere
  const start=renderToStaticMarkup(createElement(Page,{lesson:lesson('start')}));
  assert.match(start,/One symbol|Meanings in this course/);assert.match(start,/data-term="mu_phase"/);
 });
+test('part D shows each from-scratch method next to pycalphad',async()=>{
+ const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/from_scratch.json',import.meta.url)));
+ const {ScratchLab}=await server.ssrLoadModule('/components/scratch-view.tsx');
+ for(const [method,pattern] of [['brute',/Trial solid composition/],['grid',/Grid spacing/],['newton',/Newton step/],['walk',/Walk through temperature/]]){
+  const html=renderToStaticMarkup(createElement(ScratchLab,{data,initialMethod:method}));
+  assert.match(html,pattern);assert.match(html,/From scratch \(numpy\/SciPy\)[\s\S]*pycalphad/);
+  assert.match(html,/0\.440517/);assert.match(html,/data-plot/);
+ }
+ const grid=renderToStaticMarkup(createElement(ScratchLab,{data,initialMethod:'grid'}));
+ assert.match(grid,/one phase/);
+});
 test('two-phase lab shows the generated states and the gap',async()=>{
  const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/two_phase.json',import.meta.url)));
  const {TwoPhaseLab}=await server.ssrLoadModule('/components/twophase-view.tsx');

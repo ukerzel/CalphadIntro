@@ -13119,7 +13119,7 @@ compared with a value you already know. You will</p>
 <span class="c1"># downloads the tested course release and the locked package versions.</span>
 <span class="c1"># In Colab, the first run then restarts the session on purpose and Colab reports</span>
 <span class="c1"># a crash: that is expected. Run this cell again, then the rest of the notebook.</span>
-<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.2"</span>
+<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.3"</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span>
              <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"pyproject.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"course"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
@@ -13158,7 +13158,7 @@ compared with a value you already know. You will</p>
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Course release v0.1.2 · Python 3.12.14
+<pre>Course release v0.1.3 · Python 3.12.14
   numpy       2.5.3
   scipy       1.18.1
   matplotlib  3.11.2

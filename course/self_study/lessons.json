@@ -735,7 +735,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Heads-up: this step has three parts. Part A, from the problem to its worked answer, compares two different phases. [[twophase#part-b-one-phase-two-compositions|Part B]] splits one phase into two compositions, and [[twophase#part-c-melting-and-the-lens|part C]] melts a solid into a liquid. The lab has a tab for each part."
+          "text": "Heads-up: this step has four parts. Part A, from the problem to its worked answer, compares two different phases. [[twophase#part-b-one-phase-two-compositions|Part B]] splits one phase into two compositions, [[twophase#part-c-melting-and-the-lens|part C]] melts a solid into a liquid, and [[twophase#part-d-from-scratch-and-with-pycalphad|part D]] finds one point of that lens from scratch and with pycalphad, side by side. The lab has a tab for each part."
         },
         {
           "type": "table",
@@ -841,11 +841,42 @@
         },
         {
           "type": "paragraph",
+          "text": "Part D: from scratch and with pycalphad · How does a program actually find the two touching points? Take part C at 1400 K and a sample with overall composition $z = 0.40$. The same answer can be reached in four ways, and [[twophase/lab/part-d|part D of the lab]] plays each one next to pycalphad’s answer:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Try every split: pair each trial solid composition with every liquid composition, keep the pairs the lever rule allows and take the one with the lowest energy. Simple, but slow, and only as fine as the trial compositions.",
+            "Grid and linear programme: put candidate compositions of both phases on a grid and find the cheapest mixture of them that keeps all atoms and all B atoms. Energy and both balances are linear in the amounts, so this is a linear programme, which needs no first guess and is not told which phases appear.",
+            "Equal chemical potentials: solve $\\mu_{\\mathrm A}^{S} = \\mu_{\\mathrm A}^{L}$ and $\\mu_{\\mathrm B}^{S} = \\mu_{\\mathrm B}^{L}$ for the two compositions with Newton’s method. Each step replaces the two equations by straight lines and solves those; from the rough first guess in the lab it reaches the touching points in a handful of steps. (In the notebook, SciPy’s fsolve takes such steps for you.)",
+            "Step by step through temperature: start from the 1400 K answer and use each answer as the first guess at the next temperature. The touching points at all temperatures draw the lens."
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "pycalphad does the same for any database: it evaluates every phase at several thousand compositions, finds the best combination as in the second method, and refines it by solving the equal-chemical-potential equations as in the third. For this model the two routes agree in every digit the lab shows."
+        },
+        {
+          "type": "paragraph",
+          "text": "Predict before you play the grid method: if the candidate compositions are only 0.2 apart, what does the linear programme report for $z = 0.40$ at 1400 K?"
+        },
+        {
+          "type": "reveal",
+          "label": "Check · a coarse grid misses the split",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "A single solid phase at $x = 0.40$: that composition is itself a grid point, and no pair of grid points brackets the lens closely enough to do better. The true split is lower by only about 39 J/mol atoms. From a spacing of 0.05 on, the grid finds the split, and its energy approaches the exact value from above."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
           "text": "Real diagrams combine several such regions. In the [[cuni#reading-the-diagram|Cu–Ni diagram of step 05]] you will see both kinds: a low-temperature miscibility gap with two FCC compositions, like part B, and at high temperature a {{lens|liquid/FCC lens}} like part C. Where three phases meet, for example one liquid and two solids at a [[glossary#eutectic|eutectic]], they can coexist only at one temperature; [[ninb#reading-the-diagram|step 06]] shows two."
         },
         {
           "type": "paragraph",
-          "text": "Explore · After your attempt, open the lab; it has a tab for each part. Part A: move $z$ and watch where the lowest energy lies: on the ALPHA curve, on the common tangent (a split), or on the BETA curve. Part B: move the temperature and watch the two compositions draw the gap in the phase diagram. Part C: do the same for melting and watch the lens appear between 1000 and 1800 K."
+          "text": "Explore · After your attempt, open the lab; it has a tab for each part. Part A: move $z$ and watch where the lowest energy lies: on the ALPHA curve, on the common tangent (a split), or on the BETA curve. Part B: move the temperature and watch the two compositions draw the gap in the phase diagram. Part C: do the same for melting and watch the lens appear between 1000 and 1800 K. Part D: play each of the four methods and compare it with pycalphad’s answer next to it."
         },
         {
           "type": "paragraph",
@@ -1433,15 +1464,15 @@
           "links": [
             {
               "label": "Repository task · fit Cu–Ni interaction parameters",
-              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.2/course/materials/cuni/fitting.md"
+              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.3/course/materials/cuni/fitting.md"
             },
             {
               "label": "Repository task · Ni grain-boundary energies",
-              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.2/course/materials/boundaries/ni_twin.md"
+              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.3/course/materials/boundaries/ni_twin.md"
             },
             {
               "label": "Repository task · Cu–Ni boundary segregation",
-              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.2/course/materials/boundaries/segregation.md"
+              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.3/course/materials/boundaries/segregation.md"
             }
           ]
         }
