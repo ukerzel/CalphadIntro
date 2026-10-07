@@ -1,0 +1,72 @@
+{
+ "f6_a2_residual_05": {
+  "value": -1000.0,
+  "tol": 0.01,
+  "hint": "Prediction Ω·x(1−x) minus the observation at x = 0.5; mind the sign."
+ },
+ "f6_a2_objective": {
+  "value": 2670400.0,
+  "tol": 0.5,
+  "hint": "Square all five residuals in J/mol and add them; predictions scale linearly with Ω."
+ },
+ "f6_a2_j_22000": {
+  "value": 667600.0,
+  "tol": 0.5,
+  "hint": "Compare with the worked Ω = 18000 table: the residuals have the same size and opposite sign."
+ },
+ "f6_a2_bounds_enough": {
+  "value": false,
+  "hint": "How many values of Ω lie inside the bounds?"
+ },
+ "f6_a4_omega": {
+  "value": 20000.0,
+  "tol": 0.5,
+  "hint": "Divide Σa·h by Σa²; a is dimensionless, so Ω* is in J/mol."
+ },
+ "f6_a4_bound_active": {
+  "value": false,
+  "hint": "Is Ω* at 0 or 24000 J/mol, or between them?"
+ },
+ "f6_b2_pred_04": {
+  "value": 4800.0,
+  "tol": 0.5,
+  "hint": "Ω·x(1−x) at x = 0.4 with the fitted Ω; no refitting."
+ },
+ "f6_b2_retune_ok": {
+  "value": false,
+  "hint": "Once a point has guided the choice of Ω, did it take part in the fit?"
+ },
+ "f6_b4_omega": {
+  "value": 20000.0,
+  "tol": 0.5,
+  "hint": "One equation: h_mix = Ω·x(1−x) at x = 0.25."
+ },
+ "f6_b4_pred_04": {
+  "value": 4800.0,
+  "tol": 0.5,
+  "hint": "Use the Ω from x = 0.25 in Ω·x(1−x) at x = 0.4."
+ },
+ "f6_b1_hmix": {
+  "value": 5000.0,
+  "tol": 0.01,
+  "hint": "The same-phase pure reference at x = 0.5 is (1 − x)·1000 + x·13000."
+ },
+ "f6_b1_error": {
+  "value": 2189.313764,
+  "tol": 0.001,
+  "hint": "Homogeneous h_mix minus the equilibrium-mixture value, both in J/mol."
+ },
+ "f6_b3_pure_pred": {
+  "value": 0.0,
+  "tol": 1e-09,
+  "hint": "What is x(1−x) at x = 1?"
+ },
+ "f6_b3_identifiable": {
+  "value": false,
+  "hint": "Do different Ω give different predictions at x = 0 and x = 1?"
+ },
+ "f6_b3_B_identifiable": {
+  "value": false,
+  "hint": "Work out h = g − T·∂g/∂T for (A + B·T)·x(1−x): which terms are left?"
+ }
+}

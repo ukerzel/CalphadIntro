@@ -1,0 +1,11 @@
+$ Original synthetic teaching model, not an assessed material database.
+$ One invented atom A; elemental mass and reference metadata are placeholders.
+$ Only 800 <= T <= 1200 K at p=100000 Pa is taught/checked.
+ELEMENT A BLANK 1.0 0.0 0.0 !
+TYPE_DEFINITION % SEQ * !
+PHASE SOLID % 1 1 !
+CONSTITUENT SOLID :A: !
+PARAMETER G(SOLID,A;0) 800 1000-10*T; 1200 N !
+PHASE LIQUID % 1 1 !
+CONSTITUENT LIQUID :A: !
+PARAMETER G(LIQUID,A;0) 800 7000-16*T; 1200 N !

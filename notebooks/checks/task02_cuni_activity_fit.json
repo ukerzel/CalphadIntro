@@ -1,0 +1,78 @@
+{
+ "task02_atoms_per_formula": {
+  "value": 1,
+  "tol": 0,
+  "hint": "Count only real atoms: the second sublattice holds vacancies."
+ },
+ "task02_equilibrium_same": {
+  "value": false,
+  "hint": "Can an equilibrium calculation split the sample into parts with other compositions?"
+ },
+ "task02_c0_05": {
+  "value": 0.25,
+  "tol": 1e-09,
+  "hint": "At x = 0.5, δg = x(1−x)·δL0 + …; then add (1 − x)·dδg/dx."
+ },
+ "task02_c1_05": {
+  "value": -0.25,
+  "tol": 1e-09,
+  "hint": "The δL1 term of δg vanishes at x = 0.5, but its derivative does not."
+ },
+ "task02_rtlna_05": {
+  "value": -2385.2836506221747,
+  "tol": 0.01,
+  "hint": "R = 8.3145 J/(mol K), T = 1000 K, natural logarithm of the reported activity."
+ },
+ "task02_l0_fit": {
+  "value": 11989.88189235562,
+  "tol": 0.001,
+  "hint": "Pinned L0 at 1000 K plus the printed correction δL0."
+ },
+ "task02_l1_fit": {
+  "value": -1004.6996499238578,
+  "tol": 0.001,
+  "hint": "Pinned L1 at 1000 K plus the printed correction δL1; keep the signs."
+ },
+ "task02_dmu_05": {
+  "value": 120.13288556986963,
+  "tol": 0.001,
+  "hint": "Use your factors from section 2 with the printed δL0 and δL1."
+ },
+ "task02_worse_x": {
+  "value": 0.3,
+  "tol": 1e-09,
+  "hint": "Compare the size of each residual before and after, ignoring the sign."
+ },
+ "task02_a03_fit": {
+  "value": 0.6164909753747814,
+  "tol": 1e-05,
+  "hint": "Reported activity at x = 0.3 times exp(r/RT) with the fitted residual and RT = 8314.5 J/mol."
+ },
+ "task02_every_point_better": {
+  "value": false,
+  "hint": "Look again at the point where the residual grew."
+ },
+ "task02_shift_1000": {
+  "value": 0.0,
+  "tol": 1e-09,
+  "hint": "Change of A0 plus 1000 times the change of B0."
+ },
+ "task02_shift_1500": {
+  "value": -2500.0,
+  "tol": 1e-06,
+  "hint": "Change of A0 plus 1500 times the change of B0, in J/mol."
+ },
+ "task02_rank_ab": {
+  "value": 2,
+  "tol": 0,
+  "hint": "How many of the four columns are just multiples of another column?"
+ },
+ "task02_more_x_helps": {
+  "value": false,
+  "hint": "Every new row at 1000 K has the same proportional column pairs."
+ },
+ "task02_independent_validation": {
+  "value": false,
+  "hint": "Did any point stay out of the fit, and could the assessment have used these data?"
+ }
+}

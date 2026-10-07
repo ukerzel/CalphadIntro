@@ -1,0 +1,18 @@
+$ Original synthetic binary teaching model; NOT assessed elemental data.
+$ A/B are invented atoms. Mass/reference metadata below are placeholders.
+$ Explicit wrapper domain: 600 <= T <= 1800 K; p=100000 Pa; mole-of-atoms basis.
+$ I2: both ALPHA/BETA, LZERO=0. R1: ALPHA ONLY, override LZERO=20000.
+$ Fit route: homogeneous ALPHA only, LZERO trial in [0,24000].
+ELEMENT A BLANK 1.0 0.0 0.0 !
+ELEMENT B BLANK 1.0 0.0 0.0 !
+TYPE_DEFINITION % SEQ * !
+FUNCTION LZERO 600 0; 1800 N !
+PHASE ALPHA % 1 1 !
+CONSTITUENT ALPHA :A,B: !
+PARAMETER G(ALPHA,A;0) 600 1000-10*T; 1800 N !
+PARAMETER G(ALPHA,B;0) 600 13000-10*T; 1800 N !
+PARAMETER L(ALPHA,A,B;0) 600 LZERO; 1800 N !
+PHASE BETA % 1 1 !
+CONSTITUENT BETA :A,B: !
+PARAMETER G(BETA,A;0) 600 13000-10*T; 1800 N !
+PARAMETER G(BETA,B;0) 600 1000-10*T; 1800 N !

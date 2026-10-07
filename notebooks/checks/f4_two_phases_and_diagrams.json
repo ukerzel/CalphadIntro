@@ -1,0 +1,89 @@
+{
+ "f4_g_alpha_half": {
+  "value": -8763.172233,
+  "tol": 0.01,
+  "hint": "−9000 + 12000 × 0.5 + RT q(0.5), with RT = 8314.5 J/mol at 1000 K."
+ },
+ "f4_f_beta_half": {
+  "value": 0.5,
+  "tol": 1e-06,
+  "hint": "f_β = (z − x_α)/(x_β − x_α); z sits exactly between the endpoints."
+ },
+ "f4_g_split_half": {
+  "value": -10760.595951,
+  "tol": 0.01,
+  "hint": "Weight each region's energy by its amount fraction and add.",
+  "strict": true
+ },
+ "f4_split_lower_by": {
+  "value": 1997.423718,
+  "tol": 0.01,
+  "hint": "Homogeneous energy minus split energy, in J/mol; the result is positive."
+ },
+ "f4_f_alpha_035": {
+  "value": 0.75,
+  "tol": 1e-06,
+  "hint": "Find f_β with the lever rule first; then f_α = 1 − f_β."
+ },
+ "f4_f_beta_035": {
+  "value": 0.25,
+  "tol": 1e-06,
+  "hint": "(z − x_α)/(x_β − x_α) with x_α = 0.2 and x_β = 0.8."
+ },
+ "f4_f_beta_01": {
+  "value": -0.16666666666666666,
+  "tol": 0.001,
+  "hint": "Same formula; z now lies outside the two endpoints, so do not clip the result."
+ },
+ "f4_z01_possible": {
+  "value": false,
+  "hint": "Answer True or False. Can an amount fraction be negative?"
+ },
+ "f4_mu_a_best": {
+  "value": -10762.730017,
+  "tol": 0.01,
+  "hint": "A horizontal line has the same height at x = 0 as at the touching points.",
+  "strict": true
+ },
+ "f4_grid21_gap": {
+  "value": 2.134067,
+  "tol": 0.005,
+  "hint": "The closest 21-point grid compositions are the 0.2/0.8 split you already have; compare its energy with −10762.730."
+ },
+ "f4_x_alpha_101": {
+  "value": 0.19,
+  "tol": 1e-09,
+  "hint": "Which grid point with spacing 0.01 lies closest to 0.19104?"
+ },
+ "f4_gap_direction": {
+  "value": [
+   "together",
+   "closer"
+  ],
+  "hint": "Type the word in quotes, lowercase. Think about the hump: does it grow or shrink when the RT q(x) term gets stronger?"
+ },
+ "f4_tc": {
+  "value": 1202.718143,
+  "tol": 0.5,
+  "hint": "T_c = Ω/(2R) with Ω = 20000 J/mol and R = 8.3145 J/(mol K)."
+ },
+ "f4_x_left_900": {
+  "value": 0.111251,
+  "tol": 0.0001,
+  "hint": "Put 900 in gap_temperatures (or call regular_binodal(900.0)) and take the smaller composition."
+ },
+ "f4_lens_xs_1400": {
+  "value": 0.440517,
+  "tol": 0.0001,
+  "hint": "Call lens_ends(1400.0); the first value is the SOLID composition."
+ },
+ "f4_lens_xl_1400": {
+  "value": 0.31241,
+  "tol": 0.0001,
+  "hint": "Call lens_ends(1400.0); the second value is the LIQUID composition."
+ },
+ "f4_lens_richer": {
+  "value": "B",
+  "hint": "Type one capital letter in quotes. A larger x means more B; compare the SOLID and LIQUID values at 1400 K."
+ }
+}

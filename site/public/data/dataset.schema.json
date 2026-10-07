@@ -1,0 +1,782 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "crossing_temperature_K": {
+          "type": "number"
+        },
+        "panel_id": {
+          "const": "unary"
+        },
+        "records": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "HM_J_per_mol": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              "SM_J_per_mol_K": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              "T_K": {
+                "maximum": 1200,
+                "minimum": 800,
+                "type": "number"
+              },
+              "equilibrium": {
+                "additionalProperties": false,
+                "properties": {
+                  "GM": {
+                    "type": "number"
+                  },
+                  "fractions": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "LIQUID": {
+                        "maximum": 1,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      "SOLID": {
+                        "maximum": 1,
+                        "minimum": 0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "SOLID",
+                      "LIQUID"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "GM",
+                  "fractions"
+                ],
+                "type": "object"
+              },
+              "gibbs_J_per_mol": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "phase_status": {
+                "enum": [
+                  "SOLID",
+                  "LIQUID",
+                  "equal_energy_fractions_underdetermined"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "T_K",
+              "gibbs_J_per_mol",
+              "HM_J_per_mol",
+              "SM_J_per_mol_K",
+              "equilibrium",
+              "phase_status"
+            ],
+            "type": "object"
+          },
+          "maxItems": 201,
+          "minItems": 201,
+          "type": "array"
+        },
+        "saved_comparison_rows": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "T_K": {
+                "maximum": 1200,
+                "minimum": 800,
+                "type": "number"
+              },
+              "plain_GM_J_per_mol": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              "pycalphad_GM_J_per_mol": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              "pycalphad_HM_J_per_mol": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              "pycalphad_SM_J_per_mol_K": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              "pycalphad_equilibrium": {
+                "additionalProperties": false,
+                "properties": {
+                  "GM": {
+                    "type": "number"
+                  },
+                  "fractions": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "LIQUID": {
+                        "type": "number"
+                      },
+                      "SOLID": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "GM",
+                  "fractions"
+                ],
+                "type": "object"
+              },
+              "scipy_equilibrium": {
+                "additionalProperties": false,
+                "properties": {
+                  "GM": {
+                    "type": "number"
+                  },
+                  "fractions": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "LIQUID": {
+                        "type": "number"
+                      },
+                      "SOLID": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "GM",
+                  "fractions"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "T_K",
+              "plain_GM_J_per_mol",
+              "pycalphad_GM_J_per_mol",
+              "pycalphad_HM_J_per_mol",
+              "pycalphad_SM_J_per_mol_K",
+              "scipy_equilibrium",
+              "pycalphad_equilibrium"
+            ],
+            "type": "object"
+          },
+          "maxItems": 5,
+          "minItems": 5,
+          "type": "array"
+        },
+        "saved_comparison_status": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "units": {
+          "const": {
+            "HM_J_per_mol": "J/mol atoms",
+            "SM_J_per_mol_K": "J/(mol atoms K)",
+            "T_K": "K",
+            "equilibrium.GM": "J/mol atoms",
+            "equilibrium.fractions": "mol phase/mol atoms",
+            "gibbs_J_per_mol": "J/mol atoms"
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "panel_id",
+        "units",
+        "records",
+        "crossing_temperature_K",
+        "saved_comparison_rows",
+        "saved_comparison_status"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "panel_id": {
+          "const": "binary"
+        },
+        "records": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "derivatives": {
+                "additionalProperties": false,
+                "properties": {
+                  "curvature": {
+                    "type": "number"
+                  },
+                  "mu_A": {
+                    "type": "number"
+                  },
+                  "mu_B": {
+                    "type": "number"
+                  },
+                  "slope": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "slope",
+                  "curvature",
+                  "mu_A",
+                  "mu_B"
+                ],
+                "type": "object"
+              },
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "properties": {
+                "additionalProperties": false,
+                "properties": {
+                  "GM": {
+                    "type": "number"
+                  },
+                  "GM_mix": {
+                    "type": "number"
+                  },
+                  "GM_reference": {
+                    "type": "number"
+                  },
+                  "HM": {
+                    "type": "number"
+                  },
+                  "HM_mix": {
+                    "type": "number"
+                  },
+                  "SM": {
+                    "type": "number"
+                  },
+                  "SM_mix": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "GM",
+                  "HM",
+                  "SM",
+                  "GM_reference",
+                  "GM_mix",
+                  "HM_mix",
+                  "SM_mix"
+                ],
+                "type": "object"
+              },
+              "x_B": {
+                "maximum": 0.99,
+                "minimum": 0.01,
+                "type": "number"
+              }
+            },
+            "required": [
+              "id",
+              "x_B",
+              "properties",
+              "derivatives"
+            ],
+            "type": "object"
+          },
+          "maxItems": 99,
+          "minItems": 99,
+          "type": "array"
+        },
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "units": {
+          "const": {
+            "derivatives.curvature": "J/mol atoms",
+            "derivatives.mu_A": "J/mol A atoms",
+            "derivatives.mu_B": "J/mol B atoms",
+            "derivatives.slope": "J/mol atoms",
+            "properties.GM": "J/mol atoms",
+            "properties.GM_mix": "J/mol atoms",
+            "properties.GM_reference": "J/mol atoms",
+            "properties.HM": "J/mol atoms",
+            "properties.HM_mix": "J/mol atoms",
+            "properties.SM": "J/(mol atoms K)",
+            "properties.SM_mix": "J/(mol atoms K)",
+            "x_B": "mol B atoms/mol atoms"
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "panel_id",
+        "units",
+        "records"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "panel_id": {
+          "const": "boundary"
+        },
+        "records": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "closed": {
+                "additionalProperties": false,
+                "properties": {
+                  "B_boundary_excess_atoms": {
+                    "type": "number"
+                  },
+                  "B_boundary_excess_mol": {
+                    "type": "number"
+                  },
+                  "boundary_amount_mol": {
+                    "type": "number"
+                  },
+                  "bulk_amount_mol": {
+                    "type": "number"
+                  },
+                  "inventory": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "boundaries_final": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      },
+                      "bulk_final": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      },
+                      "conserved": {
+                        "const": true
+                      },
+                      "final": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      },
+                      "initial": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      },
+                      "residual_atoms": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "initial",
+                      "final",
+                      "bulk_final",
+                      "boundaries_final",
+                      "residual_atoms",
+                      "conserved"
+                    ],
+                    "type": "object"
+                  },
+                  "mu_A_J_per_mol": {
+                    "type": "number"
+                  },
+                  "mu_B_J_per_mol": {
+                    "type": "number"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "G_cell_J": {
+                        "type": "number"
+                      },
+                      "G_molar_J_per_mol_sites": {
+                        "type": "number"
+                      },
+                      "gamma_B_mol_per_m2": {
+                        "type": "number"
+                      },
+                      "nfev": {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "root_converged": {
+                        "const": true
+                      },
+                      "root_iterations": {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "solver_success": {
+                        "const": true
+                      },
+                      "theta": {
+                        "type": "number"
+                      },
+                      "theta_root": {
+                        "type": "number"
+                      },
+                      "total_B_atoms": {
+                        "type": "number"
+                      },
+                      "x_bulk": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "theta",
+                      "theta_root",
+                      "x_bulk",
+                      "total_B_atoms",
+                      "G_molar_J_per_mol_sites",
+                      "G_cell_J",
+                      "gamma_B_mol_per_m2",
+                      "nfev",
+                      "solver_success",
+                      "root_iterations",
+                      "root_converged"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "result",
+                  "inventory",
+                  "bulk_amount_mol",
+                  "boundary_amount_mol",
+                  "B_boundary_excess_atoms",
+                  "B_boundary_excess_mol",
+                  "mu_A_J_per_mol",
+                  "mu_B_J_per_mol"
+                ],
+                "type": "object"
+              },
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "open": {
+                "additionalProperties": false,
+                "properties": {
+                  "B_boundary_excess_atoms": {
+                    "type": "number"
+                  },
+                  "B_boundary_excess_mol": {
+                    "type": "number"
+                  },
+                  "boundary_amount_mol": {
+                    "type": "number"
+                  },
+                  "bulk_amount_mol": {
+                    "type": "number"
+                  },
+                  "inventory": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "boundaries_final": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      },
+                      "bulk_final": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      },
+                      "conserved": {
+                        "const": false
+                      },
+                      "exchange_atoms": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      },
+                      "final": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      },
+                      "initial": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "A": {
+                            "type": "number"
+                          },
+                          "B": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "A",
+                          "B"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "initial",
+                      "final",
+                      "bulk_final",
+                      "boundaries_final",
+                      "exchange_atoms",
+                      "conserved"
+                    ],
+                    "type": "object"
+                  },
+                  "mu_A_J_per_mol": {
+                    "type": "number"
+                  },
+                  "mu_B_J_per_mol": {
+                    "type": "number"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "gamma_B_mol_per_m2": {
+                        "type": "number"
+                      },
+                      "nfev": {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "phi_J_per_mol_sites": {
+                        "type": "number"
+                      },
+                      "solver_success": {
+                        "const": true
+                      },
+                      "theta": {
+                        "type": "number"
+                      },
+                      "theta_analytic": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "theta",
+                      "theta_analytic",
+                      "phi_J_per_mol_sites",
+                      "gamma_B_mol_per_m2",
+                      "nfev",
+                      "solver_success"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "result",
+                  "inventory",
+                  "bulk_amount_mol",
+                  "boundary_amount_mol",
+                  "B_boundary_excess_atoms",
+                  "B_boundary_excess_mol",
+                  "mu_A_J_per_mol",
+                  "mu_B_J_per_mol"
+                ],
+                "type": "object"
+              },
+              "x_initial_or_reservoir_B": {
+                "maximum": 0.9,
+                "minimum": 0.1,
+                "type": "number"
+              }
+            },
+            "required": [
+              "id",
+              "x_initial_or_reservoir_B",
+              "open",
+              "closed"
+            ],
+            "type": "object"
+          },
+          "maxItems": 81,
+          "minItems": 81,
+          "type": "array"
+        },
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "units": {
+          "const": {
+            "B_boundary_excess_atoms": "B atoms per boundary",
+            "B_boundary_excess_mol": "mol B per boundary",
+            "boundary_amount_mol": "mol occupied boundary sites",
+            "bulk_amount_mol": "mol occupied bulk sites",
+            "inventory": "atoms",
+            "mu_A_J_per_mol": "J/mol A atoms",
+            "mu_B_J_per_mol": "J/mol B atoms",
+            "result.G_cell_J": "J",
+            "result.G_molar_J_per_mol_sites": "J/mol all occupied cell sites",
+            "result.gamma_B_mol_per_m2": "mol B excess/m^2 per boundary",
+            "result.phi_J_per_mol_sites": "J/mol boundary sites",
+            "result.theta": "B atoms/boundary sites",
+            "result.theta_analytic": "B atoms/boundary sites",
+            "result.theta_root": "B atoms/boundary sites",
+            "result.total_B_atoms": "atoms",
+            "result.x_bulk": "B atoms/bulk sites",
+            "x_initial_or_reservoir_B": "B atoms/occupied sites"
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "panel_id",
+        "units",
+        "records"
+      ],
+      "type": "object"
+    }
+  ]
+}

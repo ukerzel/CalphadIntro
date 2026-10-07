@@ -1,0 +1,120 @@
+{
+  "source_sha256": "7e52adda858e302168ae26b5abfe17f4726ccbfaaff0880abcad5b38e3f559e1",
+  "observation_sha256": "6de129a6e0e156aaea0ff00dc1f7c881a7167818285ca6d29d08f111ca94b2bc",
+  "python": "3.12.14",
+  "pycalphad": "0.11.2",
+  "phase": "FCC_A1",
+  "T_K": 1000.0,
+  "P_Pa": 101325.0,
+  "R_J_per_mol_K": 8.3145,
+  "basis": "J/mol real atoms; fixed VA is not an atom",
+  "reference": "pure FCC Ni at the same temperature",
+  "objective": "unweighted sum of squared RT ln(a) residuals",
+  "baseline_L_J_per_mol": [
+    11469.89,
+    -1044.1599999999999
+  ],
+  "fit": {
+    "delta_L_J_per_mol": [
+      519.9918923556205,
+      39.46035007614199
+    ],
+    "fitted_L_J_per_mol": [
+      11989.88189235562,
+      -1004.6996499238578
+    ],
+    "residual_before_J_per_mol": [
+      -616.8269840597641,
+      -218.15036918621172,
+      -4.6770443124260055,
+      -110.29244782298792,
+      -234.27034032698975,
+      -258.91271487384415,
+      -223.16150031848883,
+      -123.56089887351163,
+      -23.805940950577792
+    ],
+    "residual_after_J_per_mol": [
+      -176.45582111470685,
+      119.6953667311318,
+      246.25186863436602,
+      68.3811978085887,
+      -114.13745475711994,
+      -184.5531305140005,
+      -182.75480671881792,
+      -106.23373398598733,
+      -19.631991129001335
+    ],
+    "sse_before_J2_per_mol2": 627804.8706902714,
+    "sse_after_J2_per_mol2": 202937.16589389846
+  },
+  "observations": [
+    {
+      "x_NI": 0.1,
+      "a_NI_reported": 0.3103,
+      "a_NI_before": 0.2881129731128663,
+      "a_NI_after": 0.303783996098818
+    },
+    {
+      "x_NI": 0.2,
+      "a_NI_reported": 0.4894,
+      "a_NI_before": 0.47672643284470173,
+      "a_NI_after": 0.4964963489725916
+    },
+    {
+      "x_NI": 0.3,
+      "a_NI_reported": 0.5985,
+      "a_NI_before": 0.5981634284843047,
+      "a_NI_after": 0.6164909753747814
+    },
+    {
+      "x_NI": 0.4,
+      "a_NI_reported": 0.6856,
+      "a_NI_before": 0.6765655200798277,
+      "a_NI_after": 0.6912618517013942
+    },
+    {
+      "x_NI": 0.5,
+      "a_NI_reported": 0.7506,
+      "a_NI_before": 0.7297461747326369,
+      "a_NI_after": 0.7403665252280004
+    },
+    {
+      "x_NI": 0.6,
+      "a_NI_reported": 0.7953,
+      "a_NI_before": 0.7709160630518522,
+      "a_NI_after": 0.7778415670535725
+    },
+    {
+      "x_NI": 0.7,
+      "a_NI_reported": 0.8322,
+      "a_NI_before": 0.8101608093498599,
+      "a_NI_after": 0.814107600304341
+    },
+    {
+      "x_NI": 0.8,
+      "a_NI_reported": 0.8686,
+      "a_NI_before": 0.8557872680448091,
+      "a_NI_after": 0.8575725622625681
+    },
+    {
+      "x_NI": 0.9,
+      "a_NI_reported": 0.9185,
+      "a_NI_before": 0.9158739270217432,
+      "a_NI_after": 0.916333818959552
+    }
+  ],
+  "checks": {
+    "pure_Ni_activity": 0.9999999999999996,
+    "hand_x_NI": 0.5,
+    "hand_mu_correction_J_per_mol": 120.13288556986963,
+    "basis_mu_correction_J_per_mol": 120.13288556986963,
+    "normal_equation_max_abs_J_per_mol": 1.6420198534206065e-13
+  },
+  "tolerances": {
+    "arithmetic_J_per_mol": 1e-07,
+    "activity_abs": 1e-10
+  },
+  "limitations": "Single-temperature calibration, no A/B slopes, no error bars or physical validation; source unchanged.",
+  "elapsed_s": 0.6284628529974725
+}

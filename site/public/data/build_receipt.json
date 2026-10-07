@@ -1,0 +1,57 @@
+{
+  "adapter_sha256": {
+    "course/site/export_site_data.py": "99e394432c030eb8390ab91a438551f377f63afdcdad5da9705018e3d3f4f43d",
+    "course/site/manifest.json": "2025fbf5f7d624f2511b8a489c638d77e893382468e70795ad72ea74a9925215",
+    "course/site/schemas/dataset.schema.json": "9255c2ede4a8a2428bdbca44320783001a54817ba89dec0674287ebbb9f53aca",
+    "course/site/schemas/manifest.schema.json": "c8b91cb0b4c5a010d35a410997fb7b37c37242f9f959f4bcb77aa3763e31317d",
+    "tests/test_site_export.py": "48dc5eaaa571aea1ede9e7a7e4533fa2dac30bdf82a1f2b3d5bba53af944919c"
+  },
+  "baseline_full_suite": "not part of the export; run the test suite separately",
+  "elapsed_seconds_before_publication": 1.4291588469641283,
+  "generated_at_UTC": "2026-10-07T07:04:50.185512+00:00",
+  "limits": {
+    "address_space_bytes": 2147483648,
+    "seconds": 120,
+    "uncompressed_payload_bytes": 5242880
+  },
+  "manifest_sha256": "2025fbf5f7d624f2511b8a489c638d77e893382468e70795ad72ea74a9925215",
+  "payload_bytes": 359103,
+  "payload_sha256": {
+    "binary.json": "75f80c6045645701e5138b777c50b8c9bc973b3489cd8858fe976d68cbd4db14",
+    "boundary.json": "58225e66c0e4c631cfa8f33886591d8fd9307e725e60a61dd02312a0a597da5a",
+    "unary.json": "2fa61f4f6c142dc7bef9d77c2e14cec473851a990463b6b9ba959fed2bdc7aff"
+  },
+  "schema_version": 1,
+  "source_commit": "231d5bb140fd10ca6e273c4ff74647459ced4c2c",
+  "source_commit_role": "committed science/text/lock inputs; adapter separately hashed",
+  "source_sha256": {
+    "course/foundations/binary_family.py": "703addc887baa35ca264fc7dc49c07dadd1d31836c97cb92963011acfb699766",
+    "course/foundations/binary_family_contract.md": "a2cf9ef5fd027c8f75bd66f9cd080640f4b54ce612a012699135164510ecec9c",
+    "course/foundations/boundary_closed.py": "0f33693b580647a7ca5d0a9770969e1b818d0100d048ac16ee4df4a523f6b7e7",
+    "course/foundations/boundary_closed_contract.md": "9449d355980e7b219f7108678a7e32d160ee77d05b69c68a1b0e60d1f29c608b",
+    "course/foundations/boundary_one_state.py": "b0bec57c44ea1cfb05d31339c1d6c1cfaa0bd53c08b7c72d8c7c8aaa1a99a6ad",
+    "course/foundations/boundary_one_state_contract.md": "9ecb7e631f586f2c8dafbe295075d40996184c68e91087deb0bcd4e0e83823d1",
+    "course/foundations/one_component_contract.md": "a5829069debeb145c03929c035c3afb6b01854e56db87c357ca4ab59445653a6",
+    "course/foundations/one_component_manual.py": "80bb310e69fc8bb251a3242841bca2ae2b1a40b98f7d4315618950a98d185b1a",
+    "course/foundations/one_component_model.tdb": "fad186f6edb18d754edd2755205a7b173adb9ff6c41a30b3b1dae4c121ff201f",
+    "course/foundations/one_component_result.json": "99682959ae8ffa963c3a01f7aa58315d00c897357ad17281ccd8fa234ca764ea",
+    "course/foundations/one_component_tools.py": "f2fe9cf9ac8bce819ebfdbfbd3e58c3700694a77762af9936ad66f101f30ff5f",
+    "course/primer/README.md": "4af570e322f7d8eaa7721acb77ea95a9a33d9a7236088df8df54a7af69bca4da",
+    "course/primer/answers.md": "ae06cb30218bbfe5e4fbde5a8fba902c8c9fe46c4c2a0df13bc511154c1e9b1f",
+    "course/primer/instructor.md": "17c44614ed78f6c2e686f00bb6acdf4aae5f312d2f516f95b5bd3e51bca16b9e",
+    "course/primer/worksheet.md": "45fe45d08101c3d1bdb9d66e85ddf55053a85008a81d833412eaf16a8395da89",
+    "course/primer_day2/README.md": "455021eaa65af48897afe74c59329d5eb2b357ea71cbe268e93f2320270fe5ba",
+    "course/primer_day2/answers.md": "99d00855c15f90c2d917b91cb3c983e003b3e13f370721095f8b18ef35dfa646",
+    "course/primer_day2/instructor.md": "669f424297d33cb93aab3baa6e6c3aa51ff8efb76780653d3c277a59edddb7ec",
+    "course/primer_day2/worksheet.md": "652dffb1a774880d1ce5bd126351873fa8f0f782ce60434008803daefe278452",
+    "poetry.lock": "ca1890efa94a4d0674c9e8002d9bd5ceb03b9b520ba19db556df351627e5bd3c"
+  },
+  "status": "exported from the course code",
+  "versions": {
+    "matplotlib": "3.11.2",
+    "numpy": "2.5.3",
+    "pycalphad": "0.11.2",
+    "python": "3.12.14",
+    "scipy": "1.18.1"
+  }
+}

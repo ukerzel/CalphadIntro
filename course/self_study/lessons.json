@@ -1,0 +1,1451 @@
+{
+  "schema_version": 1,
+  "terms": [
+    {
+      "id": "mu_chem",
+      "symbol": "μ — chemical potential",
+      "kind": "symbol",
+      "meaning": "How much the total Gibbs energy changes when one more mole of an element is added at fixed T and p. Written with an element subscript, for example μA or μNi.",
+      "elsewhere": "In step 06, “μ phase” (MU_PHASE) is the name of a Ni–Nb phase, not a chemical potential."
+    },
+    {
+      "id": "mu_phase",
+      "symbol": "μ phase (MU_PHASE)",
+      "kind": "phase",
+      "meaning": "An ordered Ni–Nb phase with ideal formula Nb₇Ni₆ and five sublattices in ratio 2:2:2:6:1 (13 atoms per formula unit).",
+      "elsewhere": "μ with an element subscript (μA, μNi) is a chemical potential, as in steps 02–04."
+    },
+    {
+      "id": "delta_pref",
+      "symbol": "δ — boundary preference",
+      "kind": "symbol",
+      "meaning": "An energy in J/mol boundary sites. The boundary function is gs = gb + δθ, so a negative δ lowers the energy of B on boundary sites and attracts B to the boundary.",
+      "elsewhere": "In step 06, “δ phase” (DELTA) is the name of a Ni–Nb phase."
+    },
+    {
+      "id": "delta_phase",
+      "symbol": "δ phase (DELTA)",
+      "kind": "phase",
+      "meaning": "An ordered Ni–Nb phase with ideal formula NbNi₃ and three sublattices in ratio 1:1:2 (4 atoms per formula unit).",
+      "elsewhere": "δ on its own is the boundary preference energy of step 04."
+    },
+    {
+      "id": "g_formula",
+      "symbol": "G_formula — per formula unit",
+      "kind": "symbol",
+      "meaning": "Gibbs energy per mole of formula units. One formula unit of the δ phase holds 4 atoms, one of the μ phase 13.",
+      "elsewhere": "G alone is the Gibbs energy of a whole sample in J; GM is per mole of atoms."
+    },
+    {
+      "id": "gm",
+      "symbol": "GM — per mole of atoms",
+      "kind": "symbol",
+      "meaning": "Gibbs energy per mole of atoms, in J/mol (pycalphad’s name). It is already per atom: do not divide it again.",
+      "elsewhere": "G_formula is per mole of formula units."
+    },
+    {
+      "id": "g_b",
+      "symbol": "gb — bulk curve",
+      "kind": "symbol",
+      "meaning": "Molar Gibbs energy of the bulk ALPHA phase, J/mol atoms. The b stands for bulk.",
+      "elsewhere": "gs is the boundary function; the b in gb and xb never means “boundary”."
+    },
+    {
+      "id": "g_s",
+      "symbol": "gs — boundary function",
+      "kind": "symbol",
+      "meaning": "Energy of the boundary sites as a function of their B occupancy θ: gs(θ) = gb(θ) + δθ + η, in J/mol boundary sites (η = 0 in step 04’s main model).",
+      "elsewhere": "gb is the bulk curve from step 02."
+    },
+    {
+      "id": "x_b",
+      "symbol": "xb — bulk fraction",
+      "kind": "symbol",
+      "meaning": "B fraction of the bulk sites. The b stands for bulk.",
+      "elsewhere": "θ is the B fraction of the boundary sites; z is the overall fraction of a whole sample."
+    },
+    {
+      "id": "eta",
+      "symbol": "η — baseline energy",
+      "kind": "symbol",
+      "meaning": "A constant energy of a boundary state, in J/mol boundary sites, added whatever the occupancy. The main step 04 model has η = 0.",
+      "elsewhere": "Only the extension compares a state with η = 2000 J/mol boundary sites."
+    },
+    {
+      "id": "fcc",
+      "symbol": "FCC_A1, BCC_A2, HCP_A3",
+      "kind": "phase",
+      "meaning": "Database names for crystal structures: face-centred cubic, body-centred cubic and hexagonal close-packed. A1, A2 and A3 are the traditional structure codes. Cu and Ni are both FCC."
+    },
+    {
+      "id": "vertex",
+      "symbol": "vertex",
+      "kind": "phase",
+      "meaning": "pycalphad’s word for one coexisting phase in an equilibrium result. Two vertices can carry the same phase name with different compositions."
+    },
+    {
+      "id": "magnetic",
+      "symbol": "magnetic contribution",
+      "kind": "phase",
+      "meaning": "An extra Gibbs-energy term for phases that order magnetically, like ferromagnetic Ni. It is largest near and below the Curie temperature, is not zero above it, and is already part of the total G."
+    },
+    {
+      "id": "curie",
+      "symbol": "Curie temperature",
+      "kind": "phase",
+      "meaning": "The temperature below which a material is ferromagnetic. For pure Ni it is about 630 K; in the alloy model it changes with composition."
+    },
+    {
+      "id": "misc_gap",
+      "symbol": "miscibility gap",
+      "kind": "phase",
+      "meaning": "A composition range in which one phase separates into two regions of the same structure with different compositions, for example two FCC compositions in Cu–Ni at low temperature."
+    },
+    {
+      "id": "lens",
+      "symbol": "liquid/FCC lens",
+      "kind": "phase",
+      "meaning": "The lens-shaped two-phase region between the liquidus (above it, all liquid) and the solidus (below it, all solid) in a diagram like Cu–Ni. Inside it, liquid and FCC coexist."
+    },
+    {
+      "id": "z_overall",
+      "symbol": "z — overall composition",
+      "kind": "symbol",
+      "meaning": "B fraction of the whole sample, whatever phases it splits into. Fixed by the amounts of A and B you put in.",
+      "elsewhere": "x is the B fraction inside one phase or region."
+    },
+    {
+      "id": "nbni_phase",
+      "symbol": "NbNi₈",
+      "kind": "phase",
+      "meaning": "A Ni–Nb phase with an almost fixed composition, one Nb in nine atoms: a line compound."
+    }
+  ],
+  "modules": [
+    {
+      "id": "start",
+      "title": "Start here · energies, terms and CALPHAD",
+      "sources": [
+        "course/foundations/lesson_00.md",
+        "course/primer/worksheet.md"
+      ],
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Why CALPHAD? Imagine heating a sealed metal specimen. Which phases can it contain at equilibrium, and how much of each? CALPHAD (CALculation of PHAse Diagrams) answers this from a Gibbs-energy model for every candidate phase. A database stores those models and their parameters. A calculation program evaluates them and searches for the combination of phases with the lowest total Gibbs energy that still contains the right amount of each element. Loading a database alone does not give you the equilibrium."
+        },
+        {
+          "type": "paragraph",
+          "text": "A phase diagram maps the answer: for each temperature and composition it shows which phases are present. You will read real ones for Cu–Ni and Ni–Nb in steps 05 and 06. Such calculations are only as good as their inputs: model parameters are chosen to match experiments and other calculations, so agreement with those same data is not an independent test. Equilibrium also says nothing about how fast a material gets there."
+        },
+        {
+          "type": "paragraph",
+          "text": "We start with invented models small enough to check with a calculator, then read real Cu–Ni and Ni–Nb results calculated from published databases. You need no software to follow these pages; optional steps for running the calculations yourself are marked. There is no grading and nothing is locked. This page stays available from the Reference button in every step, and the glossary at the end explains the terms used later."
+        },
+        {
+          "type": "paragraph",
+          "text": "Refresher · First, the vocabulary. The system is the matter you choose to study; everything else is its surroundings. A closed system exchanges energy but no matter. An isolated system exchanges neither. A component is an independent chemical constituent; a phase is a region with a distinct thermodynamic description. One component can occur in several phases."
+        },
+        {
+          "type": "paragraph",
+          "text": "Composition tells you the proportions of components inside a phase. Phase amount tells you how much of the sample occupies that phase. Neither automatically equals the area you see in an image."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Quantity",
+            "Definition and units",
+            "Conditions or caution"
+          ],
+          "rows": [
+            [
+              "U",
+              "Internal energy, J; $\\Delta U = q + w_{\\mathrm{on}}$",
+              "Heat q and work are transfers. Work on the system is positive."
+            ],
+            [
+              "H",
+              "Enthalpy $H = U + pV$, J",
+              "$pV$ has units J. $\\Delta H = q_p$ only for a closed sample at constant pressure with only pressure–volume work in mechanical equilibrium."
+            ],
+            [
+              "S",
+              "Entropy, J/K",
+              "For reversible heat transfer at constant $T$: $\\Delta S = q_{\\mathrm{rev}}/T$. Irreversible $q/T$ is not a general entropy formula."
+            ],
+            [
+              "T",
+              "Absolute temperature, K",
+              "Use kelvin in energy expressions."
+            ],
+            [
+              "F (also A)",
+              "Helmholtz energy $F = U - TS$, J",
+              "At fixed $T$, $V$ and component amounts, minimize $F$."
+            ],
+            [
+              "G",
+              "Gibbs energy $G = H - TS = F + pV$, J",
+              "At fixed $T$, $p$ and component amounts, minimize $G$."
+            ],
+            [
+              "n; g",
+              "Amount in mol; $g = G/n$ in J/mol",
+              "Here one mole means one mole of atoms; $h = H/n$ and $s = S/n$."
+            ],
+            [
+              "Equilibrium",
+              "Minimum appropriate potential among allowed states",
+              "Not a rate or a prediction of transformation time."
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "The minimum rules above assume a simple bulk system, with no extra surface, elastic, electrical or magnetic work constraints. For an isolated whole at fixed $U$, $V$ and component amounts, equilibrium instead maximizes $S$. Choose the constraints before the potential."
+        },
+        {
+          "type": "paragraph",
+          "text": "Further reading on the thermodynamic potentials:",
+          "links": [
+            {
+              "label": "MIT · thermodynamic potentials",
+              "href": "https://ocw.mit.edu/courses/3-020-thermodynamics-of-materials-spring-2021/mit3_020s21_l06.pdf"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Try this invented state: $U = 1498$ J, $p = 100000$ Pa, $V = 0.00002\\ \\mathrm{m^3}$, $T = 300$ K, $S = 4$ J/K. Find $pV$, $H$, $TS$, $F$ and $G$. Then check $G - F = pV$. Separately, if $g = -8000$ J/mol, what is $G$ for two moles?"
+        },
+        {
+          "type": "reveal",
+          "label": "Self-check · uncover after trying",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "$pV = 2$ J, $H = 1500$ J, $TS = 1200$ J, $F = 298$ J and $G = 300$ J. $G - F = 2$ J. For two moles, $G = -16000$ J. Compare like amounts or molar quantities when selecting a phase. Negative energies are allowed under a consistent reference; $H$ alone misses the entropy contribution."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Two more, on heat, work and entropy. (a) A sample receives 80 J of heat and does 10 J of work on its surroundings. Find $\\Delta U$. Must another process with the same $\\Delta U$ involve the same heat? (b) A sample receives 900 J of heat reversibly at a constant 300 K. Find $\\Delta S$, and give the units of $TS$. Can the sample's entropy ever decrease?"
+        },
+        {
+          "type": "reveal",
+          "label": "Self-check · heat, work and entropy",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "(a) The work on the sample is −10 J, so $\\Delta U = 80 - 10 = 70$ J. Another process between the same two states has the same $\\Delta U$, but its heat and work can differ as long as their sum is 70 J: heat and work belong to the process, $U$ to the state."
+            },
+            {
+              "type": "paragraph",
+              "text": "(b) $\\Delta S = 900/300 = 3$ J/K. $TS$ has units K × J/K = J, an energy. A sample's entropy can decrease if its surroundings gain at least as much; the second law constrains the isolated whole, not the sample alone."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Glossary · Terms used in later steps. Come back whenever one is unfamiliar."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Term",
+            "Meaning"
+          ],
+          "rows": [
+            [
+              "Phase amount fraction f",
+              "Share of the sample’s atoms that sit in one phase. The fractions of all phases add up to one."
+            ],
+            [
+              "Composition x",
+              "Fraction of atoms of one element inside a phase, for example x(Ni). Not the same as phase amount."
+            ],
+            [
+              "Overall composition z",
+              "The composition of the whole sample, counted over all its phases. In a two-phase sample it lies between the two phase compositions."
+            ],
+            [
+              "Amount basis",
+              "What “one mole” counts. In this course it is usually one mole of atoms; step 06 also uses moles of formula units. Energies and amounts can only be compared or added on the same basis."
+            ],
+            [
+              "Molar Gibbs energy g",
+              "Gibbs energy per mole of atoms, in J/mol. Compare phases only on the same amount basis."
+            ],
+            [
+              "SOLID, LIQUID, ALPHA, BETA",
+              "Names of the invented phases in steps 01–04. ALPHA and BETA are ideal solid solutions of A and B (step 03 part B adds a regular-solution term to ALPHA). Step 03 part C reuses SOLID and LIQUID as ideal mixtures of A and B."
+            ],
+            [
+              "Ideal mixing",
+              "Atoms mix randomly with no interaction energy. The only mixing contribution is $RT[(1-x)\\ln(1-x) + x\\ln x]$, which is negative."
+            ],
+            [
+              "Regular solution, Ω",
+              "Ideal mixing plus an interaction term $\\Omega\\,x(1-x)$. A positive Ω makes mixing costly; below a critical temperature, $T_c = \\Omega/(2R)$ for this model, one phase can split into two compositions (step 03 part B)."
+            ],
+            [
+              "Chemical potential {{mu_chem|μ}}",
+              "How much the total Gibbs energy changes when one more mole of an element is added at fixed T, p and fixed amounts of the other elements."
+            ],
+            [
+              "Tangent construction",
+              "The tangent to $g(x)$ at a composition meets $x = 0$ at $\\mu_{\\mathrm A}$ and $x = 1$ at $\\mu_{\\mathrm B}$."
+            ],
+            [
+              "Exchange slope",
+              "$\\mu_{\\mathrm B} - \\mu_{\\mathrm A}$, the slope of $g(x)$: the Gibbs-energy change when one B atom replaces one A atom on a fixed number of sites."
+            ],
+            [
+              "Common tangent",
+              "One straight line touching two curves, or one curve at two points. The touching points are the compositions of two coexisting phases, which then share the same $\\mu_{\\mathrm A}$ and $\\mu_{\\mathrm B}$."
+            ],
+            [
+              "Lever rule",
+              "The atom balance $f_\\alpha x_\\alpha + f_\\beta x_\\beta = z$ solved for the amounts: each phase’s amount is the lever arm on the other side of z divided by the whole tie line."
+            ],
+            [
+              "Tie line",
+              "The horizontal line in a temperature–composition diagram that joins the compositions of two coexisting phases at one temperature."
+            ],
+            [
+              "Miscibility gap",
+              "A region where one phase is more stable as two compositions than as one (step 03 part B; the Cu–Ni dome in step 05)."
+            ],
+            [
+              "Liquidus, solidus, lens",
+              "In a melting range the liquidus is the curve of liquid compositions against temperature (above it, all liquid) and the solidus the curve of solid compositions (below it, all solid); between them liquid and solid coexist. Two ideal phases give a lens shape (step 03 part C)."
+            ],
+            [
+              "Eutectic",
+              "A temperature and composition where one liquid coexists with two solids. On cooling through it the liquid turns into the two solids at that one temperature."
+            ],
+            [
+              "Three phases at one temperature",
+              "In a binary at fixed pressure, three phases can coexist only at single temperatures (Gibbs’ phase rule: with two components at fixed pressure, three coexisting phases leave neither temperature nor phase compositions free), so they show up as horizontal lines in a temperature–composition diagram."
+            ],
+            [
+              "Boundary occupancy θ",
+              "Fraction of the boundary sites that hold B atoms."
+            ],
+            [
+              "Boundary excess",
+              "How many more B atoms the boundary holds than bulk material filling the same number of sites would: positive for enrichment, negative for depletion (step 04)."
+            ],
+            [
+              "Open system, reservoir",
+              "The sample exchanges atoms with a large supply whose composition and chemical potentials stay fixed."
+            ],
+            [
+              "Closed system",
+              "The total amount of each element is fixed; atoms can only move between regions of the sample."
+            ],
+            [
+              "Grand potential",
+              "The energy an open system minimises at fixed T and p: Gibbs energy minus $\\mu_i n_i$ for each exchanged element $i$. Textbooks often start from fixed volume instead and write $F - \\sum_i \\mu_i n_i$; the idea is the same."
+            ],
+            [
+              "Open objective φ",
+              "In step 04, the grand potential per mole of boundary sites. In the tangent picture it is the vertical gap between the boundary curve and the reservoir tangent."
+            ],
+            [
+              "Sublattice",
+              "A set of crystal sites with its own allowed occupants, for example one set for metal atoms and one for vacancies."
+            ],
+            [
+              "Endmember",
+              "A model building block with exactly one kind of occupant on each sublattice. It need not be a stable compound. In a phase with a single sublattice (steps 02–04) the endmembers are simply pure A and pure B."
+            ],
+            [
+              "Formula unit",
+              "One copy of the sites a sublattice model describes: 4 for δ (1:1:2) and 13 for μ (2:2:2:6:1) in step 06. Dividing an energy per formula unit by the atoms per formula unit gives J/mol of atoms."
+            ],
+            [
+              "Compound energy formalism (CEF)",
+              "The sublattice model used for phases with several sublattices, such as ordered phases or FCC with its interstitial sites: the Gibbs energy is built from endmember energies plus mixing within each sublattice."
+            ],
+            [
+              "Ordered phase, line compound",
+              "In an ordered phase different sublattices prefer different elements (δ, μ, B2). A line compound has an almost fixed composition, so its region in a diagram is a thin line (NbNi₈ in step 06)."
+            ],
+            [
+              "Vacancy (Va)",
+              "An empty site. Sites that hold only vacancies add no atoms when an energy is converted to J/mol of atoms."
+            ],
+            [
+              "SER",
+              "Standard element reference: each element’s enthalpy is measured from its stable form at 298.15 K and 1 bar, so all phases share one reference. It fixes the zero of enthalpy, not of the Gibbs energy."
+            ],
+            [
+              "Assessment, TDB",
+              "Choosing a model’s parameters to match experiments and other calculations. The result is stored in a TDB database file."
+            ],
+            [
+              "pycalphad",
+              "Open-source Python package for CALPHAD calculations: Database reads a TDB file, calculate evaluates phases at given conditions, equilibrium finds the stable combination."
+            ],
+            [
+              "NP, X, GM",
+              "pycalphad results: NP is a phase’s amount fraction, X(NI) the Ni fraction inside that phase, GM the Gibbs energy per mole of atoms."
+            ],
+            [
+              "pdens",
+              "How densely pycalphad samples trial compositions before refining them. A numerical setting, not a physical quantity."
+            ],
+            [
+              "FCC_A1, BCC_A2, HCP_A3",
+              "Database names for face-centred cubic, body-centred cubic and hexagonal close-packed crystal structures."
+            ],
+            [
+              "BCC_B2",
+              "The ordered form of BCC: cube corners and cube centres form two sublattices, each preferring a different element. Allowed in the Ni–Nb calculation of step 06, but never stable there."
+            ],
+            [
+              "Vertex",
+              "pycalphad’s word for one coexisting phase in a result; two vertices can share a phase name."
+            ],
+            [
+              "Magnetic contribution",
+              "An extra Gibbs-energy term for magnetically ordering phases such as Ni, largest near and below the Curie temperature; it does not drop to zero above it."
+            ],
+            [
+              "Curie temperature",
+              "The temperature above which a ferromagnet such as Ni loses its magnetic order."
+            ],
+            [
+              "Vacancy sublattice in FCC",
+              "Many databases give FCC a second set of interstitial sites so that elements like C or N can be added later. In Cu–Ni those sites are all empty."
+            ],
+            [
+              "Pressure units",
+              "100000 Pa = 1 bar, used in steps 01–04. 101325 Pa = 1 atm, used for the real alloys. The difference hardly changes these condensed-phase energies."
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Some letters have more than one meaning. Marked symbols in later steps (dotted underline) show the meaning that applies there when you hover over or tap them."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Symbol",
+            "Meanings in this course"
+          ],
+          "rows": [
+            [
+              "μ",
+              "{{mu_chem|μ_A}}, {{mu_chem|μ_Ni}}: chemical potential, always with an element subscript (steps 02–04). {{mu_phase|μ phase}} (MU_PHASE): a Ni–Nb phase (step 06)."
+            ],
+            [
+              "δ",
+              "{{delta_pref|δ}} on its own: the boundary preference energy (step 04). {{delta_phase|δ phase}} (DELTA): a Ni–Nb phase (step 06)."
+            ],
+            [
+              "G, g, GM",
+              "G: Gibbs energy of the whole sample, in J. g and {{gm|GM}}: per mole of atoms. {{g_formula|G_formula}}: per mole of formula units (step 06)."
+            ],
+            [
+              "b, s subscripts",
+              "{{g_b|g_b}} and {{x_b|x_b}} belong to the bulk (b = bulk, not boundary). {{g_s|g_s}} belongs to the boundary sites."
+            ],
+            [
+              "x, z",
+              "x: B fraction inside one phase or region. z: overall B fraction of the whole sample."
+            ],
+            [
+              "f, NP",
+              "Both are phase amount fractions; NP is pycalphad’s name for it."
+            ]
+          ]
+        }
+      ],
+      "next": "unary"
+    },
+    {
+      "id": "unary",
+      "title": "Unary · choose between two phases",
+      "sources": [
+        "course/primer/worksheet.md",
+        "course/primer/answers.md"
+      ],
+      "next": "binary",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Problem · Which phase is favoured when we heat one invented component A? Use a closed bulk sample of one mole of A atoms at $p = 100000$ Pa. Only SOLID and LIQUID are allowed, over 800–1200 K. There are no interfaces, pressure dependence or kinetics. The numbers are invented, not taken from a real element."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Phase",
+            "h, J/mol atoms",
+            "s, J/(mol atoms K)"
+          ],
+          "rows": [
+            [
+              "SOLID",
+              "1000",
+              "10"
+            ],
+            [
+              "LIQUID",
+              "7000",
+              "16"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Approach · At fixed $T$ and $p$, compare $g = h - Ts$ on the same molar reference and [[glossary#amount-basis|amount basis]]. Calculate each branch before choosing the lower one. Which line should fall faster with temperature, and why? Constant within-phase $h$ and $s$ imply zero heat capacity within that phase; this simplification is restricted to the stated domain."
+        },
+        {
+          "type": "paragraph",
+          "text": "Attempt · Calculate both energies at 900, 1000 and 1100 K. Solve their equality for the crossing temperature. Let $f_{\\mathrm L}$ be the liquid phase amount fraction, with $f_{\\mathrm S} = 1 - f_{\\mathrm L}$. At 900 K, evaluate $g_{\\mathrm{mix}} = (1 - f_{\\mathrm L})\\,g_{\\mathrm S} + f_{\\mathrm L}\\,g_{\\mathrm L}$ for $f_{\\mathrm L} = 0$, 0.5 and 1. Why must $f_{\\mathrm L}$ lie between zero and one?"
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Use kelvin. $Ts$ has units J/mol atoms, so subtract it from $h$. A negative $g$ can still be the lower energy."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Set $1000 - 10T = 7000 - 16T$ for equality. For mixtures, vary the allowed phase fractions, keeping model parameters and total amount fixed."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Worked answer",
+          "blocks": [
+            {
+              "type": "table",
+              "headers": [
+                "T, K",
+                "gS, J/mol atoms",
+                "gL, J/mol atoms",
+                "Lower branch"
+              ],
+              "rows": [
+                [
+                  "900",
+                  "−8000",
+                  "−7400",
+                  "SOLID"
+                ],
+                [
+                  "1000",
+                  "−9000",
+                  "−9000",
+                  "Equal energies"
+                ],
+                [
+                  "1100",
+                  "−10000",
+                  "−10600",
+                  "LIQUID"
+                ]
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "The crossing is 1000 K. At 900 K, $g_{\\mathrm{mix}} = -8000 + 600\\,f_{\\mathrm L}$ J/mol atoms: 0, 0.5 and 1 give −8000, −7700 and −7400. The constrained minimum is all solid. A negative fraction is inadmissible even if its computed energy is lower. At equality, every balanced nonnegative split has the same energy, so temperature and pressure do not determine unique phase fractions."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Explore · After your attempt, open the lab below. Drag through the temperatures, compare both branches with the lower one, and check your 900, 1000 and 1100 K values. The [[unary/lab/fractions|phase-fraction chart]] further down draws your $g_{\\mathrm{mix}}$ line at the selected temperature. At 1000 K the two energies are equal, so every SOLID/LIQUID split is a minimum; the program simply returns one of them. The Data tab lists the same states solved by two programs, pycalphad and a plain SciPy minimiser."
+        },
+        {
+          "type": "paragraph",
+          "text": "Interpret and recover · If your phase choice differs, check units, temperature and both branch values before anything else. In pycalphad terms ([[start#why-calphad|the chain sketched in step 00]]), Database reads the models, calculate evaluates any phase, even an unfavoured one, and equilibrium searches the allowed phases for the minimum that respects the amounts. Excluding LIQUID at 1100 K asks a different, restricted question; it does not give the unrestricted minimum."
+        },
+        {
+          "type": "paragraph",
+          "text": "More practice. Calculate both energies at 1050 K and at 975 K and say which phase is lower. Then find the mistake in each of two reports. Report 1: “At 900 K the solid has $g = -8$ J/mol.” Report 2: “At 1000 K the equilibrium is $f_{\\mathrm S} = 0.8$ and $f_{\\mathrm L} = 0.4$.”"
+        },
+        {
+          "type": "reveal",
+          "label": "Answers · 1050 K and 975 K",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "At 1050 K, $g_{\\mathrm S} = -9500$ and $g_{\\mathrm L} = -9800$ J/mol atoms, so liquid is lower. At 975 K they are −8750 and −8600 J/mol atoms, so solid is lower."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Answers · the two reports",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Report 1 mixes units: the solid has −8000 J/mol, which is −8 kJ/mol, not −8 J/mol. Report 2 breaks the balance: $f_{\\mathrm S}$ and $f_{\\mathrm L}$ must add up to one. At 1000 K any split with $f_{\\mathrm S} + f_{\\mathrm L} = 1$ is an equally good minimum, but 0.8 and 0.4 add up to 1.2. A low energy is only meaningful for a state that respects the amounts and the bounds."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Next · Composition brings another constraint. Invented lines like these cannot predict a real alloy; that needs assessed inputs, which arrive in steps 05 and 06."
+        }
+      ]
+    },
+    {
+      "id": "binary",
+      "title": "Binary · composition and chemical potential",
+      "sources": [
+        "course/primer_day2/worksheet.md",
+        "course/primer_day2/answers.md"
+      ],
+      "next": "twophase",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Problem · How does adding a second invented component change the energy question? We allow only one phase, an ideal solid solution called ALPHA, at $T = 1000$ K and $p = 100000$ Pa, per mole of A and B atoms. The model is invented, and because only ALPHA is allowed this is not a full equilibrium calculation."
+        },
+        {
+          "type": "paragraph",
+          "text": "Define $x = n_{\\mathrm B}/(n_{\\mathrm A} + n_{\\mathrm B})$, the B atom mole fraction within ALPHA; A has fraction $1 - x$. A [[glossary#phase-amount-fraction-f|phase amount fraction]] describes how much sample is in a phase, like $f_{\\mathrm L}$ in [[unary#attempt|step 01]]. For two balanced trial regions, $z = f_1 x_1 + f_2 x_2$ with $f_1 + f_2 = 1$. Balance alone does not establish coexistence, and $x$ is not an image-area fraction (see the [[start#refresher|step 00 refresher]]). Here $z$ is the [[glossary#overall-composition-z|overall composition]] of the whole sample."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Input",
+            "Value and basis"
+          ],
+          "rows": [
+            [
+              "$g_{\\mathrm A}$; $g_{\\mathrm B}$",
+              "−9000; +3000 J/mol atoms"
+            ],
+            [
+              "$h_{\\mathrm A}$, $h_{\\mathrm B}$; $s_{\\mathrm A}$, $s_{\\mathrm B}$",
+              "1000, 13000 J/mol atoms; 10, 10 J/(mol atoms K), so $g_{\\mathrm A} = h_{\\mathrm A} - T s_{\\mathrm A} = -9000$ and $g_{\\mathrm B} = +3000$ at 1000 K"
+            ],
+            [
+              "$R$; $RT$",
+              "8.3145 J/(mol K); 8314.5 J/mol at 1000 K"
+            ],
+            [
+              "Ideal mixing $q(x)$",
+              "$(1-x)\\ln(1-x) + x\\ln x$; natural logarithms"
+            ],
+            [
+              "Molar curve $g_{\\mathrm b}(x)$",
+              "$-9000 + 12000\\,x + 8314.5\\,q(x)$, J/mol atoms"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "At the pure ends use the limit $0 \\ln 0 = 0$ for the energy; never evaluate $\\ln 0$. Derivatives and chemical potentials are undefined there, so the lab covers $x = 0.01$ to 0.99 in steps of 0.01."
+        },
+        {
+          "type": "paragraph",
+          "text": "A chemical potential {{mu_chem|μ_i}} is the change of total $G$ on adding component $i$ at fixed $T$, $p$ and the other component amount. At fixed total occupied sites, replacing A by B uses $\\mu_{\\mathrm B} - \\mu_{\\mathrm A}$. For a differentiable molar curve {{g_b|g_b}}: $g_{\\mathrm b}' = \\mu_{\\mathrm B} - \\mu_{\\mathrm A}$, $\\mu_{\\mathrm A} = g_{\\mathrm b} - x\\,g_{\\mathrm b}'$ and $\\mu_{\\mathrm B} = g_{\\mathrm b} + (1-x)\\,g_{\\mathrm b}'$. Here $\\mu_{\\mathrm A} = -9000 + 8314.5\\ln(1-x)$ and $\\mu_{\\mathrm B} = 3000 + 8314.5\\ln x$."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tangent and chemical potentials · Why are the tangent’s ends the chemical potentials? The tangent at $x_0$ is the line $y = g_{\\mathrm b}(x_0) + g_{\\mathrm b}'(x_0)\\,(x - x_0)$. At $x = 0$ it gives $g_{\\mathrm b} - x_0\\,g_{\\mathrm b}' = \\mu_{\\mathrm A}$; at $x = 1$ it gives $g_{\\mathrm b} + (1 - x_0)\\,g_{\\mathrm b}' = \\mu_{\\mathrm B}$. So both chemical potentials can be read where the tangent meets the two edges of the diagram. The same picture returns in step 03 for [[twophase#approach|two phases]] and in step 04 for [[boundary#where-the-odds-formula-comes-from|a grain boundary]]."
+        },
+        {
+          "type": "paragraph",
+          "text": "Approach · Separate the reference term from the mixing term. Keep atom basis and natural logarithms consistent. Ideal enthalpy of mixing is zero, but ideal mixing Gibbs energy is negative inside the domain; total enthalpy and total energy need not vanish."
+        },
+        {
+          "type": "paragraph",
+          "text": "Attempt · At $x = 0.20$, use $q = -0.50040242$ to calculate the reference, mixing and total molar energies. Use $\\ln(0.20/0.80) = -1.38629436$ in $g_{\\mathrm b}' = 12000 + 8314.5\\ln[x/(1-x)]$ to find the [[glossary#exchange-slope|exchange slope]] and its sign. For 2 mol of atoms at $z = 0.20$, find the A/B amounts. The slope changes sign somewhere between the two pure ends: does that mean two phases form?"
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "First multiply each [[glossary#endmember|endmember]] energy (here pure A and pure B) by its atom fraction; then add $RTq$. For amounts, multiply total moles by the composition."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Both $\\mu$ values matter because a B atom entering a filled site displaces an A atom. A derivative is a local exchange comparison; it has not compared all possible phase combinations. [[twophase#approach|Step 03]] makes that comparison."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Worked answer",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "The reference is −6600 J/mol atoms, mixing is approximately −4160.596 J/mol atoms and $g_{\\mathrm b} \\approx$ −10760.596 J/mol atoms. The exchange slope is approximately +473.656 J/mol atoms. The two-mole sample contains 0.40 mol B and 1.60 mol A. Only ALPHA was allowed, so no two-phase coexistence follows from a derivative sign change."
+            },
+            {
+              "type": "paragraph",
+              "text": "Where the slope changes sign: between $x = 0.19$ (about −56 J/mol atoms) and $x = 0.20$ (about +474). That is the minimum of this one curve. It is not the composition the sample takes: a closed sample’s composition is fixed by its amounts of A and B, and with only ALPHA allowed it stays homogeneous at that composition."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Explore · After your attempt, open the lab. At $x = 0.50$ check the slope against 12000 J/mol atoms; at $x = 0.20$ compare your rounded answer. The chart shows the total curve; the Reference line and Mixing term buttons add the two parts. The [[binary/lab/slope|exchange-slope chart]] further down shows where the slope changes sign. The tangent at your composition meets the left edge ($x = 0$) at $\\mu_{\\mathrm A}$ and the right edge ($x = 1$) at $\\mu_{\\mathrm B}$."
+        },
+        {
+          "type": "paragraph",
+          "text": "Interpret and recover · If you used only the weighted endmember energies, add the missing mixing term. Convert kJ/mol to J/mol before judging differences. For example, at $x = 0.10$ the curve gives $g_{\\mathrm b} = -10502.902$ J/mol; a report of −10.50 kJ/mol differs by about 2.902 J/mol, which is just rounding to 0.01 kJ/mol. For a balanced trial at $z = 0.20$, $x_1 = 0.10$ and $x_2 = 0.50$ give $f_1 = 0.75$ and $f_2 = 0.25$; that checks amounts without proving equilibrium."
+        },
+        {
+          "type": "paragraph",
+          "text": "Next · With one phase, the composition is fixed by the amounts. [[twophase|Step 03]] allows a second phase and asks when the sample splits in two."
+        }
+      ]
+    },
+    {
+      "id": "twophase",
+      "title": "Two phases · common tangent and lever rule",
+      "sources": [
+        "course/foundations/lesson_05_two_phase.md",
+        "course/foundations/lesson_06_chemical_potential.md",
+        "course/foundations/lesson_07_regular_solution.md"
+      ],
+      "next": "boundary",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Problem · Why does a sample sometimes split into two phases, and how much of each forms? Step 02 allowed only one phase. Now allow two invented phases, ALPHA and BETA, at 1000 K and 100000 Pa, per mole of atoms. The sample has a fixed overall B fraction {{z_overall|z}}."
+        },
+        {
+          "type": "paragraph",
+          "text": "Heads-up: this step has three parts. Part A, from the problem to its worked answer, compares two different phases. [[twophase#part-b-one-phase-two-compositions|Part B]] splits one phase into two compositions, and [[twophase#part-c-melting-and-the-lens|part C]] melts a solid into a liquid. The lab has a tab for each part."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Input",
+            "Value and basis"
+          ],
+          "rows": [
+            [
+              "ALPHA, $g_\\alpha(x)$",
+              "$-9000 + 12000\\,x + 8314.5\\,q(x)$, J/mol atoms (the [[binary#problem|step 02 curve]])"
+            ],
+            [
+              "BETA, $g_\\beta(x)$",
+              "$3000 - 12000\\,x + 8314.5\\,q(x)$, J/mol atoms"
+            ],
+            [
+              "$q(x)$",
+              "$(1-x)\\ln(1-x) + x\\ln x$, as in [[binary#problem|step 02]]"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "A split into two regions is allowed only if it keeps the amounts: $f_\\alpha + f_\\beta = 1$ and $f_\\alpha x_\\alpha + f_\\beta x_\\beta = z$, with both fractions between 0 and 1. Solving these two balances for $f_\\beta = (z - x_\\alpha)/(x_\\beta - x_\\alpha)$ is the [[glossary#lever-rule|lever rule]]; it is just the balance, not yet an equilibrium. The figure after the worked answer draws it as two lever arms. The split’s energy per mole of atoms is $f_\\alpha\\,g_\\alpha(x_\\alpha) + f_\\beta\\,g_\\beta(x_\\beta)$."
+        },
+        {
+          "type": "paragraph",
+          "text": "Approach · Compare the homogeneous states with splits at the same $z$. A split’s energy lies on the straight line joining its two points $(x_\\alpha, g_\\alpha)$ and $(x_\\beta, g_\\beta)$, at the overall composition $z$. The lowest such line touches both curves: a common tangent. Touching means it is one line for both phases, so it meets $x = 0$ and $x = 1$ at the same values, $\\mu_{\\mathrm A}$ and $\\mu_{\\mathrm B}$ (as in [[binary#tangent-and-chemical-potentials|step 02]]); therefore {{mu_chem|μ_A}} and {{mu_chem|μ_B}} are the same in both phases and atoms gain nothing by moving between them. That is the condition for two phases to coexist."
+        },
+        {
+          "type": "paragraph",
+          "text": "Attempt · Work at $z = 0.5$:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Homogeneous ALPHA at $x = 0.5$: find $g_\\alpha$ using $q(0.5) = -0.69314718$.",
+            "A split with $x_\\alpha = 0.2$ and $x_\\beta = 0.8$: find $f_\\alpha$ and $f_\\beta$ from the balance, then the split energy. Use $g_\\alpha(0.2) = g_\\beta(0.8) =$ −10760.596 J/mol atoms. Which state is lower, and by how much?",
+            "With the same endpoints, find $f_\\alpha$ and $f_\\beta$ at $z = 0.35$. Is $z = 0.1$ possible with these endpoints?",
+            "The best split uses $x_\\alpha \\approx$ 0.19104 and $x_\\beta \\approx$ 0.80896, with energy −10762.730 J/mol atoms. Why is it lower than your 0.2/0.8 split, and what are $\\mu_{\\mathrm A}$ and $\\mu_{\\mathrm B}$ there?"
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Balance first: $f_\\beta = (z - x_\\alpha)/(x_\\beta - x_\\alpha)$ and $f_\\alpha = 1 - f_\\beta$. Then multiply each region’s energy by its fraction and add."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "On a common tangent both touching points have the same slope. Here $g_\\alpha$ and $g_\\beta$ are mirror images, so the tangent is horizontal and meets $x = 0$ and $x = 1$ at the same energy."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Worked answer",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Homogeneous ALPHA at 0.5: $-9000 + 6000 + 8314.5 \\times (-0.69314718) =$ −8763.172 J/mol atoms. The 0.2/0.8 split has $f_\\alpha = f_\\beta = 0.5$ and energy −10760.596 J/mol atoms, about 1997 J/mol lower, so splitting wins. At $z = 0.35$, $f_\\beta = (0.35 - 0.2)/0.6 = 0.25$ and $f_\\alpha = 0.75$. At $z = 0.1$ the balance gives $f_\\beta = -1/6$, which is impossible: these endpoints cannot make that sample."
+            },
+            {
+              "type": "paragraph",
+              "text": "Moving the endpoints to the touching points 0.19104/0.80896 lowers the line to −10762.730 J/mol atoms, about 2.13 J/mol below the 0.2/0.8 split. Because the tangent is horizontal, $\\mu_{\\mathrm A} = \\mu_{\\mathrm B} =$ −10762.730 J/mol in both phases. Every $z$ between 0.19104 and 0.80896 splits into these same two compositions; only the amounts change, by the lever rule."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Part B: one phase, two compositions · The same idea works with only one phase. In a [[glossary#regular-solution|regular-solution model]] ALPHA gets an extra mixing term $\\Omega\\,x(1-x)$, with $\\Omega = 20000$ J/mol, that penalises mixing. Below about 1203 K the mixing part of $g(x)$ ($g$ minus its straight reference line, [[binary/lab/tangent|as in the step 02 lab]]) develops a hump; a common tangent then touches the curve twice, and the sample separates into two ALPHA regions with different compositions. This is called a {{misc_gap|miscibility gap}}. Above that temperature the hump disappears and one homogeneous phase is stable. (The full $g(x)$ only bends a little, because the straight $12000\\,x$ reference term dominates; the lab therefore shows the mixing part, which has the same touching points; its Full g(x) switch shows the whole curve.)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Predict before you open [[twophase/lab/part-b|part B of the lab]]: as the temperature rises towards 1203 K, do the two compositions move closer together or further apart?"
+        },
+        {
+          "type": "reveal",
+          "label": "Check · the gap closes",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "They move together. At 600 K they are 0.021 and 0.979; they meet at $x = 0.5$ at $T_{\\mathrm c} = \\Omega/(2R) \\approx 1203$ K. Above $T_{\\mathrm c}$ one homogeneous phase is stable."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Part C: melting and the lens · Part A compared two invented phases at one temperature. Now let a solid and a liquid both change with temperature, each an ideal solution of A and B. Component A is the one from [[unary#problem|step 01]]: it melts at 1000 K. Component B is invented: solid $h = 2000$, $s = 10$; liquid $h = 20000$, $s = 20$ (J/mol atoms and J/(mol atoms K)), so it melts at 1800 K. Below 1000 K the solid curve lies lower at every composition; above 1800 K the liquid does. In between the two curves cross, and the common tangent touches the liquid on the A-rich side and the solid on the B-rich side: the solid is richer in the component with the higher melting point. Collecting the two touching points at every temperature draws a lens. Its upper edge is the liquidus (above it, all liquid) and its lower edge the solidus (below it, all solid). [[twophase/lab/part-c|Part C of the lab]] draws it as you change the temperature."
+        },
+        {
+          "type": "paragraph",
+          "text": "Reading a phase diagram · Plot the two touching compositions at every temperature against $T$ and you have a phase diagram. Outside the curve one phase is stable; inside it the sample splits. At a given $T$ and $z$ inside, the horizontal line between the two boundary compositions is a [[glossary#tie-line|tie line]]: its ends give the compositions of the two regions, and the [[glossary#lever-rule|lever rule]] gives their amounts."
+        },
+        {
+          "type": "paragraph",
+          "text": "Real diagrams combine several such regions. In the [[cuni#reading-the-diagram|Cu–Ni diagram of step 05]] you will see both kinds: a low-temperature miscibility gap with two FCC compositions, like part B, and at high temperature a {{lens|liquid/FCC lens}} like part C. Where three phases meet, for example one liquid and two solids at a [[glossary#eutectic|eutectic]], they can coexist only at one temperature; [[ninb#reading-the-diagram|step 06]] shows two."
+        },
+        {
+          "type": "paragraph",
+          "text": "Explore · After your attempt, open the lab; it has a tab for each part. Part A: move $z$ and watch where the lowest energy lies: on the ALPHA curve, on the common tangent (a split), or on the BETA curve. Part B: move the temperature and watch the two compositions draw the gap in the phase diagram. Part C: do the same for melting and watch the lens appear between 1000 and 1800 K."
+        },
+        {
+          "type": "paragraph",
+          "text": "Next · Step 04 returns to a single bulk phase and adds a grain boundary. Step 05 reads a real Cu–Ni diagram with the ideas from this step."
+        }
+      ]
+    },
+    {
+      "id": "boundary",
+      "title": "Boundary · exchange or finite inventory?",
+      "sources": [
+        "course/primer_day2/worksheet.md",
+        "course/primer_day2/answers.md"
+      ],
+      "next": "cuni",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Problem · Will an invented boundary enrich in B, and where do those atoms come from? Keep the invented ALPHA bulk from [[binary#problem|step 02]] at 1000 K and 100000 Pa. The cell is periodic, like one repeating unit of a polycrystal, so it contains two equivalent boundaries. Each boundary has 100 sites and 20 nm² of area. The bulk has 8000 sites; the whole cell has 8200 sites and 40 nm² of boundary. The boundary is invented, not a real grain boundary of any element."
+        },
+        {
+          "type": "paragraph",
+          "text": "Heads-up: here {{delta_pref|δ}} is the boundary preference, an energy. In step 06 the same letter names a Ni–Nb phase (the δ phase). Marked symbols show their meaning on hover or tap."
+        },
+        {
+          "type": "paragraph",
+          "text": "Occupancy $\\theta$ is the B fraction of boundary sites; {{x_b|x_b}} is the B fraction of bulk sites. Every site holds A or B, so adding B replaces A, as in the [[glossary#exchange-slope|exchange slope]] of step 02. Counts are averages and need not be whole numbers. Convert counts to moles with $N_{\\mathrm{Av}} = 6.02214076\\times10^{23}\\ \\mathrm{mol^{-1}}$ before multiplying by a J/mol energy."
+        },
+        {
+          "type": "paragraph",
+          "text": "Two experiments. In the open one, the cell sits against a large reservoir with fixed $x_{\\mathrm b}$, {{mu_chem|μ_A}} and {{mu_chem|μ_B}}: atoms can enter or leave, and the open cell minimises its [[glossary#grand-potential|grand potential]] (the “open to a reservoir” sketch in the [[start#refresher|step 00 refresher]]). In the closed one nothing enters or leaves: the A and B totals are fixed, B that moves to the boundaries must come from the bulk, and the cell minimises its total $G$. Because the two minimise different energies on different bases, never rank one against the other."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Quantity",
+            "Definition and basis"
+          ],
+          "rows": [
+            [
+              "Bulk B; boundary B",
+              "$8000\\,x_{\\mathrm b}$; $200\\,\\theta$ expected atoms"
+            ],
+            [
+              "Boundary function {{g_s|g_s}}$(\\theta)$",
+              "$g_{\\mathrm b}(\\theta) + \\delta\\,\\theta + \\eta$, with the preference {{delta_pref|δ}} $= -5000$ J/mol boundary sites and the baseline {{eta|η}} $= 0$ in this step"
+            ],
+            [
+              "Equal-site B [[glossary#boundary-excess|excess]]",
+              "$200(\\theta - x_{\\mathrm b})$ across both boundaries; $5(\\theta - x_{\\mathrm b})$ atom/nm²"
+            ],
+            [
+              "Excess in mol/m²",
+              "$5(\\theta - x_{\\mathrm b}) \\times 10^{18} / N_{\\mathrm{Av}}$"
+            ],
+            [
+              "Open objective $\\varphi$",
+              "$g_{\\mathrm s}(\\theta) - (1-\\theta)\\,\\mu_{\\mathrm A} - \\theta\\,\\mu_{\\mathrm B}$, J/mol boundary sites: the grand potential per boundary site"
+            ],
+            [
+              "Closed $G_{\\mathrm{cell}}$",
+              "$[8000\\,g_{\\mathrm b}(x_{\\mathrm b}) + 200\\,g_{\\mathrm s}(\\theta)]/N_{\\mathrm{Av}}$, J"
+            ],
+            [
+              "Closed molar normalization",
+              "$G_{\\mathrm{cell}}\\,N_{\\mathrm{Av}}/8200$, J/mol all occupied cell sites"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "The excess compares the boundary with bulk material filling the same number of sites. A negative excess means depletion relative to that reference, not a negative B count. Other excess conventions exist; this one is chosen for simple counting. Per boundary the excess is $100(\\theta - x_{\\mathrm b})$ B atoms on 20 nm², that is $5(\\theta - x_{\\mathrm b})$ atoms per nm²; dividing by $N_{\\mathrm{Av}}$ and converting nm² to m² gives mol/m²."
+        },
+        {
+          "type": "paragraph",
+          "text": "Approach · Predict enrichment from the negative preference, then count atoms before energy. In open equilibrium the odds of B on a boundary site obey $\\frac{\\theta}{1-\\theta} = \\frac{x_{\\mathrm b}}{1-x_{\\mathrm b}}\\exp(5000/8314.5)$, with factor 1.82459687 supplied. For a closed cell initially at $x_0 = 0.10$ and $\\theta_0 = 0.25$, $B_{\\mathrm{tot}} = 8000\\,x_0 + 200\\,\\theta_0$ and $x_{\\mathrm b}(\\theta) = (B_{\\mathrm{tot}} - 200\\,\\theta)/8000$."
+        },
+        {
+          "type": "paragraph",
+          "text": "Where the odds formula comes from · At the open minimum, moving one more B onto a boundary site (and one A off it) must gain nothing against the reservoir, so $d\\varphi/d\\theta = 0$, which means $g_{\\mathrm s}'(\\theta) = \\mu_{\\mathrm B} - \\mu_{\\mathrm A}$. With $g_{\\mathrm s}'(\\theta) = g_{\\mathrm b}'(\\theta) + \\delta$, where {{delta_pref|δ}} is the boundary preference, the reservoir value $\\mu_{\\mathrm B} - \\mu_{\\mathrm A} = g_{\\mathrm b}'(x_{\\mathrm b})$, and $g_{\\mathrm b}'(x) = 12000 + RT\\ln[x/(1-x)]$ from [[binary#attempt|step 02]], the 12000 cancels: $RT\\ln\\frac{\\theta}{1-\\theta} + \\delta = RT\\ln\\frac{x_{\\mathrm b}}{1-x_{\\mathrm b}}$. Taking exponentials gives the odds formula, with factor $\\exp(-\\delta/RT) = \\exp(5000/8314.5)$. In a picture: the boundary settles where a line parallel to the reservoir tangent touches $g_{\\mathrm s}$, and φ is the vertical gap between the two lines (the figure below)."
+        },
+        {
+          "type": "paragraph",
+          "text": "The closed cell obeys the same condition (differentiating $G_{\\mathrm{cell}}$ with $x_{\\mathrm b} = (B_{\\mathrm{tot}} - 200\\,\\theta)/8000$ gives $dG_{\\mathrm{cell}}/d\\theta \\propto g_{\\mathrm s}'(\\theta) - g_{\\mathrm b}'(x_{\\mathrm b})$), but its bulk fraction depends on $\\theta$. You can solve it by hand by iteration (after your attempt, the lab’s Closed cell by hand view steps through it): start with $x_{\\mathrm b} = x_0$, compute $\\theta$ from the odds formula, update $x_{\\mathrm b}$, and repeat. Four or five rounds settle to $\\theta \\approx 0.17161$."
+        },
+        {
+          "type": "paragraph",
+          "text": "Attempt · Work through both cells:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Open cell at $x_{\\mathrm b} = 0.10$: find the odds, $\\theta$ and the excess per nm². Would {{delta_pref|δ}} $= 0$ give enrichment?",
+            "Closed cell from the setup above: find the initial A and B totals.",
+            "Closed cell at a trial $\\theta = 0.35$: find the bulk $x_{\\mathrm b}$ and both B counts. What goes wrong if you keep $x_{\\mathrm b} = 0.10$?",
+            "A different boundary state could have a baseline {{eta|η}} $= 2000$ J/mol boundary sites (the extension below compares one). How much would that add per mole of all 8200 cell sites?"
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "For odds $r$, $\\theta = r/(1+r)$. For the closed trial, subtract boundary B from the fixed total before dividing by bulk sites."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Both boundaries contribute 200 sites and 40 nm². For the baseline, 200 of 8200 sites carry the extra 2000 J/mol; do not assign it to every site."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Worked answer",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Open odds $\\approx 0.20273299$, $\\theta \\approx 0.16856026$ and excess $\\approx 0.3428013$ atom/nm² ($5.69235\\times10^{-7}$ mol/m²). At zero preference $\\theta = x_{\\mathrm b}$ and the excess is zero. Closed initial B=850 and A=7350. Trial $\\theta = 0.35$ gives boundary B = 70, bulk B = 780 and $x_{\\mathrm b} = 0.0975$; fixing $x_{\\mathrm b} = 0.10$ would incorrectly give 870 B. A totals still equal 7350. The baseline contributes $200 \\times 2000/8200 =$ 48.78049 J/mol all cell sites."
+            },
+            {
+              "type": "paragraph",
+              "text": "The closed cell at $x_0 = 0.10$ settles at $\\theta \\approx 0.17161$ and $x_{\\mathrm b} \\approx 0.10196$: boundary B≈34.3215 plus bulk B≈815.6785 equals 850 within rounding. Two numerical methods give it: minimising $G$ directly gives $\\theta =$ 0.17160753314081367, and solving the exchange condition above gives 0.17160752408695693. They agree to about $10^{-8}$; the lab shows both as a check."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Explore · Open the lab and move the starting composition. Both cells start with boundary occupancy $\\theta_0 = 0.25$. Where the selected $\\theta$ is below 0.25 the boundaries give up B: the open cell returns it to the reservoir, the closed cell passes it to the bulk. Where $\\theta$ is above 0.25 they take B instead. The two occupancy curves nearly coincide because the bulk is large; compare the atom ledgers to see the difference. Excess values are per boundary, while the ledgers count both boundaries. The Tangent picture view shows the open cell with the tangent of [[binary#tangent-and-chemical-potentials|step 02]]: move the boundary preference and watch where the boundary settles. The Closed cell by hand view steps through the hand method round by round."
+        },
+        {
+          "type": "reveal",
+          "label": "Extension · compare two candidate boundary states",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Try subtracting the supplied energies for two synthetic uniform boundary states: I has {{eta|η}} $= 0$, {{delta_pref|δ}} $= -5000$; II has {{eta|η}} $= 2000$, {{delta_pref|δ}} $= -10000$ J/mol boundary sites. Both share geometry, references and initial $\\theta_0 = 0.25$. At 850 B, $\\bar g_{\\mathrm I} = -10541.72679$ and $\\bar g_{\\mathrm{II}} = -10519.50695$ J/mol all sites; at 2050 B (a cell started at $x_0 = 0.25$, $\\theta_0 = 0.25$), they are −10713.32958 and −10718.80845. Compare within each inventory row. II−I is +22.21984 in the first row and −5.47887 in the second, selecting I then II among these two candidates. Each state must adjust its own final $x_{\\mathrm b}$. A crossing between two uniform alternatives is not a study of a real boundary transition. The lab shows state I only."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Practice · a second open and closed cell",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Try open $x_{\\mathrm b} = 0.20$ with the same factor: $\\theta \\approx 0.31325719$ and excess $\\approx 0.566286$ atom/nm². Separately start a closed cell at $x_0 = 0.20$, $\\theta_0 = 0.20$: $B_{\\mathrm{tot}} = 1640$. Trial $\\theta = 0.40$ gives boundary B = 80, bulk B = 1560, $x_{\\mathrm b} = 0.195$. Keeping bulk at 0.20 would violate the inventory. If counts disagree, check the two-boundary factor before adjusting any energy."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "From model to material · Everything in steps 01–04 used invented numbers, so the calculations show how the reasoning works, not what a real alloy does. A real question, say about Cu at a nickel grain boundary, needs four things before any claim, and our invented models supply none of them."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "What is needed",
+            "For a real grain-boundary claim"
+          ],
+          "rows": [
+            [
+              "Case and source",
+              "The exact alloy, the quantity to explain (for example, how much Cu sits at one kind of boundary), the boundary geometry, and data we may use"
+            ],
+            [
+              "Bulk model",
+              "An assessed Gibbs-energy model for the alloy over the right temperatures and compositions, giving the chemical potentials of the reservoir ([[cuni|step 05]] reads one for Cu–Ni)"
+            ],
+            [
+              "Boundary model",
+              "Site counts and area, boundary energies or excesses for each boundary structure, on the same reference as the bulk, with independent evidence"
+            ],
+            [
+              "Calculation and comparison",
+              "A planned calculation with conservation checks, compared with data that were not used to build the model"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Sort each statement into invented-model result, missing evidence, or unsupported real claim: (a) in the invented cell with 850 B atoms, state I has the lower energy; (b) an assessed Ni–Cu bulk model valid at the temperature and composition of interest; (c) Ni–Cu grain boundaries change structure at $x_0 = 0.216$; (d) two real boundary-state free energies, measured from one common reference; (e) the Cu concentration at an actual nickel grain boundary. Then: why does an energy crossing between two boundary states not yet show a real transition?"
+        },
+        {
+          "type": "reveal",
+          "label": "Check · from model to material",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "(a) Invented-model result. (b) Missing evidence: the bulk model. (c) Unsupported real claim: the crossing belongs to the invented states. (d) Missing evidence: the boundary model, with both states on one reference. (e) A question these models cannot answer; it needs all four rows of the table."
+            },
+            {
+              "type": "paragraph",
+              "text": "An energy crossing compares two uniform states. At a fixed inventory, a boundary that is partly in one state and partly in the other can have a lower energy than either uniform state near the crossing, so a real change may happen over a range of compositions rather than at one point. Showing a transition needs that coexistence analysis, real state energies and independent evidence."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Wrap-up · Explain which energy each experiment minimises (the [[start#refresher|step 00 refresher]] sketches all four cases; in the lab each cell’s energy sits in a closed “energy value” reveal), how zero preference changes the excess, and why the open and closed energies cannot be ranked. Then write one sentence these invented calculations support and one claim about a real material they cannot support. (A real boundary transition would need real boundary energies and evidence of coexistence; an invented energy crossing provides neither.) Next we read real bulk-material results; the invented boundary parameters are not carried over."
+        }
+      ]
+    },
+    {
+      "id": "cuni",
+      "title": "Cu–Ni · read an assessed-input calculation",
+      "sources": [
+        "course/materials/cuni/README.md",
+        "course/materials/cuni/answers.md",
+        "course/setup.md",
+        "course/sources/README.md"
+      ],
+      "next": "ninb",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Problem · How do assessed material inputs change the questions we asked with invented parameters? This step reads a Cu–Ni calculation made in advance with pycalphad from a published database (Mey’s [[glossary#assessment-tdb|assessment]], as adapted by Hallstedt). Nothing is calculated live on this page. Try the balance exercise before opening the answer or the energy plots."
+        },
+        {
+          "type": "paragraph",
+          "text": "What changes with a real alloy: instead of invented phases with numbers you can check by hand, each phase now has a model assessed from experiments, several candidate phases compete at once, and a program finds the combination with the lowest $G$ ([[start#why-calphad|the chain in step 00]]). You read its saved output: which phases appear, their compositions $x(\\mathrm{Ni})$ and their amounts [[glossary#np-x-gm|NP]]. Terms such as {{fcc|FCC_A1}}, {{vertex|vertex}} and {{magnetic|magnetic contribution}} are marked; hover or tap them."
+        },
+        {
+          "type": "paragraph",
+          "text": "The calculation used 101325 Pa and one mole of atoms, 81 temperatures from 300 to 1900 K (20 K steps) and 61 overall $x(\\mathrm{Ni})$ values from 0.005 to 0.995, with pycalphad’s sampling setting [[glossary#pdens|pdens]]=60. LIQUID, FCC_A1, BCC_A2 and HCP_A3 were allowed, with and without the magnetic contribution. The pressure is a lesson choice; the published figure does not state one."
+        },
+        {
+          "type": "paragraph",
+          "text": "In pycalphad output, GM is the Gibbs energy per mole of atoms, NP is a phase’s amount fraction on the same basis, and X(NI) is the Ni fraction inside that phase. The FCC model has a second set of interstitial sites (a second [[glossary#sublattice|sublattice]]) that holds only [[glossary#vacancy-va|vacancies]] here; databases include it so that elements such as C or N can be added later. Empty sites add no atoms, so its energy is per one mole of atoms, not two; [[ninb#approach|step 06]] does the same bookkeeping for ordered phases. Energies use the [[glossary#ser|standard element reference (SER)]], which fixes each element’s enthalpy zero; it does not make the Gibbs energy zero at 298.15 K."
+        },
+        {
+          "type": "paragraph",
+          "text": "Approach · First fix bulk composition and temperature. Multiple phase compositions can share that bulk composition if their amounts balance both elements. Use $\\sum_i f_i x_i = z$ and $\\sum_i f_i = 1$, the balance of [[twophase#problem|step 03]]. Comparing the lowest point anywhere along an energy curve would change the alloy composition and answer a different question (see [[binary#attempt|step 02’s worked answer]])."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Supplied magnetic-on sample at 600 K, bulk x(Ni)=0.5",
+            "Atom-mole amount fraction",
+            "Phase x(Ni)"
+          ],
+          "rows": [
+            [
+              "FCC_A1 {{vertex|vertex}} 1",
+              "0.7446954710541663",
+              "0.39825922064313335"
+            ],
+            [
+              "FCC_A1 {{vertex|vertex}} 2",
+              "0.25530452894576633",
+              "0.7967667589812776"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Reading the diagram · Here is the saved calculation for both magnetic settings. Each dot is the composition of a phase found at one grid temperature: blue for liquid, orange for FCC. Where the sample is a single phase, its dots fill the area. In a two-phase region no single phase has that composition, so the area stays empty; at a given temperature, the dots on its two sides are the two coexisting compositions, the ends of a tie line ([[twophase#reading-a-phase-diagram|step 03]]). The edges are only as sharp as the 20 K and composition grid.",
+          "image": {
+            "src": "/learning/materials/cuni/phase_diagram.png",
+            "alt": "Cu–Ni sampled phase compositions versus temperature and Ni atom mole fraction, comparing magnetic-on and magnetic-off calculations."
+          }
+        },
+        {
+          "type": "paragraph",
+          "text": "Read it from the top. At high temperature everything is liquid. The empty band between the blue and orange dots is the {{lens|liquid/FCC lens}}: liquid and FCC coexist there with different compositions, and the common tangent joins two different curves, as in [[twophase#part-c-melting-and-the-lens|step 03 part C]]. Below it one FCC phase spans all compositions, which is possible because Cu and Ni share the same crystal structure. The empty dome at the bottom is the {{misc_gap|miscibility gap}}: FCC separates into a Cu-rich and a Ni-rich composition, as in [[twophase#part-b-one-phase-two-compositions|step 03 part B]]. Compare the top of the dome with and without magnetism; the attempt below asks what that difference means. After your attempt, the results explorer opens with the same calculation as a [[cuni/lab/map|clickable map]]: pick any temperature and composition to see the phases, their amounts and the tie line, or press play to cool or heat at that composition."
+        },
+        {
+          "type": "paragraph",
+          "text": "Attempt · Reconstruct the Ni and Cu fractions from the 600 K table above. Why can both rows be called FCC_A1? Would switching off the {{magnetic|magnetic contribution}} necessarily remove the two-FCC region (the {{misc_gap|miscibility gap}})? How does reading this assessed calculation differ from the [[boundary#wrap-up|invented boundary model]], and from testing against experiment?"
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Multiply each phase composition by its atom-mole amount fraction before summing. For Cu use $1 - x(\\mathrm{Ni})$."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Two compositions of the same phase model can be selected, as in [[twophase#part-b-one-phase-two-compositions|step 03 part B]]; a different composition need not mean a different crystal structure. Chemical and magnetic energy contributions both enter the original model."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Worked answer",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "The weighted Ni sum is 0.5 and Cu sum is 0.5 to within $10^{-6}$; the fractions sum to one. Both vertices are FCC_A1 at different compositions. Magnetic-off also has two FCC compositions at 600 K (about 0.406223 and 0.764343 with fractions 0.738142 and 0.261858), so the chemical model already demixes. Magnetism changes these calculated results."
+            },
+            {
+              "type": "paragraph",
+              "text": "At 1540 K and overall $x(\\mathrm{Ni}) = 0.5$, the lowest sampled temperature at which liquid and FCC coexist (at 1520 K there is no liquid yet) has approximately 0.0978183 liquid at $x(\\mathrm{Ni}) = 0.368010$ and 0.902182 FCC at 0.514311. Use the full precision in the saved results (the reveal below, or the 1540 K button under [[cuni/lab/samples|Saved samples]] in the results explorer) for the same balance check. The saved 1500 K state is all FCC; 1600 K is all liquid."
+            },
+            {
+              "type": "paragraph",
+              "text": "Reading this calculation tells you what the assessed model predicts at these conditions. The step 04 boundary model was invented, so it predicts nothing about a real material. Neither is a test against experiment: that needs measured compositions or temperatures compared with these numbers, and the model parameters were themselves chosen to fit some of those measurements."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Show previously calculated outputs · Cu–Ni",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Read Gibbs energies on a shared J/mol atom basis. The pure-Ni panel marks the source {{curie|Curie temperature}} and compares the model magnetic contribution; that contribution is not a simple switch set to zero above the Curie temperature.",
+              "image": {
+                "src": "/learning/materials/cuni/energy_magnetism.png",
+                "alt": "Cu–Ni FCC and liquid Gibbs energy curves and the pure FCC Ni magnetic energy contribution versus temperature."
+              }
+            },
+            {
+              "type": "paragraph",
+              "text": "Full saved numerical results, including unrounded phase amounts and energy checks:",
+              "links": [
+                {
+                  "label": "Local Cu–Ni results JSON",
+                  "href": "/learning/materials/cuni/results.json"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Interpret and recover · The magnetic-off run switches off only the magnetic energy term and leaves everything else unchanged. It is a comparison, not a real nonmagnetic alloy. The total energy already contains the magnetic part, so never add it a second time. If your balance differs, check that you used phase amount and composition in the right places, then check rounding."
+        },
+        {
+          "type": "paragraph",
+          "text": "The highest sampled temperatures with two FCC compositions are 640 K with magnetism and 620 K without; both dome tops are marked on the [[cuni/lab/map|clickable map]]. Because the temperature grid has 20 K steps, that difference is only approximate. BCC_A2 and HCP_A3 were allowed but never appeared in these samples."
+        },
+        {
+          "type": "paragraph",
+          "text": "Source-dependent extensions · With your own copy of the database, evaluate pure liquid Cu at 1500 K with a calculator; the saved value is −83457.60262034053 J/mol atoms. This needs reading the database file: each FUNCTION or PARAMETER line gives a lower temperature limit, then expressions in $T$, each followed by the upper limit of its range and Y (another range follows) or N (last range). Pick the range containing 1500 K, set $T = 1500$, and evaluate any referenced functions the same way. If you have access to the paper, compare Mey Fig. 1 (printed p.256/PDF p.2) and Fig. 7 (p.259/PDF p.5) with the saved plot. Only the broad shapes were compared: the {{lens|liquid/FCC lens}} and the low-temperature {{misc_gap|miscibility gap}}."
+        },
+        {
+          "type": "paragraph",
+          "text": "Attribution · S. an Mey, Calphad 16 (1992) 255–260, published the original assessment; B. Hallstedt, Calphad 89 (2025) 102833, documents the collection this database comes from. The database is an adaptation: for example, the printed liquid coefficient $b_0 = 1.29093$ differs from the file’s 1.29893 J/(mol K), and some magnetic coefficients differ too. Both versions are recorded; neither is declared correct.",
+          "links": [
+            {
+              "label": "Mey assessment · DOI",
+              "href": "https://doi.org/10.1016/0364-5916(92)90022-P"
+            },
+            {
+              "label": "Hallstedt collection · DOI",
+              "href": "https://doi.org/10.1016/j.calphad.2025.102833"
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Optional setup, input retrieval and bounded run",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Optional reproduction · You do not need this to follow the step. To run the calculation yourself you need a checkout of the course repository, CPython 3.12, Poetry 2.x and your own copy of the published database, kept outside the checkout. The saved run used Python 3.12.14, Poetry 2.5.1 and pycalphad 0.11.2; keep the existing lock file and skip the optional atomistic group."
+            },
+            {
+              "type": "paragraph",
+              "text": "From the repository root, outside any other activated environment:\nexport POETRY_VIRTUALENVS_IN_PROJECT=true\npoetry env use python3.12\npoetry install --without atomistic\n.venv/bin/python -c \"import sys, pycalphad; print(sys.executable, sys.version, pycalphad.__version__)\"\nExpect this checkout’s .venv, Python 3.12.x and pycalphad 0.11.2. Stop a mismatched or failed setup; do not change versions to force success."
+            },
+            {
+              "type": "paragraph",
+              "text": "Time limit · If setup or the download is still not working after about 30 minutes, stop and keep reading the saved results; you lose nothing essential. Respect the source’s terms of use, and do not redistribute the database file or publisher figures."
+            },
+            {
+              "type": "paragraph",
+              "text": "Fetch CuNi-92Mey-LB.tdb yourself, outside the checkout. Expected size 6789 bytes; SHA-256 7e52adda858e302168ae26b5abfe17f4726ccbfaaff0880abcad5b38e3f559e1. If the direct download fails within that time limit, extract datasets/datasets/CuNi-92Mey-LB.tdb from Hallstedt’s publisher supplement. Do not edit a mismatched file.",
+              "links": [
+                {
+                  "label": "Direct published Cu–Ni TDB",
+                  "href": "https://phasediagrams.org/uploads/CuNi-92Mey-LB.tdb"
+                },
+                {
+                  "label": "Hallstedt supplement ZIP",
+                  "href": "https://ars.els-cdn.com/content/image/1-s2.0-S0364591625000367-mmc3.zip"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Check your file’s byte size and SHA-256 (for example wc -c and sha256sum on Linux), then from the repository root:\nmkdir -p /tmp/cuni-mpl\nexport MPLCONFIGDIR=/tmp/cuni-mpl MPLBACKEND=Agg\nexport OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1\n(ulimit -v 4194304; timeout 600 .venv/bin/python course/materials/cuni/worked_example.py --tdb /absolute/path/to/CuNi-92Mey-LB.tdb --output /tmp/cuni-output)\nUse your actual absolute input path. Linux bounds: 4 GiB address space, 10 minutes, one numerical thread. On other platforms an equivalent local limit is required; that route is untested. The script performs no fetch and checks the source hash before/after. Inspect phase_diagram.png, energy_magnetism.png and results.json, under 20 MiB combined."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Next · [[ninb|Ni–Nb]] adds ordered phases with several sublattices. Reading its saved values is enough to practise converting between formula and atom bases."
+        }
+      ]
+    },
+    {
+      "id": "ninb",
+      "title": "Ni–Nb · ordered phases and amount bases",
+      "sources": [
+        "course/materials/ninb/README.md",
+        "course/materials/ninb/answers.md",
+        "course/setup.md",
+        "course/sources/README.md"
+      ],
+      "next": null,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Problem · How do ordered phases change the amount basis? This step reads a Ni–Nb calculation made in advance with pycalphad from the database published with Sun et al.’s assessment. Practise the conversion with the given energies before opening the results explorer."
+        },
+        {
+          "type": "paragraph",
+          "text": "Heads-up: in this step μ and δ are names of two Ni–Nb phases, written {{mu_phase|μ phase}} and {{delta_phase|δ phase}}. They are not the chemical potential {{mu_chem|μ_A}} or the boundary preference {{delta_pref|δ}} from steps 02–04. Hover over or tap any marked symbol to see what it means here."
+        },
+        {
+          "type": "paragraph",
+          "text": "A sublattice is a group of sites whose allowed occupants and capacity enter the model. An endmember fixes an occupant on each sublattice; it is a model building block, not necessarily a stable material. The [[glossary#compound-energy-formalism-cef|compound energy formalism (CEF)]] combines these building blocks. Here the {{delta_phase|δ phase}} has three sublattices in ratio 1:1:2, four atoms per formula; the {{mu_phase|μ phase}} has five in ratio 2:2:2:6:1, thirteen atoms per formula. The database numbers the sublattices but does not say which crystal sites they are; for the {{mu_phase|μ phase}} the site counts are enough to match most of them, as the sketch below shows. Composition follows from the occupancy: in the ideal NbNi₃ formula of the {{delta_phase|δ phase}}, one of the four sites per formula holds Nb, so $x(\\mathrm{Nb}) = 1/4 = 0.25$; click the boxes below to try other fillings. In the 1200 K sample used in the attempt, the {{delta_phase|δ phase}} has $x(\\mathrm{Nb}) = 0.2599$, close to that."
+        },
+        {
+          "type": "paragraph",
+          "text": "The names {{delta_phase|δ}}-NbNi₃ and {{mu_phase|μ}}-Nb₇Ni₆ give the ideal compositions; because sites can hold either element, each phase spans a composition range. pycalphad gives a phase’s energy per mole of formula units ({{g_formula|G_formula}}) or per mole of atoms ({{gm|GM}})."
+        },
+        {
+          "type": "table",
+          "headers": [
+            "Supplied endmember evaluation at 1000 K",
+            "Formula energy, J/mol formula",
+            "Atoms per formula"
+          ],
+          "rows": [
+            [
+              "{{delta_phase|δ phase}}, all Nb",
+              "−122000.02016185605",
+              "4"
+            ],
+            [
+              "{{mu_phase|μ phase}}, all Ni",
+              "−368073.0553770607",
+              "13"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Approach · Divide a formula-basis energy by its number of atoms per formula, once. Leave GM, which is already per mole of atoms, unchanged. Phase amounts NP are also per mole of atoms, not formula counts. The map’s “mol formula units” setting only recounts the same amount (NP divided by the atoms per formula); balances always use NP itself. A database file also lists a reference enthalpy for each element; that is bookkeeping for the [[glossary#ser|standard element reference]] and is already built into these energies, so do not add it."
+        },
+        {
+          "type": "paragraph",
+          "text": "Reading the diagram · Here is the saved calculation, read the same way as [[cuni#reading-the-diagram|Cu–Ni in step 05]]: dots are compositions of phases found at one grid temperature, and empty areas between them are two-phase regions. The {{delta_phase|δ phase}} and the {{mu_phase|μ phase}} appear as narrow bands near $x(\\mathrm{Nb}) = 0.25$ and at about 0.48–0.59, {{nbni_phase|NbNi₈}} as a thin line near 0.11 at low temperature (a [[glossary#ordered-phase-line-compound|line compound]]), and Nb-rich BCC on the right.",
+          "image": {
+            "src": "/learning/materials/ninb/phase_diagram.png",
+            "alt": "Ni–Nb sampled equilibrium phase compositions versus temperature and Nb atom mole fraction, showing liquid, FCC, BCC, delta, mu and NbNi8 fields."
+          }
+        },
+        {
+          "type": "paragraph",
+          "text": "Where the liquid region narrows to a point between two liquid + solid regions, a [[glossary#eutectic|eutectic]] sits at that tip: on cooling, the liquid turns into two solids at one temperature. On the clickable map, try $x(\\mathrm{Nb}) \\approx 0.40$: liquid alone at 1470 K, {{delta_phase|δ}} + {{mu_phase|μ}} one row below at 1425 K, so a eutectic lies between those temperatures. Another sits near 0.16, where liquid at 1560 K gives FCC + {{delta_phase|δ}} at 1515 K. In a binary at fixed pressure, [[glossary#three-phases-at-one-temperature|three phases can coexist only at a single temperature]], so this 45 K grid never lands exactly on it. After your attempt, the results explorer shows the calculation as a [[ninb/lab/map|clickable map]], with amounts in mol atoms or in mol formula units."
+        },
+        {
+          "type": "paragraph",
+          "text": "Attempt · Convert the two supplied energies to J/mol atoms. Why would dividing the per-atom energy ({{gm|GM}}) by four or thirteen again be wrong? At the supplied 1200 K sample, overall $x(\\mathrm{Nb}) = 0.3416$: the {{mu_phase|μ phase}} has atom-mole fraction 0.3705990971416999 and $x(\\mathrm{Nb}) = 0.48038239728767557$; the {{delta_phase|δ phase}} has fraction 0.6294009028581448 and $x(\\mathrm{Nb}) = 0.25988319454193687$. Reconstruct both Nb and Ni balances. (The calculation was set up for $x(\\mathrm{Nb}) = 0.35$, between the {{delta_phase|δ-phase}} and {{mu_phase|μ-phase}} compositions; the calculation used 51 compositions from 0.005 to 0.995, and 0.3416 is the nearest grid point.)"
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 1",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Ask which amount the numerator already refers to before dividing. For balances, multiply phase atom-mole fraction by phase atom composition."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Hint 2",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "The energy divisor converts one mole of formulas to the corresponding moles of real atoms. That conversion has already occurred for GM and NP; dividing them again would corrupt energies and balances."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Worked answer",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "{{delta_phase|δ phase}}: $-122000.02016185605/4 =$ −30500.005040464013 J/mol atoms. {{mu_phase|μ phase}}: $-368073.0553770607/13 =$ −28313.311952081593 J/mol atoms. The atom-mole weighted Nb fraction is 0.3416 and Ni fraction 0.6584; phase fractions sum to one to within $10^{-6}$. Evaluated hypothetical all-Nb {{delta_phase|δ-phase}} and all-Ni {{mu_phase|μ-phase}} energies do not imply their stability."
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Show previously calculated outputs · Ni–Nb",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Read full-precision amounts, normalization checks and the sample in the saved results:",
+              "links": [
+                {
+                  "label": "Local Ni–Nb results JSON",
+                  "href": "/learning/materials/ninb/results.json"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Interpret · Conditions were 101325 Pa, one mole of atoms and [[glossary#pdens|pdens]]=60, on 61 temperatures from 300 to 3000 K (45 K steps) and 51 bulk Nb fractions from 0.005 to 0.995. LIQUID, FCC_A1, BCC_A2, HCP_A3, DELTA, MU_PHASE, NBNI8 and BCC_B2 were allowed; HCP_A3 and [[glossary#bcc-b2|BCC_B2]] never appeared. The saved calculation shows what the published model predicts at these conditions; on its own it does not test that model against experiment."
+        },
+        {
+          "type": "paragraph",
+          "text": "Recover · If the balance fails after division by four or thirteen, restore atom-mole NP and X(NB). Magnetic terms in FCC_A1, BCC_A2 and HCP_A3 are already part of the total Gibbs energy; do not add another correction (as in [[cuni#interpret-and-recover|step 05]])."
+        },
+        {
+          "type": "paragraph",
+          "text": "Source-dependent extensions · With your own copy of the database, follow the {{delta_phase|δ phase}}’s all-Nb endmember through the temperature range containing 1000 K (reading the ranges as in [[cuni#source-dependent-extensions|step 05]]) and compare your calculator result with the saved energy_checks; the saved hand check agrees to $1.46\\times10^{-10}$ J/mol formula."
+        },
+        {
+          "type": "paragraph",
+          "text": "If you have access to Sun’s manuscript, compare its Fig. 8(a) (printed p.42/PDF p.44; Fig. 8(b) is an earlier assessment) with the saved plot. The comparison is qualitative: liquid above the solid fields, the {{delta_phase|δ phase}} near $x(\\mathrm{Nb}) = 0.25$, the {{mu_phase|μ phase}} near 0.5, NbNi₈ at lower temperature and Nb-rich BCC. The coarse grid does not give exact boundaries or three-phase temperatures."
+        },
+        {
+          "type": "paragraph",
+          "text": "Attribution · H. Sun et al., “Thermodynamic modeling of the Nb-Ni system with uncertainty quantification using PyCalphad and ESPEI,” Calphad 82 (2023), 102563. The supplement file predates the final paper, so details may differ from the published assessment.",
+          "links": [
+            {
+              "label": "Sun assessment · DOI",
+              "href": "https://doi.org/10.1016/j.calphad.2023.102563"
+            },
+            {
+              "label": "Sun institutional manuscript",
+              "href": "https://www.osti.gov/servlets/purl/2205728"
+            }
+          ]
+        },
+        {
+          "type": "reveal",
+          "label": "Optional setup, input retrieval and bounded run",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Optional reproduction · You do not need this to follow the step. To run the calculation yourself you need a checkout of the course repository, CPython 3.12, Poetry 2.x and your own copy of the published database, kept outside the checkout. The saved run used Python 3.12.14, Poetry 2.5.1 and pycalphad 0.11.2; keep the existing lock file and skip the optional atomistic group."
+            },
+            {
+              "type": "paragraph",
+              "text": "From the repository root, outside any other activated environment:\nexport POETRY_VIRTUALENVS_IN_PROJECT=true\npoetry env use python3.12\npoetry install --without atomistic\n.venv/bin/python -c \"import sys, pycalphad; print(sys.executable, sys.version, pycalphad.__version__)\"\nExpect this checkout’s .venv, Python 3.12.x and pycalphad 0.11.2. Stop a mismatched or failed setup; do not change versions to force success."
+            },
+            {
+              "type": "paragraph",
+              "text": "Time limit · If setup or the download is still not working after about 30 minutes, stop and keep reading the saved results; you lose nothing essential. Respect the source’s terms of use, and do not redistribute the database file or publisher figures."
+            },
+            {
+              "type": "paragraph",
+              "text": "Download Sun’s original supplement ZIP with your lawful source access, then extract calpha_102563_Nb-Ni_new_mmc1.tdb outside the checkout. Expected member: 13087 bytes, SHA-256 ceb0c4667a031900aab8c15867b0186ed88ba822f37a0f9390328c55457b8c0a. Stop a mismatched member/hash without editing it. No publisher figure or full TDB is redistributed.",
+              "links": [
+                {
+                  "label": "Sun original supplement ZIP",
+                  "href": "https://ars.els-cdn.com/content/image/1-s2.0-S0364591623000354-mmc1.zip"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Check member size and SHA-256 (for example wc -c and sha256sum on Linux), then from the repository root:\nmkdir -p /tmp/ninb-mpl\nexport MPLCONFIGDIR=/tmp/ninb-mpl MPLBACKEND=Agg\nexport OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1\n(ulimit -v 4194304; timeout 600 .venv/bin/python course/materials/ninb/worked_example.py --tdb /absolute/path/to/calpha_102563_Nb-Ni_new_mmc1.tdb --output /tmp/ninb-output)\nUse your own absolute input path. Linux bounds: 4 GiB address space, 10 minutes, one numerical thread. An equivalent limit on other platforms is required; that route is untested. The script performs no network fetch. Inspect phase_diagram.png and results.json; keep outputs below 20 MiB."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Continue · Explain what changed from the [[binary|ideal binary]]: real assessed inputs, several competing phases and sublattice amount bases. To go further, the course repository has three more worked tasks (links below). You can also revisit any step or open a lab from the Labs menu.",
+          "links": [
+            {
+              "label": "Repository task · fit Cu–Ni interaction parameters",
+              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.0/course/materials/cuni/fitting.md"
+            },
+            {
+              "label": "Repository task · Ni grain-boundary energies",
+              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.0/course/materials/boundaries/ni_twin.md"
+            },
+            {
+              "label": "Repository task · Cu–Ni boundary segregation",
+              "href": "https://github.com/ukerzel/CalphadIntro/blob/v0.1.0/course/materials/boundaries/segregation.md"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

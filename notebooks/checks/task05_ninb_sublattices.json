@@ -1,0 +1,113 @@
+{
+ "task05_x_nbni3": {
+  "value": 0.25,
+  "tol": 1e-06,
+  "hint": "Nb atoms per formula divided by all atoms per formula; one sublattice holds the Nb."
+ },
+ "task05_x_nb7ni6": {
+  "value": 0.5384615384615384,
+  "tol": 0.0001,
+  "hint": "Seven of the thirteen sites per formula hold Nb; use x_nb with whole sublattices filled."
+ },
+ "task05_atoms_delta": {
+  "value": 4,
+  "tol": 0,
+  "hint": "Add the sites per formula of all δ sublattices."
+ },
+ "task05_atoms_mu": {
+  "value": 13,
+  "tol": 0,
+  "hint": "Add the sites per formula of all μ sublattices."
+ },
+ "task05_delta_hand_1000": {
+  "value": -122000.0201618562,
+  "tol": 0.01,
+  "hint": "Use the function's branch whose range contains 1000 K, then apply the endmember's own multiplier and added constant. The result is per mole of formula units."
+ },
+ "task05_delta_atom": {
+  "value": -30500.005040464013,
+  "tol": 0.001,
+  "hint": "Divide the formula energy once by the atoms per δ formula."
+ },
+ "task05_mu_atom": {
+  "value": -28313.311952081593,
+  "tol": 0.001,
+  "hint": "Divide the formula energy once by the atoms per μ formula."
+ },
+ "task05_divide_gm_again": {
+  "value": false,
+  "hint": "GM is already per mole of atoms. Answer True or False."
+ },
+ "task05_amount_sum": {
+  "value": 1.0,
+  "tol": 1e-06,
+  "hint": "Add the two NP values as given."
+ },
+ "task05_nb_balance": {
+  "value": 0.34159999999999996,
+  "tol": 1e-06,
+  "hint": "Multiply each phase's NP by its x(Nb) and add; do not divide NP by the atoms per formula."
+ },
+ "task05_ni_balance": {
+  "value": 0.6584000000000001,
+  "tol": 1e-06,
+  "hint": "Multiply each phase's NP by its 1 − x(Nb) and add."
+ },
+ "task05_delta_formula_units": {
+  "value": 0.1573502257145362,
+  "tol": 1e-06,
+  "hint": "δ's NP divided by the atoms per δ formula."
+ },
+ "task05_mu_formula_units": {
+  "value": 0.028507622857053837,
+  "tol": 1e-06,
+  "hint": "μ's NP divided by the atoms per μ formula."
+ },
+ "task05_formula_weights_balance": {
+  "value": false,
+  "hint": "Try it: normalise the two formula-unit amounts, weight the x(Nb) values and compare. Answer True or False."
+ },
+ "task05_eut040_liquid": {
+  "value": 1470.0,
+  "tol": 1e-06,
+  "hint": "Run column(0.40): the lowest temperature at which the cell is LIQUID alone."
+ },
+ "task05_eut040_solid": {
+  "value": 1425.0,
+  "tol": 1e-06,
+  "hint": "Run column(0.40): the highest temperature at which the cell has no LIQUID."
+ },
+ "task05_eut016_liquid": {
+  "value": 1560.0,
+  "tol": 1e-06,
+  "hint": "Run column(0.16): the lowest temperature at which the cell is LIQUID alone."
+ },
+ "task05_eut016_solid": {
+  "value": 1515.0,
+  "tol": 1e-06,
+  "hint": "Run column(0.16): the highest temperature at which the cell has no LIQUID."
+ },
+ "task05_eut016_nb_richer": {
+  "value": "DELTA",
+  "hint": "Of the two solids just below the liquid, take the one with the larger x(Nb) in the phase; type its name as in the table."
+ },
+ "task05_mu_atoms_per_cell": {
+  "value": 39,
+  "tol": 0,
+  "hint": "The block holds 2 × 2 × 1 = 4 cells: divide its total by 4."
+ },
+ "task05_mu_formula_per_cell": {
+  "value": 3,
+  "tol": 0,
+  "hint": "Atoms per cell divided by 13 atoms per μ formula."
+ },
+ "task05_mu_18h_per_formula": {
+  "value": 6,
+  "tol": 0,
+  "hint": "18h atoms in one cell divided by the formula units per cell."
+ },
+ "task05_mu_6c_order_known": {
+  "value": false,
+  "hint": "The database numbers sublattices but names no crystal sites. Answer True or False."
+ }
+}

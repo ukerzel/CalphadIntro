@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+.env
+.env.*
+
+# Published databases you download stay outside Git.
+*.tdb
+!course/foundations/*.tdb

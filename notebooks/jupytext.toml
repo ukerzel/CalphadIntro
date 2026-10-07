@@ -1,0 +1,5 @@
+# Course notebooks: edit the percent-format .py; the paired .ipynb is generated
+# (jupytext --sync notebooks/NAME.py) and committed without outputs.
+formats = "ipynb,py:percent"
+notebook_metadata_filter = "kernelspec,jupytext,-all"
+cell_metadata_filter = "cellView,-all"

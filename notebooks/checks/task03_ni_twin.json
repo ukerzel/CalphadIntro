@@ -1,0 +1,85 @@
+{
+ "task03_independent": {
+  "value": false,
+  "hint": "All eight points are read from one curve that was integrated from one reference temperature."
+ },
+ "task03_fit_A": {
+  "value": 0.067525,
+  "tol": 1e-06,
+  "hint": "A = γ̄ − B T̄, in J/m²."
+ },
+ "task03_fit_B": {
+  "value": -2.025e-05,
+  "tol": 1e-08,
+  "hint": "B = Σ(T − T̄)(γ − γ̄) / Σ(T − T̄)², in J/(m² K); γ falls with T."
+ },
+ "task03_max_residual": {
+  "value": 0.000175,
+  "tol": 1e-06,
+  "hint": "Residual = fit minus reading at each of the eight temperatures; take the largest size, in J/m²."
+ },
+ "task03_minus_B_mJ": {
+  "value": 0.02025,
+  "tol": 1e-05,
+  "hint": "Change the sign of B, then 1 J = 1000 mJ."
+ },
+ "task03_V_m": {
+  "value": 6.566272492797953e-06,
+  "tol": 1e-11,
+  "hint": "N_Av a³ / 4 with a in metres."
+ },
+ "task03_A_GB": {
+  "value": 196.9881747839386,
+  "tol": 0.001,
+  "hint": "3 V_m / d: each cube face is shared by two grains."
+ },
+ "task03_rho": {
+  "value": 6.190035365655413e-05,
+  "tol": 1e-10,
+  "hint": "Two {111} planes of 4/(√3 a²) atoms per m², divided by N_Av."
+ },
+ "task03_n_s": {
+  "value": 0.012193637685284898,
+  "tol": 1e-07,
+  "hint": "ρ times A_GB, in mol."
+ },
+ "task03_n_b": {
+  "value": 0.9878063623147151,
+  "tol": 1e-07,
+  "hint": "The boundary atoms come out of the one mole."
+ },
+ "task03_A_six_faces": {
+  "value": 393.9763495678772,
+  "tol": 0.002,
+  "hint": "Without sharing, every face is counted once per grain: 6 V_m / d."
+ },
+ "task03_total_wrong": {
+  "value": 1.012193637685285,
+  "tol": 1e-07,
+  "hint": "One mole in the bulk plus the boundary atoms on top."
+ },
+ "task03_gamma_500": {
+  "value": 0.0574,
+  "tol": 1e-06,
+  "hint": "A + B T at 500 K."
+ },
+ "task03_epsilon_500": {
+  "value": 927.2968021875329,
+  "tol": 0.001,
+  "hint": "γ divided by ρ: J/m² over mol sites/m²."
+ },
+ "task03_excess_500": {
+  "value": 11.307121232598076,
+  "tol": 0.0001,
+  "hint": "n_s ε, which equals A_GB γ."
+ },
+ "task03_excess_zero": {
+  "value": 0.0,
+  "tol": 1e-09,
+  "hint": "With no offset every Ni atom has the same molar energy."
+ },
+ "task03_validates": {
+  "value": false,
+  "hint": "The recovery follows from n_b + n_s = 1; what does it test?"
+ }
+}

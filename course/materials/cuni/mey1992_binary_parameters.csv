@@ -1,0 +1,5 @@
+phase,rk_order,a_J_per_mol,b_J_per_mol_K,source_table,source_printed_page
+LIQUID,0,12048.61,1.29093,2,257
+LIQUID,1,-1861.61,0.94201,2,257
+FCC_A1,0,8047.72,3.42217,2,257
+FCC_A1,1,-2041.30,0.99714,2,257

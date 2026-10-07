@@ -1,0 +1,12 @@
+{
+ "f2_gl_1200": {
+  "value": -12200.0,
+  "tol": 1e-06,
+  "hint": "The same LIQUID line as in f1: 7000 − 16T."
+ },
+ "f2_solid_only_1100": {
+  "value": -10000.0,
+  "tol": 1e-06,
+  "hint": "With only SOLID allowed, the minimum is the SOLID energy at that temperature."
+ }
+}

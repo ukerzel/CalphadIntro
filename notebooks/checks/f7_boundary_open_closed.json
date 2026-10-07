@@ -1,0 +1,160 @@
+{
+ "f7_d4_total_A": {
+  "value": 7370.0,
+  "tol": 1e-06,
+  "hint": "A in bulk is 8000(1 − x_b), A on the boundaries is 200(1 − θ); add them."
+ },
+ "f7_d4_excess_equal": {
+  "value": 0.0,
+  "tol": 1e-09,
+  "hint": "Compare the cell's B count with the 8200-site reference when θ and x_b are equal."
+ },
+ "f7_d4_excess_008": {
+  "value": -0.1,
+  "tol": 1e-06,
+  "hint": "Count boundary B, bulk B and reference B, then divide the difference by both boundaries' area (40 nm²)."
+ },
+ "f7_d4_mol_m2_025": {
+  "value": 4.151347667934617e-07,
+  "tol": 1e-10,
+  "hint": "Multiply by 1e18 nm² per m², then divide by N_Av atoms per mol."
+ },
+ "f7_d5_odds": {
+  "value": 0.20273298596473338,
+  "tol": 1e-06,
+  "hint": "Bulk odds x_b/(1 − x_b) times the supplied factor 1.82459687."
+ },
+ "f7_d5_theta": {
+  "value": 0.16856026094779272,
+  "tol": 1e-06,
+  "hint": "From odds r, θ = r/(1 + r)."
+ },
+ "f7_d5_boundary_B": {
+  "value": 33.71205218955854,
+  "tol": 0.002,
+  "hint": "θ is a fraction of 200 boundary sites (both boundaries), so the count is 200θ."
+ },
+ "f7_d5_excess": {
+  "value": 0.3428013047389636,
+  "tol": 1e-05,
+  "hint": "Use 5(θ − x_b) atom/nm²: 100 sites per 20 nm² of one boundary."
+ },
+ "f7_d5_mol_m2": {
+  "value": 5.692349587972161e-07,
+  "tol": 1e-10,
+  "hint": "Take the atom/nm² value, multiply by 1e18 and divide by N_Av."
+ },
+ "f7_d5_theta_delta0": {
+  "value": 0.1,
+  "tol": 1e-09,
+  "hint": "With δ = 0 the factor exp(−δ/RT) is one."
+ },
+ "f7_d6_total_B": {
+  "value": 850.0,
+  "tol": 1e-06,
+  "hint": "8000 x0 + 200 θ0."
+ },
+ "f7_d6_total_A": {
+  "value": 7350.0,
+  "tol": 1e-06,
+  "hint": "Every site holds A or B: 8200 minus total B."
+ },
+ "f7_d6_boundary_B_035": {
+  "value": 70.0,
+  "tol": 1e-06,
+  "hint": "200 boundary sites times the trial θ."
+ },
+ "f7_d6_bulk_B_035": {
+  "value": 780.0,
+  "tol": 1e-06,
+  "hint": "Total B stays fixed; subtract what sits on the boundaries."
+ },
+ "f7_d6_x_b_035": {
+  "value": 0.0975,
+  "tol": 1e-09,
+  "hint": "Bulk B divided by 8000 bulk sites."
+ },
+ "f7_d6_wrong_B_035": {
+  "value": 870.0,
+  "tol": 1e-06,
+  "hint": "8000 × 0.10 in bulk plus the trial boundary B; compare with the fixed total."
+ },
+ "f7_d6_theta_round1": {
+  "value": 0.16856026094779272,
+  "tol": 1e-06,
+  "hint": "Round 1 uses x_b = x0 in the odds formula, exactly as in the open cell."
+ },
+ "f7_d6_x_b_round1": {
+  "value": 0.10203599347630518,
+  "tol": 1e-06,
+  "hint": "Subtract 200θ from the fixed total B, then divide by 8000."
+ },
+ "f7_d6_theta_final": {
+  "value": 0.17160752408695693,
+  "tol": 1e-05,
+  "hint": "Repeat: odds formula at the current x_b, then update x_b from the fixed 850 B; four or five rounds are enough.",
+  "near_miss": false
+ },
+ "f7_d6_x_b_final": {
+  "value": 0.10195981167147966,
+  "tol": 1e-05,
+  "hint": "Use x_b = (850 − 200θ)/8000 with the settled θ.",
+  "near_miss": false
+ },
+ "f7_d6_boundary_B_final": {
+  "value": 34.321504817391386,
+  "tol": 0.002,
+  "hint": "200 boundary sites times the settled θ; bulk B plus boundary B must still be 850.",
+  "near_miss": false
+ },
+ "f7_d9_odds": {
+  "value": 0.4561492184206501,
+  "tol": 1e-06,
+  "hint": "Bulk odds 0.20/0.80 times the supplied factor."
+ },
+ "f7_d9_theta": {
+  "value": 0.3132571941462104,
+  "tol": 1e-06,
+  "hint": "From odds r, θ = r/(1 + r)."
+ },
+ "f7_d9_excess": {
+  "value": 0.5662859707310519,
+  "tol": 1e-05,
+  "hint": "5(θ − x_b) atom/nm² with the new reservoir x_b."
+ },
+ "f7_d9_excess_count": {
+  "value": 22.651438829242075,
+  "tol": 0.002,
+  "hint": "Excess atom/nm² times 40 nm², or 200(θ − x_b); both routes must agree."
+ },
+ "f7_d9_total_B": {
+  "value": 1640.0,
+  "tol": 1e-06,
+  "hint": "8000 x0 + 200 θ0 with the new starting values."
+ },
+ "f7_d9_boundary_B": {
+  "value": 80.0,
+  "tol": 1e-06,
+  "hint": "200 boundary sites times the trial θ."
+ },
+ "f7_d9_bulk_B": {
+  "value": 1560.0,
+  "tol": 1e-06,
+  "hint": "Subtract the boundary B from this cell's fixed total B."
+ },
+ "f7_d9_x_b": {
+  "value": 0.195,
+  "tol": 1e-09,
+  "hint": "Bulk B divided by 8000 bulk sites."
+ },
+ "f7_d9_wrong_B": {
+  "value": 1680.0,
+  "tol": 1e-06,
+  "hint": "8000 × 0.20 in bulk plus the trial boundary B; compare with the fixed total."
+ },
+ "f7_baseline_eta": {
+  "value": 48.78048780487805,
+  "tol": 0.0001,
+  "hint": "Only the 200 boundary sites carry the 2000 J/mol; spread that over all 8200 sites."
+ }
+}

@@ -1,0 +1,113 @@
+{
+  "doi": "10.1016/j.actamat.2019.06.027",
+  "figure": 3,
+  "source_printed_page": 224,
+  "source_pdf_page": 5,
+  "supplied_paper_sha256": "eb3fe5b6c92f24ea9ea440132e0ab52e8082f03d14e789679284acaff90aaabd",
+  "curve_csv_sha256": "38d6fe7ae8118e1e4961f09888889ee80f60f5bc951dab9e10b8d7af270188b6",
+  "bulk_tdb_sha256": "7e52adda858e302168ae26b5abfe17f4726ccbfaaff0880abcad5b38e3f559e1",
+  "python": "3.12.14",
+  "pycalphad": "0.11.2",
+  "input_role": "Rounded samples of blue Ni Sigma3 integrated formation-energy band midpoint, not independent observations",
+  "temperature_K": [
+    100.0,
+    200.0,
+    300.0,
+    400.0,
+    500.0,
+    600.0,
+    700.0,
+    800.0
+  ],
+  "gamma_read_J_per_m2": [
+    0.0656,
+    0.0635,
+    0.0613,
+    0.0595,
+    0.0574,
+    0.0552,
+    0.0533,
+    0.0515
+  ],
+  "reading_precision_J_per_m2": 0.001,
+  "fit": {
+    "A_J_per_m2": 0.06752500000000002,
+    "B_J_per_m2_K": -2.025000000000003e-05,
+    "predicted_J_per_m2": [
+      0.06550000000000002,
+      0.063475,
+      0.061450000000000005,
+      0.059425000000000006,
+      0.0574,
+      0.055374999999999994,
+      0.053349999999999995,
+      0.05132499999999999
+    ],
+    "residual_J_per_m2": [
+      -9.999999999998899e-05,
+      -2.4999999999997247e-05,
+      0.0001500000000000043,
+      -7.499999999999174e-05,
+      0.0,
+      0.0001749999999999946,
+      4.999999999999449e-05,
+      -0.00017500000000000848
+    ],
+    "sse_J2_per_m4": 1.0249999999999822e-07,
+    "max_absolute_residual_J_per_m2": 0.00017500000000000848
+  },
+  "slope_entropy_like_coefficient_J_per_m2_K": 2.025000000000003e-05,
+  "geometry": {
+    "lattice_parameter_m": 3.52e-10,
+    "grain_size_m": 1e-07,
+    "molar_volume_m3_per_mol": 6.566272492797953e-06,
+    "area_m2_for_one_mol_NI": 196.9881747839386,
+    "site_density_mol_per_m2": 6.190035365655413e-05,
+    "boundary_NI_mol": 0.012193637685284898,
+    "bulk_NI_mol": 0.9878063623147151
+  },
+  "energy_checks": [
+    {
+      "T_K": 300.0,
+      "fitted_gamma_J_per_m2": 0.061450000000000005,
+      "recovered_gamma_J_per_m2": 0.061450000000000005,
+      "bulk_g_J_per_mol_NI": -8938.787869401212,
+      "epsilon_J_per_mol_sites": 992.7245382303815,
+      "boundary_g_J_per_mol_sites": -7946.063331170831,
+      "cell_G_J": -8926.682946060739,
+      "excess_total_J": 12.10492334047376,
+      "area_times_gamma_J": 12.104923340473029
+    },
+    {
+      "T_K": 500.0,
+      "fitted_gamma_J_per_m2": 0.0574,
+      "recovered_gamma_J_per_m2": 0.0574,
+      "bulk_g_J_per_mol_NI": -16427.96788138172,
+      "epsilon_J_per_mol_sites": 927.2968021875329,
+      "boundary_g_J_per_mol_sites": -15500.671079194186,
+      "cell_G_J": -16416.66076014912,
+      "excess_total_J": 11.307121232599457,
+      "area_times_gamma_J": 11.307121232598076
+    },
+    {
+      "T_K": 800.0,
+      "fitted_gamma_J_per_m2": 0.05132499999999999,
+      "recovered_gamma_J_per_m2": 0.05132499999999999,
+      "bulk_g_J_per_mol_NI": -32193.541880948662,
+      "epsilon_J_per_mol_sites": 829.1551981232598,
+      "boundary_g_J_per_mol_sites": -31364.386682825403,
+      "cell_G_J": -32183.431462877874,
+      "excess_total_J": 10.110418070788,
+      "area_times_gamma_J": 10.110418070785647
+    }
+  ],
+  "bulk_pressure_Pa": 101325,
+  "source_pressure": "no external pressure, source Eq7",
+  "tolerances": {
+    "area_energy_abs_J_per_m2": 1e-08,
+    "energy_abs_J_on_one_mol_basis": 1e-07,
+    "amount_balance_abs_mol": 1e-10
+  },
+  "limitations": "Digitized integrated EAM curve, no independent experimental fit/uncertainty inference. Fixed teaching area/sites and CALPHAD bulk copying assumed; no physical boundary assessment, exact entropy determination, transitions or extrapolation.",
+  "elapsed_s": 0.7736681940150447
+}

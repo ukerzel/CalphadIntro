@@ -1,0 +1,29 @@
+{
+ "f0_delta_u": {
+  "value": 70.0,
+  "tol": 1e-06,
+  "hint": "Work done by the sample counts negative: ΔU = q + w_on."
+ },
+ "f0_delta_s": {
+  "value": 3.0,
+  "tol": 1e-06,
+  "hint": "Divide the reversible heat (J) by the absolute temperature (K); the result is in J/K."
+ },
+ "f0_try_h": {
+  "value": 1500.0,
+  "tol": 1e-06,
+  "hint": "H = U + pV; with p in Pa and V in m³, pV is in J."
+ },
+ "f0_try_f": {
+  "value": 298.0,
+  "tol": 1e-06,
+  "hint": "F = U − TS, with TS in J.",
+  "near_miss": false
+ },
+ "f0_try_g": {
+  "value": 300.0,
+  "tol": 1e-06,
+  "hint": "G = H − TS, or F + pV.",
+  "near_miss": false
+ }
+}

@@ -1,0 +1,190 @@
+{
+  "status": "saved comparison of the plain-Python and pycalphad routes",
+  "component": "A",
+  "synthetic": true,
+  "P_Pa": 100000,
+  "amount_mol": 1,
+  "phase_order": [
+    "SOLID",
+    "LIQUID"
+  ],
+  "transition_temperature_K": 1000.0,
+  "at_crossing": "fractions are not uniquely determined; compare energy and balance",
+  "versions": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pycalphad": "0.11.2",
+    "matplotlib": "3.11.2",
+    "python": "3.12.14"
+  },
+  "sha256": {
+    "course/foundations/one_component_model.tdb": "fad186f6edb18d754edd2755205a7b173adb9ff6c41a30b3b1dae4c121ff201f",
+    "course/foundations/one_component_contract.md": "21e02b3e04eafc6e355ad9672a6c5102897a09db17775ac6f182021cb54ee7a3",
+    "course/foundations/one_component_manual.py": "80bb310e69fc8bb251a3242841bca2ae2b1a40b98f7d4315618950a98d185b1a",
+    "course/foundations/one_component_tools.py": "f2fe9cf9ac8bce819ebfdbfbd3e58c3700694a77762af9936ad66f101f30ff5f",
+    "tests/test_one_component_course.py": "cb36524e079ef8940a183b173ecb02ed5d71f17a1af9997fd73c62752c753826",
+    "poetry.lock": "ca1890efa94a4d0674c9e8002d9bd5ceb03b9b520ba19db556df351627e5bd3c"
+  },
+  "rows": [
+    {
+      "T_K": 800,
+      "plain_GM_J_per_mol": [
+        -7000.0,
+        -5800.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -7000.0,
+        -5800.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "scipy_equilibrium": {
+        "GM": -7000.0,
+        "fractions": {
+          "SOLID": 1.0,
+          "LIQUID": -0.0
+        }
+      },
+      "pycalphad_equilibrium": {
+        "GM": -7000.0,
+        "fractions": {
+          "SOLID": 1.0
+        }
+      }
+    },
+    {
+      "T_K": 900,
+      "plain_GM_J_per_mol": [
+        -8000.0,
+        -7400.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -8000.0,
+        -7400.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "scipy_equilibrium": {
+        "GM": -8000.0,
+        "fractions": {
+          "SOLID": 1.0,
+          "LIQUID": -0.0
+        }
+      },
+      "pycalphad_equilibrium": {
+        "GM": -8000.0,
+        "fractions": {
+          "SOLID": 1.0
+        }
+      }
+    },
+    {
+      "T_K": 1000,
+      "plain_GM_J_per_mol": [
+        -9000.0,
+        -9000.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -9000.0,
+        -9000.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "scipy_equilibrium": {
+        "GM": -9000.0,
+        "fractions": {
+          "SOLID": 0.0,
+          "LIQUID": 1.0
+        }
+      },
+      "pycalphad_equilibrium": {
+        "GM": -9000.0,
+        "fractions": {
+          "LIQUID": 1.0
+        }
+      }
+    },
+    {
+      "T_K": 1100,
+      "plain_GM_J_per_mol": [
+        -10000.0,
+        -10600.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -10000.0,
+        -10600.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "scipy_equilibrium": {
+        "GM": -10600.0,
+        "fractions": {
+          "SOLID": 0.0,
+          "LIQUID": 1.0
+        }
+      },
+      "pycalphad_equilibrium": {
+        "GM": -10600.0,
+        "fractions": {
+          "LIQUID": 1.0
+        }
+      }
+    },
+    {
+      "T_K": 1200,
+      "plain_GM_J_per_mol": [
+        -11000.0,
+        -12200.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -11000.0,
+        -12200.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "scipy_equilibrium": {
+        "GM": -12200.0,
+        "fractions": {
+          "SOLID": 0.0,
+          "LIQUID": 1.0
+        }
+      },
+      "pycalphad_equilibrium": {
+        "GM": -12200.0,
+        "fractions": {
+          "LIQUID": 1.0
+        }
+      }
+    }
+  ]
+}

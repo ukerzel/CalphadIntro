@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "canonical": "course/self_study/lessons.json",
+      "public": "lessons.json",
+      "sha256": "669b83800db4d9369d546214da4a7eb9fb13aa62958e193a208694ec39112702"
+    },
+    {
+      "canonical": "course/self_study/generated/two_phase.json",
+      "public": "self_study/generated/two_phase.json",
+      "sha256": "c11bd9d751af706f67ee783c8a83a5085c16bc1830ac06906fa34d77bd6743d2"
+    },
+    {
+      "canonical": "course/self_study/generated/boundary_views.json",
+      "public": "self_study/generated/boundary_views.json",
+      "sha256": "75715b2e0e003737b858ecf3867b0d778be000b46b2b6b9983f11c304a4661df"
+    },
+    {
+      "canonical": "course/materials/cuni/phase_diagram.png",
+      "public": "materials/cuni/phase_diagram.png",
+      "sha256": "6da74935448e7c551d7c22a2193255b491ba946ecf1ad70b3919831b34037017"
+    },
+    {
+      "canonical": "course/materials/cuni/energy_magnetism.png",
+      "public": "materials/cuni/energy_magnetism.png",
+      "sha256": "84ab3b5fb602d7def7b8f0ba4197092659502f6f7270871c5347156dd6f625e8"
+    },
+    {
+      "canonical": "course/materials/cuni/results.json",
+      "public": "materials/cuni/results.json",
+      "sha256": "27accb8b30debf9b8b06202c911bf1024b2969ba4d6df80fbd6ad0ad28e99b54"
+    },
+    {
+      "canonical": "course/self_study/generated/cuni_grid.json",
+      "public": "self_study/generated/cuni_grid.json",
+      "sha256": "9b98f90d1f5aef65e82ff36f3a4ad0ebd23f70d0564625710ae52e154c85bde9"
+    },
+    {
+      "canonical": "course/materials/ninb/phase_diagram.png",
+      "public": "materials/ninb/phase_diagram.png",
+      "sha256": "c6215c5f605c77eea2f3bcd20ff65b988b0d2b098cc91a286871bda0cd2c5d6a"
+    },
+    {
+      "canonical": "course/materials/ninb/results.json",
+      "public": "materials/ninb/results.json",
+      "sha256": "871d730715df3ff629daa77d0f80dd827e3456229ee342477834ebdacb55a848"
+    },
+    {
+      "canonical": "course/self_study/generated/ninb_grid.json",
+      "public": "self_study/generated/ninb_grid.json",
+      "sha256": "3bc98baa0404e10e5ad8dd29e0b02bf0eba7f953995266dc30706c31a83d3228"
+    },
+    {
+      "canonical": "course/self_study/generated/mu_structure.json",
+      "public": "self_study/generated/mu_structure.json",
+      "sha256": "6c33981831cb0d21c129932f176f1f1542842a7d22d86d3ff008ead8574039ee"
+    }
+  ]
+}

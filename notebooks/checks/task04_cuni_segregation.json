@@ -1,0 +1,81 @@
+{
+ "task04_ni_below_bulk": {
+  "value": true,
+  "hint": "A positive δ makes Ni on a boundary site cost more than in the bulk."
+ },
+ "task04_second_potential": {
+  "value": "Cu",
+  "hint": "A Ni atom arriving at a filled site pushes out an atom of the other element."
+ },
+ "task04_closed_ni_mol": {
+  "value": 0.5,
+  "tol": 1e-08,
+  "hint": "0.98 x + 0.02 y with the saved closed values."
+ },
+ "task04_closed_cu_mol": {
+  "value": 0.5,
+  "tol": 1e-08,
+  "hint": "0.98(1 − x) + 0.02(1 − y); every site holds Cu or Ni."
+ },
+ "task04_boundary_cu_closed": {
+  "value": 0.8206474977828694,
+  "tol": 1e-08,
+  "hint": "Cu per boundary site is 1 − y, with the closed y.",
+  "near_miss": false
+ },
+ "task04_boundary_cu_open": {
+  "value": 0.8224269318009267,
+  "tol": 1e-08,
+  "hint": "1 − y with the open y.",
+  "near_miss": false
+ },
+ "task04_cu_moved_into": {
+  "value": "boundary",
+  "hint": "Compare the boundary Cu fraction 1 − y with the starting 1 − z."
+ },
+ "task04_closed_excess_atoms": {
+  "value": 3.2719132426823405,
+  "tol": 1e-06,
+  "hint": "10(x − y) with the final closed x, not z."
+ },
+ "task04_closed_excess_mol": {
+  "value": 5.43313976387749e-06,
+  "tol": 1e-12,
+  "hint": "atoms/nm² × 1e18 nm²/m² ÷ N_Av."
+ },
+ "task04_open_excess_atoms": {
+  "value": 3.2242693180092674,
+  "tol": 1e-06,
+  "hint": "10(x − y) with the reservoir x = 0.5 and the open y."
+ },
+ "task04_trial_excess_atoms": {
+  "value": 2.0,
+  "tol": 1e-09,
+  "hint": "10(x − y) with the trial values."
+ },
+ "task04_trial_excess_mol": {
+  "value": 3.3210781343476934e-06,
+  "tol": 1e-12,
+  "hint": "Multiply by 1e18, divide by N_Av."
+ },
+ "task04_zero_open_y": {
+  "value": 0.5,
+  "tol": 1e-09,
+  "hint": "With δ = 0, g_b'(y) = g_b'(x)."
+ },
+ "task04_zero_closed_x": {
+  "value": 0.5,
+  "tol": 1e-09,
+  "hint": "With δ = 0 nothing drives Cu to the boundary; the piece stays uniform."
+ },
+ "task04_zero_closed_y": {
+  "value": 0.5,
+  "tol": 1e-09,
+  "hint": "Same reasoning as the closed x."
+ },
+ "task04_zero_excess": {
+  "value": 0.0,
+  "tol": 1e-09,
+  "hint": "10(x − y) when x and y are equal."
+ }
+}

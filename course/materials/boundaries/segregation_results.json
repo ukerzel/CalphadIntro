@@ -1,0 +1,84 @@
+{
+  "source_sha256": "7e52adda858e302168ae26b5abfe17f4726ccbfaaff0880abcad5b38e3f559e1",
+  "python": "3.12.14",
+  "pycalphad": "0.11.2",
+  "T_K": 1000.0,
+  "P_Pa": 101325.0,
+  "bulk_phase": "homogeneous FCC_A1, conditionally restricted",
+  "basis": "one atom per occupied site; total closed cell 1 mol sites",
+  "invented_boundary": {
+    "function": "g_s(y_NI)=g_bulk(y_NI)+delta*y_NI",
+    "delta_J_per_mol_sites": 6000.0,
+    "boundary_site_fraction": 0.02,
+    "sites_per_nm2": 10.0
+  },
+  "magnetic_assumption": "Entire bulk function copied once into invented boundary",
+  "rows": [
+    {
+      "overall_or_open_reservoir_x_NI": 0.2,
+      "open_y_NI": 0.08622349512120261,
+      "closed_bulk_x_NI": 0.20230443476934018,
+      "closed_y_NI": 0.08708269630233212,
+      "closed_total_NI_mol": 0.2,
+      "closed_total_CU_mol": 0.8,
+      "open_CU_excess": {
+        "atoms_per_nm2": 1.137765048787974,
+        "mol_per_m2": 1.8893033127773886e-06
+      },
+      "closed_CU_excess": {
+        "atoms_per_nm2": 1.1522173846700805,
+        "mol_per_m2": 1.913301981121545e-06
+      },
+      "open_phi_J_per_mol_boundary_sites": 803.3669546490837,
+      "closed_g_J_per_mol_all_sites": -48427.71605883389
+    },
+    {
+      "overall_or_open_reservoir_x_NI": 0.5,
+      "open_y_NI": 0.17757306819907326,
+      "closed_bulk_x_NI": 0.5065438264853647,
+      "closed_y_NI": 0.17935250221713064,
+      "closed_total_NI_mol": 0.5,
+      "closed_total_CU_mol": 0.5,
+      "open_CU_excess": {
+        "atoms_per_nm2": 3.2242693180092674,
+        "mol_per_m2": 5.354025165644364e-06
+      },
+      "closed_CU_excess": {
+        "atoms_per_nm2": 3.2719132426823405,
+        "mol_per_m2": 5.43313976387749e-06
+      },
+      "open_phi_J_per_mol_boundary_sites": 1817.5710347629288,
+      "closed_g_J_per_mol_all_sites": -48420.37365874993
+    },
+    {
+      "overall_or_open_reservoir_x_NI": 0.8,
+      "open_y_NI": 0.34407421637613106,
+      "closed_bulk_x_NI": 0.8089965702844126,
+      "closed_y_NI": 0.3591680560637883,
+      "closed_total_NI_mol": 0.8,
+      "closed_total_CU_mol": 0.19999999999999984,
+      "open_CU_excess": {
+        "atoms_per_nm2": 4.5592578362386895,
+        "mol_per_m2": 7.570825754392844e-06
+      },
+      "closed_CU_excess": {
+        "atoms_per_nm2": 4.498285142206243,
+        "mol_per_m2": 7.46957821392113e-06
+      },
+      "open_phi_J_per_mol_boundary_sites": 3543.0689775341775,
+      "closed_g_J_per_mol_all_sites": -47258.75981288754
+    }
+  ],
+  "checks": {
+    "max_exchange_abs_J_per_mol_sites": 2.168235369026661e-09,
+    "max_zero_preference_fraction_error": 4.440892098500626e-16,
+    "min_sampled_bulk_curvature_J_per_mol": 10024.2588872537,
+    "hand_excess_CU_atoms_per_nm2_at_x05_y03": 2.0
+  },
+  "tolerances": {
+    "fraction_balance_abs": 1e-10,
+    "exchange_abs_J_per_mol_sites": 1e-06
+  },
+  "limitations": "Invented one-state boundary; no physical boundary fit, absolute boundary energy, transition, full phase equilibrium or global certification. Convexity screen sampled only.",
+  "elapsed_s": 1.4938826400029939
+}

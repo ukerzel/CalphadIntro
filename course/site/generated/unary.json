@@ -1,0 +1,5002 @@
+{
+  "crossing_temperature_K": 1000.0,
+  "panel_id": "unary",
+  "records": [
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 800,
+      "equilibrium": {
+        "GM": -7000.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7000.0,
+        -5800.0
+      ],
+      "id": "unary-000",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 802,
+      "equilibrium": {
+        "GM": -7020.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7020.0,
+        -5832.0
+      ],
+      "id": "unary-001",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 804,
+      "equilibrium": {
+        "GM": -7040.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7040.0,
+        -5864.0
+      ],
+      "id": "unary-002",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 806,
+      "equilibrium": {
+        "GM": -7060.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7060.0,
+        -5896.0
+      ],
+      "id": "unary-003",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 808,
+      "equilibrium": {
+        "GM": -7080.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7080.0,
+        -5928.0
+      ],
+      "id": "unary-004",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 810,
+      "equilibrium": {
+        "GM": -7100.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7100.0,
+        -5960.0
+      ],
+      "id": "unary-005",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 812,
+      "equilibrium": {
+        "GM": -7120.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7120.0,
+        -5992.0
+      ],
+      "id": "unary-006",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 814,
+      "equilibrium": {
+        "GM": -7140.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7140.0,
+        -6024.0
+      ],
+      "id": "unary-007",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 816,
+      "equilibrium": {
+        "GM": -7160.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7160.0,
+        -6056.0
+      ],
+      "id": "unary-008",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 818,
+      "equilibrium": {
+        "GM": -7180.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7180.0,
+        -6088.0
+      ],
+      "id": "unary-009",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 820,
+      "equilibrium": {
+        "GM": -7200.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7200.0,
+        -6120.0
+      ],
+      "id": "unary-010",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 822,
+      "equilibrium": {
+        "GM": -7220.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7220.0,
+        -6152.0
+      ],
+      "id": "unary-011",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 824,
+      "equilibrium": {
+        "GM": -7240.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7240.0,
+        -6184.0
+      ],
+      "id": "unary-012",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 826,
+      "equilibrium": {
+        "GM": -7260.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7260.0,
+        -6216.0
+      ],
+      "id": "unary-013",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 828,
+      "equilibrium": {
+        "GM": -7280.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7280.0,
+        -6248.0
+      ],
+      "id": "unary-014",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 830,
+      "equilibrium": {
+        "GM": -7300.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7300.0,
+        -6280.0
+      ],
+      "id": "unary-015",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 832,
+      "equilibrium": {
+        "GM": -7320.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7320.0,
+        -6312.0
+      ],
+      "id": "unary-016",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 834,
+      "equilibrium": {
+        "GM": -7340.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7340.0,
+        -6344.0
+      ],
+      "id": "unary-017",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 836,
+      "equilibrium": {
+        "GM": -7360.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7360.0,
+        -6376.0
+      ],
+      "id": "unary-018",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 838,
+      "equilibrium": {
+        "GM": -7380.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7380.0,
+        -6408.0
+      ],
+      "id": "unary-019",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 840,
+      "equilibrium": {
+        "GM": -7400.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7400.0,
+        -6440.0
+      ],
+      "id": "unary-020",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 842,
+      "equilibrium": {
+        "GM": -7420.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7420.0,
+        -6472.0
+      ],
+      "id": "unary-021",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 844,
+      "equilibrium": {
+        "GM": -7440.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7440.0,
+        -6504.0
+      ],
+      "id": "unary-022",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 846,
+      "equilibrium": {
+        "GM": -7460.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7460.0,
+        -6536.0
+      ],
+      "id": "unary-023",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 848,
+      "equilibrium": {
+        "GM": -7480.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7480.0,
+        -6568.0
+      ],
+      "id": "unary-024",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 850,
+      "equilibrium": {
+        "GM": -7500.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7500.0,
+        -6600.0
+      ],
+      "id": "unary-025",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 852,
+      "equilibrium": {
+        "GM": -7520.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7520.0,
+        -6632.0
+      ],
+      "id": "unary-026",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 854,
+      "equilibrium": {
+        "GM": -7540.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7540.0,
+        -6664.0
+      ],
+      "id": "unary-027",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 856,
+      "equilibrium": {
+        "GM": -7560.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7560.0,
+        -6696.0
+      ],
+      "id": "unary-028",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 858,
+      "equilibrium": {
+        "GM": -7580.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7580.0,
+        -6728.0
+      ],
+      "id": "unary-029",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 860,
+      "equilibrium": {
+        "GM": -7600.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7600.0,
+        -6760.0
+      ],
+      "id": "unary-030",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 862,
+      "equilibrium": {
+        "GM": -7620.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7620.0,
+        -6792.0
+      ],
+      "id": "unary-031",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 864,
+      "equilibrium": {
+        "GM": -7640.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7640.0,
+        -6824.0
+      ],
+      "id": "unary-032",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 866,
+      "equilibrium": {
+        "GM": -7660.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7660.0,
+        -6856.0
+      ],
+      "id": "unary-033",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 868,
+      "equilibrium": {
+        "GM": -7680.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7680.0,
+        -6888.0
+      ],
+      "id": "unary-034",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 870,
+      "equilibrium": {
+        "GM": -7700.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7700.0,
+        -6920.0
+      ],
+      "id": "unary-035",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 872,
+      "equilibrium": {
+        "GM": -7720.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7720.0,
+        -6952.0
+      ],
+      "id": "unary-036",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 874,
+      "equilibrium": {
+        "GM": -7740.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7740.0,
+        -6984.0
+      ],
+      "id": "unary-037",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 876,
+      "equilibrium": {
+        "GM": -7760.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7760.0,
+        -7016.0
+      ],
+      "id": "unary-038",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 878,
+      "equilibrium": {
+        "GM": -7780.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7780.0,
+        -7048.0
+      ],
+      "id": "unary-039",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 880,
+      "equilibrium": {
+        "GM": -7800.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7800.0,
+        -7080.0
+      ],
+      "id": "unary-040",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 882,
+      "equilibrium": {
+        "GM": -7820.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7820.0,
+        -7112.0
+      ],
+      "id": "unary-041",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 884,
+      "equilibrium": {
+        "GM": -7840.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7840.0,
+        -7144.0
+      ],
+      "id": "unary-042",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 886,
+      "equilibrium": {
+        "GM": -7860.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7860.0,
+        -7176.0
+      ],
+      "id": "unary-043",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 888,
+      "equilibrium": {
+        "GM": -7880.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7880.0,
+        -7208.0
+      ],
+      "id": "unary-044",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 890,
+      "equilibrium": {
+        "GM": -7900.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7900.0,
+        -7240.0
+      ],
+      "id": "unary-045",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 892,
+      "equilibrium": {
+        "GM": -7920.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7920.0,
+        -7272.0
+      ],
+      "id": "unary-046",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 894,
+      "equilibrium": {
+        "GM": -7940.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7940.0,
+        -7304.0
+      ],
+      "id": "unary-047",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 896,
+      "equilibrium": {
+        "GM": -7960.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7960.0,
+        -7336.0
+      ],
+      "id": "unary-048",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 898,
+      "equilibrium": {
+        "GM": -7980.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -7980.0,
+        -7368.0
+      ],
+      "id": "unary-049",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 900,
+      "equilibrium": {
+        "GM": -8000.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8000.0,
+        -7400.0
+      ],
+      "id": "unary-050",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 902,
+      "equilibrium": {
+        "GM": -8020.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8020.0,
+        -7432.0
+      ],
+      "id": "unary-051",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 904,
+      "equilibrium": {
+        "GM": -8040.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8040.0,
+        -7464.0
+      ],
+      "id": "unary-052",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 906,
+      "equilibrium": {
+        "GM": -8060.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8060.0,
+        -7496.0
+      ],
+      "id": "unary-053",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 908,
+      "equilibrium": {
+        "GM": -8080.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8080.0,
+        -7528.0
+      ],
+      "id": "unary-054",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 910,
+      "equilibrium": {
+        "GM": -8100.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8100.0,
+        -7560.0
+      ],
+      "id": "unary-055",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 912,
+      "equilibrium": {
+        "GM": -8120.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8120.0,
+        -7592.0
+      ],
+      "id": "unary-056",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 914,
+      "equilibrium": {
+        "GM": -8140.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8140.0,
+        -7624.0
+      ],
+      "id": "unary-057",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 916,
+      "equilibrium": {
+        "GM": -8160.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8160.0,
+        -7656.0
+      ],
+      "id": "unary-058",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 918,
+      "equilibrium": {
+        "GM": -8180.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8180.0,
+        -7688.0
+      ],
+      "id": "unary-059",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 920,
+      "equilibrium": {
+        "GM": -8200.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8200.0,
+        -7720.0
+      ],
+      "id": "unary-060",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 922,
+      "equilibrium": {
+        "GM": -8220.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8220.0,
+        -7752.0
+      ],
+      "id": "unary-061",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 924,
+      "equilibrium": {
+        "GM": -8240.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8240.0,
+        -7784.0
+      ],
+      "id": "unary-062",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 926,
+      "equilibrium": {
+        "GM": -8260.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8260.0,
+        -7816.0
+      ],
+      "id": "unary-063",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 928,
+      "equilibrium": {
+        "GM": -8280.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8280.0,
+        -7848.0
+      ],
+      "id": "unary-064",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 930,
+      "equilibrium": {
+        "GM": -8300.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8300.0,
+        -7880.0
+      ],
+      "id": "unary-065",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 932,
+      "equilibrium": {
+        "GM": -8320.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8320.0,
+        -7912.0
+      ],
+      "id": "unary-066",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 934,
+      "equilibrium": {
+        "GM": -8340.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8340.0,
+        -7944.0
+      ],
+      "id": "unary-067",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 936,
+      "equilibrium": {
+        "GM": -8360.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8360.0,
+        -7976.0
+      ],
+      "id": "unary-068",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 938,
+      "equilibrium": {
+        "GM": -8380.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8380.0,
+        -8008.0
+      ],
+      "id": "unary-069",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 940,
+      "equilibrium": {
+        "GM": -8400.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8400.0,
+        -8040.0
+      ],
+      "id": "unary-070",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 942,
+      "equilibrium": {
+        "GM": -8420.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8420.0,
+        -8072.0
+      ],
+      "id": "unary-071",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 944,
+      "equilibrium": {
+        "GM": -8440.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8440.0,
+        -8104.0
+      ],
+      "id": "unary-072",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 946,
+      "equilibrium": {
+        "GM": -8460.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8460.0,
+        -8136.0
+      ],
+      "id": "unary-073",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 948,
+      "equilibrium": {
+        "GM": -8480.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8480.0,
+        -8168.0
+      ],
+      "id": "unary-074",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 950,
+      "equilibrium": {
+        "GM": -8500.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8500.0,
+        -8200.0
+      ],
+      "id": "unary-075",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 952,
+      "equilibrium": {
+        "GM": -8520.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8520.0,
+        -8232.0
+      ],
+      "id": "unary-076",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 954,
+      "equilibrium": {
+        "GM": -8540.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8540.0,
+        -8264.0
+      ],
+      "id": "unary-077",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 956,
+      "equilibrium": {
+        "GM": -8560.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8560.0,
+        -8296.0
+      ],
+      "id": "unary-078",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 958,
+      "equilibrium": {
+        "GM": -8580.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8580.0,
+        -8328.0
+      ],
+      "id": "unary-079",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 960,
+      "equilibrium": {
+        "GM": -8600.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8600.0,
+        -8360.0
+      ],
+      "id": "unary-080",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 962,
+      "equilibrium": {
+        "GM": -8620.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8620.0,
+        -8392.0
+      ],
+      "id": "unary-081",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 964,
+      "equilibrium": {
+        "GM": -8640.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8640.0,
+        -8424.0
+      ],
+      "id": "unary-082",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 966,
+      "equilibrium": {
+        "GM": -8660.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8660.0,
+        -8456.0
+      ],
+      "id": "unary-083",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 968,
+      "equilibrium": {
+        "GM": -8680.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8680.0,
+        -8488.0
+      ],
+      "id": "unary-084",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 970,
+      "equilibrium": {
+        "GM": -8700.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8700.0,
+        -8520.0
+      ],
+      "id": "unary-085",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 972,
+      "equilibrium": {
+        "GM": -8720.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8720.0,
+        -8552.0
+      ],
+      "id": "unary-086",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 974,
+      "equilibrium": {
+        "GM": -8740.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8740.0,
+        -8584.0
+      ],
+      "id": "unary-087",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 976,
+      "equilibrium": {
+        "GM": -8760.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8760.0,
+        -8616.0
+      ],
+      "id": "unary-088",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 978,
+      "equilibrium": {
+        "GM": -8780.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8780.0,
+        -8648.0
+      ],
+      "id": "unary-089",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 980,
+      "equilibrium": {
+        "GM": -8800.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8800.0,
+        -8680.0
+      ],
+      "id": "unary-090",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 982,
+      "equilibrium": {
+        "GM": -8820.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8820.0,
+        -8712.0
+      ],
+      "id": "unary-091",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 984,
+      "equilibrium": {
+        "GM": -8840.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8840.0,
+        -8744.0
+      ],
+      "id": "unary-092",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 986,
+      "equilibrium": {
+        "GM": -8860.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8860.0,
+        -8776.0
+      ],
+      "id": "unary-093",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 988,
+      "equilibrium": {
+        "GM": -8880.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8880.0,
+        -8808.0
+      ],
+      "id": "unary-094",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 990,
+      "equilibrium": {
+        "GM": -8900.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8900.0,
+        -8840.0
+      ],
+      "id": "unary-095",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 992,
+      "equilibrium": {
+        "GM": -8920.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8920.0,
+        -8872.0
+      ],
+      "id": "unary-096",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 994,
+      "equilibrium": {
+        "GM": -8940.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8940.0,
+        -8904.0
+      ],
+      "id": "unary-097",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 996,
+      "equilibrium": {
+        "GM": -8960.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8960.0,
+        -8936.0
+      ],
+      "id": "unary-098",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 998,
+      "equilibrium": {
+        "GM": -8980.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -8980.0,
+        -8968.0
+      ],
+      "id": "unary-099",
+      "phase_status": "SOLID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1000,
+      "equilibrium": {
+        "GM": -9000.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9000.0,
+        -9000.0
+      ],
+      "id": "unary-100",
+      "phase_status": "equal_energy_fractions_underdetermined"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1002,
+      "equilibrium": {
+        "GM": -9032.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9020.0,
+        -9032.0
+      ],
+      "id": "unary-101",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1004,
+      "equilibrium": {
+        "GM": -9064.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9040.0,
+        -9064.0
+      ],
+      "id": "unary-102",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1006,
+      "equilibrium": {
+        "GM": -9096.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9060.0,
+        -9096.0
+      ],
+      "id": "unary-103",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1008,
+      "equilibrium": {
+        "GM": -9128.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9080.0,
+        -9128.0
+      ],
+      "id": "unary-104",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1010,
+      "equilibrium": {
+        "GM": -9160.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9100.0,
+        -9160.0
+      ],
+      "id": "unary-105",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1012,
+      "equilibrium": {
+        "GM": -9192.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9120.0,
+        -9192.0
+      ],
+      "id": "unary-106",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1014,
+      "equilibrium": {
+        "GM": -9224.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9140.0,
+        -9224.0
+      ],
+      "id": "unary-107",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1016,
+      "equilibrium": {
+        "GM": -9256.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9160.0,
+        -9256.0
+      ],
+      "id": "unary-108",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1018,
+      "equilibrium": {
+        "GM": -9288.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9180.0,
+        -9288.0
+      ],
+      "id": "unary-109",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1020,
+      "equilibrium": {
+        "GM": -9320.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9200.0,
+        -9320.0
+      ],
+      "id": "unary-110",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1022,
+      "equilibrium": {
+        "GM": -9352.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9220.0,
+        -9352.0
+      ],
+      "id": "unary-111",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1024,
+      "equilibrium": {
+        "GM": -9384.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9240.0,
+        -9384.0
+      ],
+      "id": "unary-112",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1026,
+      "equilibrium": {
+        "GM": -9416.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9260.0,
+        -9416.0
+      ],
+      "id": "unary-113",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1028,
+      "equilibrium": {
+        "GM": -9448.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9280.0,
+        -9448.0
+      ],
+      "id": "unary-114",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1030,
+      "equilibrium": {
+        "GM": -9480.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9300.0,
+        -9480.0
+      ],
+      "id": "unary-115",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1032,
+      "equilibrium": {
+        "GM": -9512.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9320.0,
+        -9512.0
+      ],
+      "id": "unary-116",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1034,
+      "equilibrium": {
+        "GM": -9544.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9340.0,
+        -9544.0
+      ],
+      "id": "unary-117",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1036,
+      "equilibrium": {
+        "GM": -9576.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9360.0,
+        -9576.0
+      ],
+      "id": "unary-118",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1038,
+      "equilibrium": {
+        "GM": -9608.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9380.0,
+        -9608.0
+      ],
+      "id": "unary-119",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1040,
+      "equilibrium": {
+        "GM": -9640.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9400.0,
+        -9640.0
+      ],
+      "id": "unary-120",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1042,
+      "equilibrium": {
+        "GM": -9672.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9420.0,
+        -9672.0
+      ],
+      "id": "unary-121",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1044,
+      "equilibrium": {
+        "GM": -9704.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9440.0,
+        -9704.0
+      ],
+      "id": "unary-122",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1046,
+      "equilibrium": {
+        "GM": -9736.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9460.0,
+        -9736.0
+      ],
+      "id": "unary-123",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1048,
+      "equilibrium": {
+        "GM": -9768.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9480.0,
+        -9768.0
+      ],
+      "id": "unary-124",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1050,
+      "equilibrium": {
+        "GM": -9800.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9500.0,
+        -9800.0
+      ],
+      "id": "unary-125",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1052,
+      "equilibrium": {
+        "GM": -9832.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9520.0,
+        -9832.0
+      ],
+      "id": "unary-126",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1054,
+      "equilibrium": {
+        "GM": -9864.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9540.0,
+        -9864.0
+      ],
+      "id": "unary-127",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1056,
+      "equilibrium": {
+        "GM": -9896.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9560.0,
+        -9896.0
+      ],
+      "id": "unary-128",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1058,
+      "equilibrium": {
+        "GM": -9928.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9580.0,
+        -9928.0
+      ],
+      "id": "unary-129",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1060,
+      "equilibrium": {
+        "GM": -9960.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9600.0,
+        -9960.0
+      ],
+      "id": "unary-130",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1062,
+      "equilibrium": {
+        "GM": -9992.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9620.0,
+        -9992.0
+      ],
+      "id": "unary-131",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1064,
+      "equilibrium": {
+        "GM": -10024.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9640.0,
+        -10024.0
+      ],
+      "id": "unary-132",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1066,
+      "equilibrium": {
+        "GM": -10056.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9660.0,
+        -10056.0
+      ],
+      "id": "unary-133",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1068,
+      "equilibrium": {
+        "GM": -10088.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9680.0,
+        -10088.0
+      ],
+      "id": "unary-134",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1070,
+      "equilibrium": {
+        "GM": -10120.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9700.0,
+        -10120.0
+      ],
+      "id": "unary-135",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1072,
+      "equilibrium": {
+        "GM": -10152.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9720.0,
+        -10152.0
+      ],
+      "id": "unary-136",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1074,
+      "equilibrium": {
+        "GM": -10184.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9740.0,
+        -10184.0
+      ],
+      "id": "unary-137",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1076,
+      "equilibrium": {
+        "GM": -10216.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9760.0,
+        -10216.0
+      ],
+      "id": "unary-138",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1078,
+      "equilibrium": {
+        "GM": -10248.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9780.0,
+        -10248.0
+      ],
+      "id": "unary-139",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1080,
+      "equilibrium": {
+        "GM": -10280.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9800.0,
+        -10280.0
+      ],
+      "id": "unary-140",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1082,
+      "equilibrium": {
+        "GM": -10312.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9820.0,
+        -10312.0
+      ],
+      "id": "unary-141",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1084,
+      "equilibrium": {
+        "GM": -10344.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9840.0,
+        -10344.0
+      ],
+      "id": "unary-142",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1086,
+      "equilibrium": {
+        "GM": -10376.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9860.0,
+        -10376.0
+      ],
+      "id": "unary-143",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1088,
+      "equilibrium": {
+        "GM": -10408.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9880.0,
+        -10408.0
+      ],
+      "id": "unary-144",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1090,
+      "equilibrium": {
+        "GM": -10440.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9900.0,
+        -10440.0
+      ],
+      "id": "unary-145",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1092,
+      "equilibrium": {
+        "GM": -10472.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9920.0,
+        -10472.0
+      ],
+      "id": "unary-146",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1094,
+      "equilibrium": {
+        "GM": -10504.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9940.0,
+        -10504.0
+      ],
+      "id": "unary-147",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1096,
+      "equilibrium": {
+        "GM": -10536.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9960.0,
+        -10536.0
+      ],
+      "id": "unary-148",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1098,
+      "equilibrium": {
+        "GM": -10568.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -9980.0,
+        -10568.0
+      ],
+      "id": "unary-149",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1100,
+      "equilibrium": {
+        "GM": -10600.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10000.0,
+        -10600.0
+      ],
+      "id": "unary-150",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1102,
+      "equilibrium": {
+        "GM": -10632.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10020.0,
+        -10632.0
+      ],
+      "id": "unary-151",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1104,
+      "equilibrium": {
+        "GM": -10664.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10040.0,
+        -10664.0
+      ],
+      "id": "unary-152",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1106,
+      "equilibrium": {
+        "GM": -10696.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10060.0,
+        -10696.0
+      ],
+      "id": "unary-153",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1108,
+      "equilibrium": {
+        "GM": -10728.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10080.0,
+        -10728.0
+      ],
+      "id": "unary-154",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1110,
+      "equilibrium": {
+        "GM": -10760.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10100.0,
+        -10760.0
+      ],
+      "id": "unary-155",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1112,
+      "equilibrium": {
+        "GM": -10792.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10120.0,
+        -10792.0
+      ],
+      "id": "unary-156",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1114,
+      "equilibrium": {
+        "GM": -10824.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10140.0,
+        -10824.0
+      ],
+      "id": "unary-157",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1116,
+      "equilibrium": {
+        "GM": -10856.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10160.0,
+        -10856.0
+      ],
+      "id": "unary-158",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1118,
+      "equilibrium": {
+        "GM": -10888.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10180.0,
+        -10888.0
+      ],
+      "id": "unary-159",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1120,
+      "equilibrium": {
+        "GM": -10920.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10200.0,
+        -10920.0
+      ],
+      "id": "unary-160",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1122,
+      "equilibrium": {
+        "GM": -10952.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10220.0,
+        -10952.0
+      ],
+      "id": "unary-161",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1124,
+      "equilibrium": {
+        "GM": -10984.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10240.0,
+        -10984.0
+      ],
+      "id": "unary-162",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1126,
+      "equilibrium": {
+        "GM": -11016.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10260.0,
+        -11016.0
+      ],
+      "id": "unary-163",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1128,
+      "equilibrium": {
+        "GM": -11048.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10280.0,
+        -11048.0
+      ],
+      "id": "unary-164",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1130,
+      "equilibrium": {
+        "GM": -11080.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10300.0,
+        -11080.0
+      ],
+      "id": "unary-165",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1132,
+      "equilibrium": {
+        "GM": -11112.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10320.0,
+        -11112.0
+      ],
+      "id": "unary-166",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1134,
+      "equilibrium": {
+        "GM": -11144.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10340.0,
+        -11144.0
+      ],
+      "id": "unary-167",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1136,
+      "equilibrium": {
+        "GM": -11176.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10360.0,
+        -11176.0
+      ],
+      "id": "unary-168",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1138,
+      "equilibrium": {
+        "GM": -11208.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10380.0,
+        -11208.0
+      ],
+      "id": "unary-169",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1140,
+      "equilibrium": {
+        "GM": -11240.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10400.0,
+        -11240.0
+      ],
+      "id": "unary-170",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1142,
+      "equilibrium": {
+        "GM": -11272.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10420.0,
+        -11272.0
+      ],
+      "id": "unary-171",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1144,
+      "equilibrium": {
+        "GM": -11304.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10440.0,
+        -11304.0
+      ],
+      "id": "unary-172",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1146,
+      "equilibrium": {
+        "GM": -11336.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10460.0,
+        -11336.0
+      ],
+      "id": "unary-173",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1148,
+      "equilibrium": {
+        "GM": -11368.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10480.0,
+        -11368.0
+      ],
+      "id": "unary-174",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1150,
+      "equilibrium": {
+        "GM": -11400.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10500.0,
+        -11400.0
+      ],
+      "id": "unary-175",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1152,
+      "equilibrium": {
+        "GM": -11432.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10520.0,
+        -11432.0
+      ],
+      "id": "unary-176",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1154,
+      "equilibrium": {
+        "GM": -11464.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10540.0,
+        -11464.0
+      ],
+      "id": "unary-177",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1156,
+      "equilibrium": {
+        "GM": -11496.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10560.0,
+        -11496.0
+      ],
+      "id": "unary-178",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1158,
+      "equilibrium": {
+        "GM": -11528.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10580.0,
+        -11528.0
+      ],
+      "id": "unary-179",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1160,
+      "equilibrium": {
+        "GM": -11560.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10600.0,
+        -11560.0
+      ],
+      "id": "unary-180",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1162,
+      "equilibrium": {
+        "GM": -11592.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10620.0,
+        -11592.0
+      ],
+      "id": "unary-181",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1164,
+      "equilibrium": {
+        "GM": -11624.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10640.0,
+        -11624.0
+      ],
+      "id": "unary-182",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1166,
+      "equilibrium": {
+        "GM": -11656.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10660.0,
+        -11656.0
+      ],
+      "id": "unary-183",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1168,
+      "equilibrium": {
+        "GM": -11688.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10680.0,
+        -11688.0
+      ],
+      "id": "unary-184",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1170,
+      "equilibrium": {
+        "GM": -11720.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10700.0,
+        -11720.0
+      ],
+      "id": "unary-185",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1172,
+      "equilibrium": {
+        "GM": -11752.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10720.0,
+        -11752.0
+      ],
+      "id": "unary-186",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1174,
+      "equilibrium": {
+        "GM": -11784.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10740.0,
+        -11784.0
+      ],
+      "id": "unary-187",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1176,
+      "equilibrium": {
+        "GM": -11816.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10760.0,
+        -11816.0
+      ],
+      "id": "unary-188",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1178,
+      "equilibrium": {
+        "GM": -11848.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10780.0,
+        -11848.0
+      ],
+      "id": "unary-189",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1180,
+      "equilibrium": {
+        "GM": -11880.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10800.0,
+        -11880.0
+      ],
+      "id": "unary-190",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1182,
+      "equilibrium": {
+        "GM": -11912.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10820.0,
+        -11912.0
+      ],
+      "id": "unary-191",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1184,
+      "equilibrium": {
+        "GM": -11944.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10840.0,
+        -11944.0
+      ],
+      "id": "unary-192",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1186,
+      "equilibrium": {
+        "GM": -11976.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10860.0,
+        -11976.0
+      ],
+      "id": "unary-193",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1188,
+      "equilibrium": {
+        "GM": -12008.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10880.0,
+        -12008.0
+      ],
+      "id": "unary-194",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1190,
+      "equilibrium": {
+        "GM": -12040.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10900.0,
+        -12040.0
+      ],
+      "id": "unary-195",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1192,
+      "equilibrium": {
+        "GM": -12072.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10920.0,
+        -12072.0
+      ],
+      "id": "unary-196",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1194,
+      "equilibrium": {
+        "GM": -12104.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10940.0,
+        -12104.0
+      ],
+      "id": "unary-197",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1196,
+      "equilibrium": {
+        "GM": -12136.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10960.0,
+        -12136.0
+      ],
+      "id": "unary-198",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1198,
+      "equilibrium": {
+        "GM": -12168.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -10980.0,
+        -12168.0
+      ],
+      "id": "unary-199",
+      "phase_status": "LIQUID"
+    },
+    {
+      "HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "T_K": 1200,
+      "equilibrium": {
+        "GM": -12200.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      },
+      "gibbs_J_per_mol": [
+        -11000.0,
+        -12200.0
+      ],
+      "id": "unary-200",
+      "phase_status": "LIQUID"
+    }
+  ],
+  "saved_comparison_rows": [
+    {
+      "T_K": 800,
+      "plain_GM_J_per_mol": [
+        -7000.0,
+        -5800.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -7000.0,
+        -5800.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "pycalphad_equilibrium": {
+        "GM": -7000.0,
+        "fractions": {
+          "SOLID": 1.0
+        }
+      },
+      "scipy_equilibrium": {
+        "GM": -7000.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      }
+    },
+    {
+      "T_K": 900,
+      "plain_GM_J_per_mol": [
+        -8000.0,
+        -7400.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -8000.0,
+        -7400.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "pycalphad_equilibrium": {
+        "GM": -8000.0,
+        "fractions": {
+          "SOLID": 1.0
+        }
+      },
+      "scipy_equilibrium": {
+        "GM": -8000.0,
+        "fractions": {
+          "LIQUID": -0.0,
+          "SOLID": 1.0
+        }
+      }
+    },
+    {
+      "T_K": 1000,
+      "plain_GM_J_per_mol": [
+        -9000.0,
+        -9000.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -9000.0,
+        -9000.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "pycalphad_equilibrium": {
+        "GM": -9000.0,
+        "fractions": {
+          "LIQUID": 1.0
+        }
+      },
+      "scipy_equilibrium": {
+        "GM": -9000.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      }
+    },
+    {
+      "T_K": 1100,
+      "plain_GM_J_per_mol": [
+        -10000.0,
+        -10600.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -10000.0,
+        -10600.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "pycalphad_equilibrium": {
+        "GM": -10600.0,
+        "fractions": {
+          "LIQUID": 1.0
+        }
+      },
+      "scipy_equilibrium": {
+        "GM": -10600.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      }
+    },
+    {
+      "T_K": 1200,
+      "plain_GM_J_per_mol": [
+        -11000.0,
+        -12200.0
+      ],
+      "pycalphad_GM_J_per_mol": [
+        -11000.0,
+        -12200.0
+      ],
+      "pycalphad_HM_J_per_mol": [
+        1000.0,
+        7000.0
+      ],
+      "pycalphad_SM_J_per_mol_K": [
+        10.0,
+        16.0
+      ],
+      "pycalphad_equilibrium": {
+        "GM": -12200.0,
+        "fractions": {
+          "LIQUID": 1.0
+        }
+      },
+      "scipy_equilibrium": {
+        "GM": -12200.0,
+        "fractions": {
+          "LIQUID": 1.0,
+          "SOLID": 0.0
+        }
+      }
+    }
+  ],
+  "saved_comparison_status": "saved comparison of the plain-Python and pycalphad routes",
+  "schema_version": 1,
+  "units": {
+    "HM_J_per_mol": "J/mol atoms",
+    "SM_J_per_mol_K": "J/(mol atoms K)",
+    "T_K": "K",
+    "equilibrium.GM": "J/mol atoms",
+    "equilibrium.fractions": "mol phase/mol atoms",
+    "gibbs_J_per_mol": "J/mol atoms"
+  }
+}

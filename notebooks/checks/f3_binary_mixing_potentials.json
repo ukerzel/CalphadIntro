@@ -1,0 +1,97 @@
+{
+ "f3_ratio_nb_na": {
+  "value": 0.6666666666666666,
+  "tol": 0.001,
+  "hint": "A ratio divides one amount by the other, not by the total."
+ },
+ "f3_nb_2mol": {
+  "value": 0.4,
+  "tol": 1e-06,
+  "hint": "n_B = z × (total moles of atoms)."
+ },
+ "f3_na_2mol": {
+  "value": 1.6,
+  "tol": 1e-06,
+  "hint": "Whatever is not B is A: total minus n_B."
+ },
+ "f3_f2_trial": {
+  "value": 0.25,
+  "tol": 1e-06,
+  "hint": "Put f1 = 1 − f2 into z = f1 x1 + f2 x2 and solve for f2."
+ },
+ "f3_a_balance": {
+  "value": 0.8,
+  "tol": 1e-06,
+  "hint": "Use your f1 and f2 with the A fractions 1 − x1 and 1 − x2; it must equal 1 − z."
+ },
+ "f3_xb_40g": {
+  "value": 0.2,
+  "tol": 1e-06,
+  "hint": "Turn each mass into moles with n = m/M first, then take n_B over the total."
+ },
+ "f3_beta_mass_fraction": {
+  "value": 0.6285714285714286,
+  "tol": 0.0001,
+  "hint": "Mass of each box = n_A M_A + n_B M_B in grams; divide β's mass by the total."
+ },
+ "f3_kj_gap": {
+  "value": 2.902,
+  "tol": 0.01,
+  "hint": "Multiply the kJ/mol value by 1000 before subtracting, and give the size without a sign."
+ },
+ "f3_g_2mol_x010": {
+  "value": -21005.804,
+  "tol": 0.01,
+  "hint": "Total G in J = (moles of atoms) × (J per mole of atoms)."
+ },
+ "f3_ref_020": {
+  "value": -6600.0,
+  "tol": 0.01,
+  "hint": "Only the straight line −9000 + 12000x; no logarithm yet."
+ },
+ "f3_mix_020": {
+  "value": -4160.596,
+  "tol": 0.01,
+  "hint": "q is dimensionless; multiply it by RT = 8314.5 J/mol. The result is negative."
+ },
+ "f3_gb_020": {
+  "value": -10760.596,
+  "tol": 0.01,
+  "hint": "Add the reference and the mixing term at the same x."
+ },
+ "f3_gb_pure_b": {
+  "value": 3000.0,
+  "tol": 1e-06,
+  "hint": "At a pure end both terms of q are 0 ln 0 = 0, so only the reference line is left."
+ },
+ "f3_slope_020": {
+  "value": 473.656,
+  "tol": 0.01,
+  "hint": "12000 + 8314.5 × ln(x/(1 − x)); watch the sign of the logarithm."
+ },
+ "f3_mua_020": {
+  "value": -10855.327,
+  "tol": 0.01,
+  "hint": "μ_A = −9000 + 8314.5 ln(1 − x), natural logarithm."
+ },
+ "f3_mub_020": {
+  "value": -10381.672,
+  "tol": 0.01,
+  "hint": "μ_B = 3000 + 8314.5 ln x; check that μ_B − μ_A equals your slope."
+ },
+ "f3_tangent_05_at_08": {
+  "value": -5163.172233,
+  "tol": 0.01,
+  "hint": "ℓ(x) = g_b(0.5) + g_b'(0.5)(x − 0.5); at x = 0.5 the logarithm in the slope is zero."
+ },
+ "f3_slope_019": {
+  "value": -56.1096,
+  "tol": 0.5,
+  "hint": "Same slope formula as at 0.20, with x = 0.19; it is small, so keep enough digits in the logarithm."
+ },
+ "f3_x_zero_slope": {
+  "value": 0.191040753,
+  "tol": 0.0001,
+  "hint": "Set 12000 + 8314.5 ln(x/(1 − x)) = 0, take the exponential, then solve x/(1 − x) = r for x."
+ }
+}

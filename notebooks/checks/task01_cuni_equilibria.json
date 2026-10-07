@@ -1,0 +1,54 @@
+{
+ "task01_liquid_cu_1500": {
+  "value": -83457.60262034053,
+  "tol": 0.01,
+  "hint": "Use only the range whose limits enclose 1500 K, LN is the natural logarithm, and add any function the range refers to; the result is in J/mol of atoms.",
+  "strict": true
+ },
+ "task01_ni_balance_600": {
+  "value": 0.5,
+  "tol": 1e-06,
+  "hint": "Multiply each row's amount NP by its x(Ni) and add the products; use all printed digits."
+ },
+ "task01_cu_balance_600": {
+  "value": 0.5,
+  "tol": 1e-06,
+  "hint": "The Cu fraction in a phase is 1 − x(Ni); weight it by that row's amount NP and add."
+ },
+ "task01_same_fcc_600": {
+  "value": true,
+  "hint": "Compare with the miscibility gap of f4 and f5: how many phase models produced the two rows?"
+ },
+ "task01_demixing_disappears": {
+  "value": false,
+  "hint": "Count the FCC_A1 rows with a positive amount in the magnetic-off table."
+ },
+ "task01_lever_liquid_1540": {
+  "value": 0.09781834616237173,
+  "tol": 1e-06,
+  "hint": "f_L = (x_FCC − z)/(x_FCC − x_L) with z = 0.5 and the 1540 K compositions at full precision."
+ },
+ "task01_lever_fcc_1540": {
+  "value": 0.9021816538378962,
+  "tol": 1e-06,
+  "hint": "The two amounts add up to one."
+ },
+ "task01_phase_1600": {
+  "value": "LIQUID",
+  "hint": "Read the 1600 K line of the table; write the phase name as pycalphad prints it."
+ },
+ "task01_gap_top_on": {
+  "value": 640.0,
+  "tol": 1e-06,
+  "hint": "In the zoomed panel, find the highest 20 K row that still has both FCC compositions (solid line, filled circles)."
+ },
+ "task01_gap_top_off": {
+  "value": 620.0,
+  "tol": 1e-06,
+  "hint": "Same reading for the magnetic-off curves (dashed line, open squares)."
+ },
+ "task01_independent_validation": {
+  "value": false,
+  "hint": "Ask where the coefficients came from: data that a check against them could not test independently."
+ }
+}

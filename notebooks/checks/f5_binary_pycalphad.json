@@ -1,0 +1,17 @@
+{
+ "f5_alpha_half": {
+  "value": -8763.172233,
+  "tol": 0.5,
+  "hint": "Weighted references −9000 and +3000, plus RT·q(0.5) with q = ln 0.5."
+ },
+ "f5_r1_vertices": {
+  "value": 2,
+  "tol": 0,
+  "hint": "Recall the f4 regular solution at 1000 K: is z = 0.5 inside or outside its miscibility gap? Count one used vertex per coexisting composition."
+ },
+ "f5_single_phase_t": {
+  "value": 1150.0,
+  "tol": 1e-06,
+  "hint": "Read the scan table: the first row with one phase."
+ }
+}

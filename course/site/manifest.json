@@ -1,0 +1,199 @@
+{
+  "answer_policy": "Keep answers hidden until learner attempts activity; no pacing evidence.",
+  "day2_remaining_tasks": [
+    "D7",
+    "D8",
+    "D9",
+    "D10"
+  ],
+  "panels": [
+    {
+      "conditions": {
+        "P_Pa": 100000,
+        "amount_mol_atoms": 1,
+        "components": [
+          "A"
+        ],
+        "phases": [
+          "SOLID",
+          "LIQUID"
+        ]
+      },
+      "dataset": "generated/unary.json",
+      "id": "unary",
+      "learner_pacing": "unobserved",
+      "limitations": "Invented A; SOLID/LIQUID only. Equal energies at 1000 K leave fractions undetermined; returned split is one minimizer. No kinetics or material prediction.",
+      "missing_value_policy": "reject; no fallback",
+      "physical_validation": "not established",
+      "record_count": 201,
+      "review_scope": "Checked against the course code, the Day 1 worksheet values and the saved plain-Python/pycalphad comparison; not a physical validation.",
+      "selection": {
+        "field": "T_K",
+        "maximum": 1200,
+        "minimum": 800,
+        "order": "ascending",
+        "policy": "exact exported rows only; no interpolation/extrapolation/clipping",
+        "step": 2
+      },
+      "source_paths": [
+        "course/foundations/one_component_manual.py",
+        "course/foundations/one_component_tools.py",
+        "course/foundations/one_component_model.tdb",
+        "course/foundations/one_component_contract.md",
+        "course/foundations/one_component_result.json",
+        "course/primer/worksheet.md",
+        "course/primer/answers.md"
+      ],
+      "synthetic": true,
+      "task_ids": [
+        "W4",
+        "W5",
+        "W6",
+        "W7",
+        "W8"
+      ],
+      "units": {
+        "HM_J_per_mol": "J/mol atoms",
+        "SM_J_per_mol_K": "J/(mol atoms K)",
+        "T_K": "K",
+        "equilibrium.GM": "J/mol atoms",
+        "equilibrium.fractions": "mol phase/mol atoms",
+        "gibbs_J_per_mol": "J/mol atoms"
+      }
+    },
+    {
+      "conditions": {
+        "P_Pa": 100000,
+        "T_K": 1000,
+        "amount_basis": "per mole atoms",
+        "components": [
+          "A",
+          "B"
+        ],
+        "phases": [
+          "ALPHA"
+        ]
+      },
+      "dataset": "generated/binary.json",
+      "id": "binary",
+      "learner_pacing": "unobserved",
+      "limitations": "I1 homogeneous ALPHA only; no all-phase equilibrium. Chemical-potential endpoints are undefined and omitted, with no epsilon substitution.",
+      "missing_value_policy": "reject; no fallback",
+      "physical_validation": "not established",
+      "record_count": 99,
+      "review_scope": "Checked against the binary-family course code and the Day 2 worksheet values; not a physical validation.",
+      "selection": {
+        "field": "x_B",
+        "maximum": 0.99,
+        "minimum": 0.01,
+        "order": "ascending",
+        "policy": "exact exported rows only; no interpolation/extrapolation/clipping",
+        "step": 0.01
+      },
+      "source_paths": [
+        "course/foundations/binary_family.py",
+        "course/foundations/binary_family_contract.md",
+        "course/primer_day2/worksheet.md",
+        "course/primer_day2/answers.md"
+      ],
+      "synthetic": true,
+      "task_ids": [
+        "D1",
+        "D2",
+        "D3"
+      ],
+      "units": {
+        "derivatives.curvature": "J/mol atoms",
+        "derivatives.mu_A": "J/mol A atoms",
+        "derivatives.mu_B": "J/mol B atoms",
+        "derivatives.slope": "J/mol atoms",
+        "properties.GM": "J/mol atoms",
+        "properties.GM_mix": "J/mol atoms",
+        "properties.GM_reference": "J/mol atoms",
+        "properties.HM": "J/mol atoms",
+        "properties.HM_mix": "J/mol atoms",
+        "properties.SM": "J/(mol atoms K)",
+        "properties.SM_mix": "J/(mol atoms K)",
+        "x_B": "mol B atoms/mol atoms"
+      }
+    },
+    {
+      "conditions": {
+        "P_Pa": 100000,
+        "T_K": 1000,
+        "area_per_boundary_m2": 2e-17,
+        "area_per_boundary_nm2": 20,
+        "boundary_count": 2,
+        "boundary_states": 1,
+        "bulk_phase": "ALPHA",
+        "bulk_sites": 8000,
+        "initial_boundary_occupancy_B": 0.25,
+        "preference_J_per_mol_boundary_sites": -5000,
+        "sites_per_boundary": 100
+      },
+      "dataset": "generated/boundary.json",
+      "id": "boundary",
+      "learner_pacing": "unobserved",
+      "limitations": "Open exchanges A/B with a reservoir; closed conserves both components. Open grand potential and closed total G have different ensembles and must not be ranked together. Excess uses current bulk composition and one boundary area.",
+      "missing_value_policy": "reject; no fallback",
+      "physical_validation": "not established",
+      "record_count": 81,
+      "review_scope": "Checked against the boundary course code, both atom balances and the open-reservoir limit; not a physical validation.",
+      "selection": {
+        "field": "x_initial_or_reservoir_B",
+        "maximum": 0.9,
+        "minimum": 0.1,
+        "order": "ascending",
+        "policy": "exact exported rows only; no interpolation/extrapolation/clipping",
+        "step": 0.01
+      },
+      "source_paths": [
+        "course/foundations/boundary_one_state.py",
+        "course/foundations/boundary_closed.py",
+        "course/foundations/binary_family.py",
+        "course/foundations/binary_family_contract.md",
+        "course/foundations/boundary_one_state_contract.md",
+        "course/foundations/boundary_closed_contract.md",
+        "course/primer_day2/worksheet.md",
+        "course/primer_day2/answers.md"
+      ],
+      "synthetic": true,
+      "task_ids": [
+        "D4",
+        "D5",
+        "D6"
+      ],
+      "units": {
+        "B_boundary_excess_atoms": "B atoms per boundary",
+        "B_boundary_excess_mol": "mol B per boundary",
+        "boundary_amount_mol": "mol occupied boundary sites",
+        "bulk_amount_mol": "mol occupied bulk sites",
+        "inventory": "atoms",
+        "mu_A_J_per_mol": "J/mol A atoms",
+        "mu_B_J_per_mol": "J/mol B atoms",
+        "result.G_cell_J": "J",
+        "result.G_molar_J_per_mol_sites": "J/mol all occupied cell sites",
+        "result.gamma_B_mol_per_m2": "mol B excess/m^2 per boundary",
+        "result.phi_J_per_mol_sites": "J/mol boundary sites",
+        "result.theta": "B atoms/boundary sites",
+        "result.theta_analytic": "B atoms/boundary sites",
+        "result.theta_root": "B atoms/boundary sites",
+        "result.total_B_atoms": "atoms",
+        "result.x_bulk": "B atoms/bulk sites",
+        "x_initial_or_reservoir_B": "B atoms/occupied sites"
+      }
+    }
+  ],
+  "reading_routes": [
+    "course/primer/README.md",
+    "course/primer/worksheet.md",
+    "course/primer/answers.md",
+    "course/primer/instructor.md",
+    "course/primer_day2/README.md",
+    "course/primer_day2/worksheet.md",
+    "course/primer_day2/answers.md",
+    "course/primer_day2/instructor.md"
+  ],
+  "schema_version": 1,
+  "title": "Synthetic CALPHAD two-primer companion"
+}

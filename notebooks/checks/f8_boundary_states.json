@@ -1,0 +1,114 @@
+{
+ "f8_d7_D_010": {
+  "value": 22.21984,
+  "tol": 0.0001,
+  "hint": "Subtract State I's settled energy from State II's in the same row."
+ },
+ "f8_d7_lower_010": {
+  "value": "I",
+  "hint": "Positive D means State I is lower; negative D means State II is lower."
+ },
+ "f8_d7_D_025": {
+  "value": -5.47887,
+  "tol": 0.0001,
+  "hint": "Same subtraction, II minus I, in the second row only."
+ },
+ "f8_d7_lower_025": {
+  "value": "II",
+  "hint": "Look at the sign of D in this row."
+ },
+ "f8_d7_cross_row": {
+  "value": false,
+  "hint": "The two rows hold different B totals; are they the same closed cell?"
+ },
+ "f8_d7_boundary_B_II": {
+  "value": 53.796516,
+  "tol": 0.002,
+  "hint": "State II's θ is a fraction of 200 boundary sites."
+ },
+ "f8_d7_bulk_B_II": {
+  "value": 796.203484,
+  "tol": 0.002,
+  "hint": "The cell keeps its 850 B; subtract what sits on the boundaries."
+ },
+ "f8_d7_x_b_II": {
+  "value": 0.0995254355,
+  "tol": 1e-06,
+  "hint": "Bulk B divided by 8000 bulk sites."
+ },
+ "f8_d7_bulk_B_I": {
+  "value": 815.678494,
+  "tol": 0.002,
+  "hint": "Same balance with State I's θ."
+ },
+ "f8_d7_same_x_b": {
+  "value": false,
+  "hint": "The two states settle at different θ; with a fixed 850 B, what does that force on x_b?"
+ },
+ "f8_d7_baseline": {
+  "value": 48.78048780487805,
+  "tol": 0.0001,
+  "hint": "Only 200 of the 8200 sites carry η; spread it over all cell sites."
+ },
+ "f8_d7_g_II_no_baseline": {
+  "value": -10568.287437804878,
+  "tol": 0.001,
+  "hint": "Remove the baseline on the all-site basis, not 2000 J/mol."
+ },
+ "f8_d7_lower_no_baseline": {
+  "value": "II",
+  "hint": "Compare the energy without the baseline with State I's energy in the same row."
+ },
+ "f8_l14_D_unrelaxed": {
+  "value": 18.29268292682927,
+  "tol": 0.0001,
+  "hint": "At equal θ and equal B the bulk terms cancel; only 200(η + Δδ θ)/8200 remains."
+ },
+ "f8_l14_lower_unrelaxed": {
+  "value": "I",
+  "hint": "Look at the sign of the unrelaxed D."
+ },
+ "f8_l14_crossing": {
+  "value": 0.21618677985342732,
+  "tol": 0.0001,
+  "hint": "D is positive at 0.20 and negative at 0.25; keep halving the interval where the sign changes."
+ },
+ "f8_l14_shift_2100": {
+  "value": 2.4390243902439024,
+  "tol": 0.0001,
+  "hint": "100 J/mol on 200 of the 8200 sites."
+ },
+ "f8_l14_theta_changes": {
+  "value": false,
+  "hint": "Does η depend on θ? Look at the exchange condition."
+ },
+ "f8_l14_crossing_2100": {
+  "value": 0.230947752370634,
+  "tol": 0.0001,
+  "hint": "Use D_at(x0, eta_II=2100.0) and bracket the sign change again."
+ },
+ "f8_clinic_total_B": {
+  "value": 3250.0,
+  "tol": 1e-06,
+  "hint": "8000 x0 + 200 θ0."
+ },
+ "f8_clinic_total_A": {
+  "value": 4950.0,
+  "tol": 1e-06,
+  "hint": "Every site holds A or B: 8200 minus total B."
+ },
+ "f8_clinic_D": {
+  "value": -25.84748,
+  "tol": 0.0001,
+  "hint": "II minus I from the card."
+ },
+ "f8_clinic_lower": {
+  "value": "II",
+  "hint": "Look at the sign of D."
+ },
+ "f8_clinic_excess_II": {
+  "value": 1.4520929,
+  "tol": 1e-05,
+  "hint": "5(θ − x_b) with State II's own θ and final x_b."
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "f1_gs_1000": {
+  "value": -9000.0,
+  "tol": 1e-06,
+  "hint": "g = h − Ts with T in kelvin."
+ },
+ "f1_gl_1100": {
+  "value": -10600.0,
+  "tol": 1e-06,
+  "hint": "Use the LIQUID row: g = h − Ts with T in kelvin."
+ },
+ "f1_crossing": {
+  "value": 1000.0,
+  "tol": 1e-06,
+  "hint": "Collect the T terms on one side and the constants on the other, then divide."
+ },
+ "f1_gs_950": {
+  "value": -8500.0,
+  "tol": 1e-06,
+  "hint": "Same constants, new temperature."
+ },
+ "f1_gl_950": {
+  "value": -8200.0,
+  "tol": 1e-06,
+  "hint": "Same constants, new temperature."
+ },
+ "f1_gmix_025": {
+  "value": -7850.0,
+  "tol": 1e-06,
+  "hint": "Weight each phase's g at 900 K by its fraction and add the two."
+ },
+ "f1_best_fl_900": {
+  "value": 0.0,
+  "tol": 1e-09,
+  "hint": "Does g_mix rise or fall as f_L grows at 900 K? Then choose the end of the allowed range 0 ≤ f_L ≤ 1 with the lower g_mix."
+ },
+ "f1_gs_1050": {
+  "value": -9500.0,
+  "tol": 1e-06,
+  "hint": "Use the SOLID row: g = h − Ts at the new temperature."
+ },
+ "f1_gl_1050": {
+  "value": -9800.0,
+  "tol": 1e-06,
+  "hint": "Use the LIQUID row: g = h − Ts at the new temperature."
+ },
+ "f1_min_1050": {
+  "value": -9800.0,
+  "tol": 1e-06,
+  "hint": "Take the lower of your two energies."
+ },
+ "f1_report_a": {
+  "value": -8000.0,
+  "tol": 1e-06,
+  "hint": "Recompute g_S at 900 K from the model, and put both energies in the same unit before comparing."
+ },
+ "f1_report_b_sum": {
+  "value": 1.2,
+  "tol": 1e-09,
+  "hint": "Add the two reported fractions as they stand."
+ },
+ "f1_report_b_balanced": {
+  "value": false,
+  "hint": "One mole needs f_S + f_L = 1 exactly. Rescaling the reported fractions would silently change the reported state."
+ },
+ "f1_gs_975": {
+  "value": -8750.0,
+  "tol": 1e-06,
+  "hint": "Use the SOLID row: g = h − Ts at the new temperature.",
+  "near_miss": false
+ },
+ "f1_gl_975": {
+  "value": -8600.0,
+  "tol": 1e-06,
+  "hint": "Use the LIQUID row: g = h − Ts at the new temperature.",
+  "near_miss": false
+ }
+}
