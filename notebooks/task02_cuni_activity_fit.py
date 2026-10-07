@@ -29,13 +29,26 @@
 #
 # This notebook runs with or without the published Cu–Ni database. Without it,
 # the pinned model's values at the nine compositions come from the saved run.
+#
+# **How this notebook works.** Run the cells from top to bottom (Shift + Enter).
+# In each "Your turn" cell, replace `None` with your value and run the cell:
+# `check(your_value, key)` (key: the name of the stored answer, in quotes) prints "✓ matches", "close" or "not yet" without
+# showing the stored answer. The "After your attempt" cells use
+# `confirm(value, expected, "what", tol=...)`, which prints a ✓ line when a
+# calculation reproduces the lesson value within `tol` and stops with an error
+# otherwise.
+#
+# The steps: read the measurements (1), write the model change as a linear
+# formula (2), get the published model's predictions (3), fit two numbers by
+# least squares (4), see what one temperature cannot decide (5), and name the
+# result correctly (6).
 
 # %%
 # Setup: run this cell first. Locally it finds the course folder; in Colab it
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.1"
+RELEASE = "v0.1.2"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)
@@ -84,6 +97,28 @@ show_versions(RELEASE)
 #
 # The fit compares $RT\ln a_{Ni}$, the Ni chemical potential relative to pure Ni,
 # because the model changes are linear in it.
+#
+# **What an activity is.** The chemical potential $\mu_{Ni}$ is the Gibbs energy
+# change per mole of Ni added to a large amount of alloy (J/mol). The activity
+# compares it with pure Ni at the same temperature:
+#
+# $$RT\ln a_{Ni}=\mu_{Ni}-\mu^{\rm pure}_{Ni},\qquad\text{so}\qquad a_{Ni}=1 \text{ for pure Ni}.$$
+#
+# In an *ideal* solution $a_{Ni}=x_{Ni}$. Values below $x_{Ni}$ mean Ni is held
+# more strongly in the alloy than in an ideal mix (negative deviation), values
+# above mean it is held less strongly (positive deviation). Since $a<1$ in an
+# alloy, $RT\ln a_{Ni}$ is negative.
+#
+# **Where the numbers come from.** In an EMF (electromotive force) measurement
+# an electrochemical cell compares Ni in the alloy with pure Ni; its voltage $E$
+# gives the chemical potential difference directly, $RT\ln a_{Ni}=-2FE$, with
+# $F$ the Faraday constant and 2 the charge of a Ni²⁺ ion. The notebook uses the
+# activities as reported.
+#
+# **The code.** `csv.DictReader` reads the table file row by row, each row as a
+# dictionary keyed by the column names (all values arrive as text, hence
+# `float(...)`). `np.array([...])` turns a Python list into a numpy array, so
+# that `RT * np.log(a_obs)` acts on all nine numbers at once.
 
 # %%
 import csv
@@ -97,7 +132,7 @@ R = 8.3145             # J/(mol K), the value pycalphad uses
 RT = R * T             # J/mol
 DATA = Path("course/materials/cuni/srikanth_jacob1989_ni_activity.csv")
 
-rows = list(csv.DictReader(DATA.open()))
+rows = list(csv.DictReader(DATA.open()))  # nine rows, each a dict {column name: text}
 x = np.array([float(r["x_NI_mole_fraction"]) for r in rows])     # Ni atom fraction
 a_obs = np.array([float(r["a_NI_dimensionless"]) for r in rows])  # Ni activity
 mu_obs = RT * np.log(a_obs)                                       # J/mol of atoms
@@ -118,6 +153,14 @@ print("The fit uses RT ln a_Ni at each point (mu_obs, J/mol); work out the one a
 # $$\mu_{Ni}=g+(1-x)\frac{dg}{dx},\qquad
 # RT\ln a_{Ni}=\mu_{Ni}-g^{FCC}_{Ni}.$$
 #
+# **Why $\mu_{Ni}$ has this form (tangent construction).** For a binary,
+# $g=(1-x)\,\mu_{Cu}+x\,\mu_{Ni}$, and the slope of the curve is
+# $dg/dx=\mu_{Ni}-\mu_{Cu}$. Put the second into the first and solve for
+# $\mu_{Ni}$: you get the formula above. In a picture: draw the tangent to
+# $g(x)$ at the composition $x$; where it meets the line $x=1$ is $\mu_{Ni}$,
+# where it meets $x=0$ is $\mu_{Cu}$. $g^{FCC}_{Ni}$ is the Gibbs energy of pure
+# FCC Ni, i.e. $g$ at $x=1$.
+#
 # Pure-element, ideal and magnetic terms stay as published. Only the two
 # interaction values at 1000 K, $L_0$ and $L_1$, are changed by $\delta L_0$ and
 # $\delta L_1$. In the source's sign convention (order $x_{Cu}-x_{Ni}=1-2x$),
@@ -125,15 +168,27 @@ print("The fit uses RT ln a_Ni at each point (mu_obs, J/mol); work out the one a
 # $$\delta g=x(1-x)\,[\delta L_0+\delta L_1(1-2x)],$$
 # $$\delta\mu_{Ni}=(1-x)^2\,[\delta L_0+\delta L_1(1-4x)].$$
 #
+# The first line is the Redlich–Kister excess term of Task 01 with $L_0$ and
+# $L_1$ replaced by their changes; the factor $x(1-x)=x_{Ni}x_{Cu}$ makes it
+# vanish for the pure elements. The second line is the tangent formula applied
+# to $\delta g$; you can check it yourself by differentiating.
+#
 # So each prediction is the pinned value plus a **linear** combination of the
 # two unknowns: a 9 × 2 matrix $M$ with columns $(1-x)^2$ and $(1-x)^2(1-4x)$.
+#
+# **Why "linear" matters.** The unknowns $\delta L_0$, $\delta L_1$ appear only
+# multiplied by known numbers (the columns of $M$ at each composition). Then the
+# best fit can be found in one step with matrix algebra, with no trial and error.
+#
+# In the code, `np.column_stack` puts the two columns side by side to make the
+# 9 × 2 array, and `M.shape` is its (rows, columns) size. `**2` is a square.
 
 # %%
 def basis(x):
-    x = np.asarray(x, dtype=float)
+    x = np.asarray(x, dtype=float)  # accept a list or a single value as well as an array
     return np.column_stack(((1 - x)**2, (1 - x)**2 * (1 - 4 * x)))   # dimensionless, 9 × 2
 
-M = basis(x)
+M = basis(x)  # row i: the two factors at composition x[i]
 print("M has", M.shape[0], "rows (one per composition) and", M.shape[1], "columns; its values are printed after your turn.")
 
 # %% [markdown]
@@ -145,6 +200,10 @@ print("M has", M.shape[0], "rows (one per composition) and", M.shape[1], "column
 # 2. Work out $\delta\mu_{Ni}$ at x = 0.5 from $\delta g$ and its derivative.
 #    Give the factors in $\delta\mu_{Ni}=c_0\,\delta L_0+c_1\,\delta L_1$.
 # 3. Units drill: $RT\ln a_{Ni}$ at x = 0.5 (J/mol).
+#
+# The notation (Cu,Ni)₁(Va)₁ lists the sublattices: the first bracket is one
+# site per formula unit that holds Cu or Ni, the second is one site that holds
+# only vacancies (Va, an empty site).
 
 # %%
 atoms_per_formula_unit = None   # mol atoms per mol formula units
@@ -161,11 +220,15 @@ check(rt_ln_a_05, "task02_rtlna_05")
 # %% cellView="form"
 #@title After your attempt: RT ln a_Ni and the two basis columns at each composition
 print(" x_Ni   RT ln a_Ni (J/mol)   (1−x)²     (1−x)²(1−4x)")
-for xi, m, (c0, c1) in zip(x, mu_obs, M):
+for xi, m, (c0, c1) in zip(x, mu_obs, M):  # each row of M unpacks into its two columns
     print(f" {xi:.1f}   {m:12.2f}         {c0:.4f}    {c1:8.4f}")
 
 # %% [markdown]
 # ## 3. The pinned model before fitting
+#
+# Before changing anything we need the published model's own prediction
+# $\mu_{\rm before}$ at the nine compositions: the fit then adds a correction to
+# it.
 #
 # With the published database, the course code builds $g(x)$ from it and
 # differentiates. Without it, the pinned model's activities at the nine
@@ -179,16 +242,25 @@ for xi, m, (c0, c1) in zip(x, mu_obs, M):
 # [doi:10.1016/0364-5916(92)90022-P](https://doi.org/10.1016/0364-5916(92)90022-P),
 # from B. Hallstedt's SGTE collection, *Calphad* 89 (2025) 102833,
 # [doi:10.1016/j.calphad.2025.102833](https://doi.org/10.1016/j.calphad.2025.102833).
+#
+# **The code.** `database("cuni", download=DOWNLOAD)` returns the path of a
+# checked copy, or `None` (no-database mode). With the file,
+# `make_forward_model` turns pycalphad's symbolic FCC Gibbs energy into $g(x)$
+# at 1000 K, differentiates it, and returns a dictionary; its entry
+# `forward["mu_relative"]` is a *function* that you call with compositions and
+# that returns $\mu_{Ni}-g^{FCC}_{Ni}$ in J/mol. `baseline_L_J_per_mol` holds the
+# published $L_0$ and $L_1$ at 1000 K. Without the file, the saved activities are
+# turned back into $RT\ln a$.
 
 # %%
 DOWNLOAD = False
-tdb = database("cuni", download=DOWNLOAD)
-saved = json.loads(Path("course/materials/cuni/activity_fit_results.json").read_text())
+tdb = database("cuni", download=DOWNLOAD)  # path to the checked file, or None
+saved = json.loads(Path("course/materials/cuni/activity_fit_results.json").read_text())  # the course run
 
 if tdb is not None:
     from course.materials.cuni.fit_activity import make_forward_model
     from course.materials.cuni.worked_example import load_source
-    forward = make_forward_model(load_source(tdb))
+    forward = make_forward_model(load_source(tdb))  # load_source checks the file and pycalphad version
     mu_before = forward["mu_relative"](x)                  # J/mol, μ_Ni − g_Ni(FCC)
     L_before = forward["baseline_L_J_per_mol"]             # J/mol at 1000 K
     print("Pinned model built from the database.")
@@ -203,6 +275,9 @@ print(f"L0(1000 K) = {L_before[0]:.2f} J/mol, L1(1000 K) = {L_before[1]:.2f} J/m
 # %% [markdown]
 # ## 4. The least-squares fit
 #
+# Now the two corrections are chosen so that the model follows the nine
+# measurements as closely as possible.
+#
 # Residual = prediction − observation, in $RT\ln a_{Ni}$ (J/mol):
 #
 # $$r=\underbrace{\mu_{\rm before}+M\,\delta L}_{\text{prediction}}-\mu_{\rm obs}.$$
@@ -214,6 +289,22 @@ print(f"L0(1000 K) = {L_before[0]:.2f} J/mol, L1(1000 K) = {L_before[1]:.2f} J/m
 #
 # two linear equations in two unknowns, no iteration. They have one solution
 # because the two columns of $M$ are not proportional.
+#
+# **Where the normal equations come from.** $J=r^{\mathsf T}r=\sum_i r_i^2$ is
+# the sum of squared residuals (J²/mol²); squaring makes positive and negative
+# misses count the same. At the minimum the derivative of $J$ with respect to
+# each unknown is zero: $\partial J/\partial\,\delta L=2M^{\mathsf T}r=0$.
+# Inserting $r$ and moving the known part to the right gives the line above.
+# "Unweighted" means every point counts equally, since the source gives no error
+# bar per point.
+#
+# **The code.** `@` is matrix multiplication and `.T` the transpose, so
+# `M.T @ M` is the 2 × 2 matrix $M^{\mathsf T}M$. `np.linalg.solve(A, b)` solves
+# the linear system $A\,u=b$ for $u$. `r_before` and `r_after` are the residuals
+# without and with the correction; `r @ r` is the sum of their squares.
+#
+# What to look at: the two corrections, the drop in $J$, and the residuals point
+# by point.
 
 # %%
 target = mu_obs - mu_before                           # J/mol
@@ -221,7 +312,7 @@ normal_matrix = M.T @ M                               # 2 × 2
 delta_L = np.linalg.solve(normal_matrix, M.T @ target)  # J/mol
 r_before = mu_before - mu_obs                         # J/mol
 r_after = mu_before + M @ delta_L - mu_obs            # J/mol
-sse_before, sse_after = float(r_before @ r_before), float(r_after @ r_after)
+sse_before, sse_after = float(r_before @ r_before), float(r_after @ r_after)  # (J/mol)², the sum J
 
 print(f"δL0 = {delta_L[0]:.6f} J/mol, δL1 = {delta_L[1]:.6f} J/mol")
 print(f"J before = {sse_before:.1f} (J/mol)², J after = {sse_after:.1f} (J/mol)²")
@@ -239,6 +330,10 @@ for xi, rb, ra in zip(x, r_before, r_after):
 # 4. Turn the fitted residual at x = 0.3 back into the fitted model's activity
 #    ($a=a_{\rm obs}\exp(r/RT)$).
 # 5. Does a lower total J guarantee that every point improves (True or False)?
+#
+# For item 4: the residual is $r=RT\ln a_{\rm fit}-RT\ln a_{\rm obs}$, so
+# $\ln(a_{\rm fit}/a_{\rm obs})=r/RT$; take the exponential of both sides.
+# `np.exp` is the exponential function.
 
 # %%
 L0_fitted = None              # J/mol
@@ -260,13 +355,20 @@ check(every_point_improves, "task02_every_point_better")
 # The packet's checks are arithmetic: 10⁻⁷ J/mol for chemical potentials and
 # corrections, 10⁻¹⁰ for activities. They catch implementation mistakes; there
 # is no tolerance for agreement with the measurements.
+#
+# The cell below compares every number of this notebook with the saved run and
+# with the course module `fit_activity` (which solves the same problem with
+# `numpy.linalg.lstsq`), checks that $M^{\mathsf T}r=0$ after the fit (the
+# condition for a minimum), and then prints a table and draws two panels: the
+# activities against $x_{Ni}$ (left) and the residuals before and after (right).
+# In the left panel, the dotted line $a=x$ is the ideal solution.
 
 # %% cellView="form"
 #@title After your attempt: run to compare with the saved run and the course code
 import matplotlib.pyplot as plt
 from course.materials.cuni.fit_activity import fit_isothermal, interaction_basis, predict_activity
 
-ARITH, ACT = saved["tolerances"]["arithmetic_J_per_mol"], saved["tolerances"]["activity_abs"]
+ARITH, ACT = saved["tolerances"]["arithmetic_J_per_mol"], saved["tolerances"]["activity_abs"]  # J/mol; activity
 fit = saved["fit"]
 a_saved_before = np.array([o["a_NI_before"] for o in saved["observations"]])
 a_saved_after = np.array([o["a_NI_after"] for o in saved["observations"]])
@@ -274,7 +376,7 @@ confirm(R, saved["R_J_per_mol_K"], "Gas constant", tol=0)
 confirm(float(np.max(np.abs(M - interaction_basis(x)))), 0.0, "Basis matrix against the course code", tol=1e-15)
 if forward is not None:
     confirm(float(np.max(np.abs(np.exp(mu_before / RT) - a_saved_before))), 0.0, "Pinned activities from the database", tol=ACT)
-for k in (0, 1):
+for k in (0, 1):  # k = Redlich–Kister order
     confirm(L_before[k], saved["baseline_L_J_per_mol"][k], f"Pinned L{k}(1000 K)", tol=ARITH)
     confirm(delta_L[k], fit["delta_L_J_per_mol"][k], f"Correction δL{k}", tol=ARITH)
     confirm(L_before[k] + delta_L[k], fit["fitted_L_J_per_mol"][k], f"Fitted L{k}(1000 K)", tol=ARITH)
@@ -288,9 +390,10 @@ hand = 0.5 * 0.5 * (delta_L[0] + delta_L[1] * 0.0) + 0.5 * (-0.5 * delta_L[1])  
 confirm(hand, saved["checks"]["hand_mu_correction_J_per_mol"], "Hand δμ_Ni at x = 0.5", tol=ARITH)
 confirm(float(basis([0.5])[0] @ delta_L), hand, "δμ_Ni at x = 0.5 from the basis", tol=ARITH)
 
-a_before = np.exp(mu_before / RT)
-a_after = np.exp((mu_before + M @ delta_L) / RT)
+a_before = np.exp(mu_before / RT)                 # activities of the pinned model
+a_after = np.exp((mu_before + M @ delta_L) / RT)  # activities after the fit
 confirm(float(np.max(np.abs(a_after - a_saved_after))), 0.0, "Fitted activities", tol=ACT)
+# without the database, a stand-in dictionary that returns the saved μ_before plays the role of `forward`
 course_fit = fit_isothermal(forward if forward is not None else
                             {"mu_relative": lambda z: mu_before, "baseline_L_J_per_mol": L_before}, x, a_obs)
 confirm(float(np.max(np.abs(course_fit["delta_L_J_per_mol"] - delta_L))), 0.0, "Corrections from fit_isothermal", tol=ARITH)
@@ -304,10 +407,10 @@ for i, xi in enumerate(x):
     flag = "  worse" if abs(r_after[i]) > abs(r_before[i]) else ""
     print(f" {xi:.1f}    {a_obs[i]:.4f}    {a_before[i]:.6f}  {a_after[i]:.6f}  {abs(r_before[i]):8.2f}   {abs(r_after[i]):8.2f}{flag}")
 
-fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.2))
-left.plot(x, a_obs, "ko", ms=7, label="reported (Srikanth and Jacob 1989)")
+fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.2))  # two panels side by side
+left.plot(x, a_obs, "ko", ms=7, label="reported (Srikanth and Jacob 1989)")  # "ko": black circles
 if forward is not None:
-    curve = np.linspace(0.01, 0.99, 201)
+    curve = np.linspace(0.01, 0.99, 201)  # smooth curve between the measured points
     left.plot(curve, predict_activity(forward, curve, [0, 0]), "--", label="pinned input")
     left.plot(curve, predict_activity(forward, curve, delta_L), "-", label="two-value fit")
 else:
@@ -317,7 +420,7 @@ left.plot([0, 1], [0, 1], ":", color="0.6", label="a = x (ideal)")
 left.set(xlabel="Ni atom fraction x_Ni", ylabel="Ni activity (pure FCC Ni = 1)",
          title="Homogeneous FCC, 1000 K", xlim=(0, 1), ylim=(0, 1))
 left.legend(fontsize=8)
-right.axhline(0, color="0.5", lw=0.8)
+right.axhline(0, color="0.5", lw=0.8)  # zero line: a perfect match
 right.plot(x, r_before, "^--", label="before")
 right.plot(x, r_after, "s-", mfc="none", label="after")
 right.set(xlabel="Ni atom fraction x_Ni", ylabel="RT ln a residual (J/mol of atoms)",
@@ -331,9 +434,16 @@ plt.show()
 # and at x = 0.3, which the pinned model already matched closely, it gets
 # worse. The residuals after the fit still reach about 250 J/mol and change
 # sign along x: two numbers at one temperature cannot follow every point.
+#
+# For scale: 250 J/mol in $RT\ln a$ at 1000 K is a factor
+# $\exp(250/8314.5)\approx1.03$ in the activity, about 3 %.
 
 # %% [markdown]
 # ## 5. What one temperature cannot determine (exercise 4)
+#
+# The fit gave two numbers at 1000 K. A database, however, stores each
+# interaction as a function of temperature. This section shows why nine points
+# at a single temperature cannot fix that function.
 #
 # In the database each interaction depends on temperature, $L_k(T)=A_k+B_kT$.
 # The published FCC values (S. an Mey 1992, as in the course file
@@ -345,12 +455,20 @@ plt.show()
 #
 # The value at 1000 K, the only thing these data see, does not change.
 #
+# Here $A_k$ (J/mol) acts like an enthalpy part and $-B_k$ (J/(mol K)) like an
+# entropy part of the interaction, since $L=A+BT$ has the same shape as
+# $H-TS$. Data at one temperature fix only the sum, not how it is split.
+#
 # ### Your turn (exercise 4)
 #
 # With c = 5 J/(mol K): the change in $L_0$ at 1000 K and at 1500 K (J/mol).
 # If you try to fit all four numbers $A_0,B_0,A_1,B_1$ to the nine points, the
 # matrix has columns $M_0,\ 1000M_0,\ M_1,\ 1000M_1$: what is its rank? Would
 # more compositions at 1000 K separate A from B (True or False)?
+#
+# The **rank** of a matrix is the number of its columns that are linearly
+# independent, i.e. that cannot be made from the other columns by multiplying
+# and adding. It is the number of unknowns the data can determine.
 
 # %%
 shift_at_1000 = None          # J/mol
@@ -362,8 +480,15 @@ check(shift_at_1500, "task02_shift_1500")
 check(rank_four_unknowns, "task02_rank_ab")
 check(more_x_separates, "task02_more_x_helps")
 
+# %% [markdown]
+# The next cell builds a second (A, B) pair shifted by c = 5 J/(mol K), shows
+# that both pairs give the same predictions at 1000 K, and uses
+# `np.linalg.matrix_rank` to count the independent columns of the four-unknown
+# matrix, with one temperature and with an imagined second one.
+
 # %% cellView="form"
 #@title After your attempt: run to see the shift leave the fit unchanged
+# the FCC_A1 rows of the transcribed table (orders 0 and 1)
 params = [r for r in csv.DictReader(Path("course/materials/cuni/mey1992_binary_parameters.csv").open())
           if r["phase"] == "FCC_A1"]
 A = np.array([float(r["a_J_per_mol"]) for r in params])         # J/mol, orders 0 and 1
@@ -389,13 +514,14 @@ for name, (a_, b_) in (("published", (A, B)), ("shifted", (A_shift, B_shift))):
 difference = predicted_mu(A_shift, B_shift, delta_L) - predicted_mu(A, B, delta_L)
 confirm(float(np.max(np.abs(difference))), 0.0, "Change of every prediction under the shift", tol=1e-9)
 
+# columns for the unknowns A0, B0, A1, B1: B_k multiplies T times the column of A_k
 four = np.column_stack((M[:, 0], T * M[:, 0], M[:, 1], T * M[:, 1]))
-rank_one_T = np.linalg.matrix_rank(four)
+rank_one_T = np.linalg.matrix_rank(four)  # number of independent columns
 print(f"\nRank for A0, B0, A1, B1 from the nine points at 1000 K: {rank_one_T} of 4")
 confirm(rank_one_T, 2, "Rank with one temperature", tol=0)
 # Structure only: the same compositions at a second temperature (no such data here).
 T2 = 1200.0
-stacked = np.vstack((four, np.column_stack((M[:, 0], T2 * M[:, 0], M[:, 1], T2 * M[:, 1]))))
+stacked = np.vstack((four, np.column_stack((M[:, 0], T2 * M[:, 0], M[:, 1], T2 * M[:, 1]))))  # 18 × 4
 print(f"Rank if the same compositions were also measured at {T2:.0f} K: {np.linalg.matrix_rank(stacked)} of 4")
 
 # %% [markdown]

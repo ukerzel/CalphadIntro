@@ -13096,6 +13096,17 @@ f3 and f4, and how do you read what <code>equilibrium</code> returns, before usi
 real alloy?</p>
 <p>Used in: Lesson 8; before Task 01 (Cu–Ni); self-study before step 05 (optional).
 Do <a href="f4_two_phases_and_diagrams.ipynb">f4</a> first: here pycalphad must reproduce it.</p>
+<p><strong>The route through the notebook.</strong> In f3 and f4 you calculated the A–B model with your own formulas.
+Here the same model is handed to pycalphad, and every pycalphad number is
+compared with a value you already know. You will</p>
+<ol>
+<li>read the database file and recognise each term of the model in it;</li>
+<li>evaluate one phase at one composition with <code>calculate</code>;</li>
+<li>find an equilibrium with <code>equilibrium</code> and learn to read its result;</li>
+<li>scan temperature and draw a small miscibility gap.</li>
+</ol>
+<p>Only once the tool reproduces known numbers is it used on a real alloy (Task 01).</p>
+<p>Run the setup cell first; it makes the course code and the helper <code>check</code> available.</p>
 </div>
 </div>
 </div>
@@ -13108,7 +13119,7 @@ Do <a href="f4_two_phases_and_diagrams.ipynb">f4</a> first: here pycalphad must 
 <span class="c1"># downloads the tested course release and the locked package versions.</span>
 <span class="c1"># In Colab, the first run then restarts the session on purpose and Colab reports</span>
 <span class="c1"># a crash: that is expected. Run this cell again, then the rest of the notebook.</span>
-<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.1"</span>
+<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.2"</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span>
              <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"pyproject.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"course"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
@@ -13147,7 +13158,7 @@ Do <a href="f4_two_phases_and_diagrams.ipynb">f4</a> first: here pycalphad must 
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Course release v0.1.1 · Python 3.12.14
+<pre>Course release v0.1.2 · Python 3.12.14
   numpy       2.5.3
   scipy       1.18.1
   matplotlib  3.11.2
@@ -13174,6 +13185,29 @@ energies are 1000 − 10T and 13000 − 10T (−9000 and +3000 J/mol at 1000 K);
 has them swapped. <code>L(ALPHA,A,B;0)</code> is the interaction Ω, set by the function
 <code>LZERO</code> (0 in the file; the regular solution of f4 uses 20000 J/mol). The ideal
 mixing term RT·q(x) is added by pycalphad's phase model; it is not in the file.</p>
+<p><strong>How to read a TDB file.</strong> A database (TDB) file is plain text. Each command
+ends with <code>!</code>; lines starting with <code>$</code> are comments.</p>
+<ul>
+<li><code>ELEMENT A ...</code> declares an element (here an invented one; its mass and
+reference data are placeholders).</li>
+<li><code>FUNCTION LZERO 600 0; 1800 N !</code> defines a named function: from 600 K to
+1800 K its value is <code>0</code>. <code>N</code> after the upper limit means "no further
+temperature range".</li>
+<li><code>PHASE ALPHA % 1 1 !</code> declares a phase with <strong>1</strong> sublattice (set of sites)
+carrying <strong>1</strong> site per formula unit.</li>
+<li><code>CONSTITUENT ALPHA :A,B: !</code> says that A or B can sit on that sublattice.</li>
+<li><code>PARAMETER G(ALPHA,A;0) 600 1000-10*T; 1800 N !</code> is the Gibbs energy of pure
+A in the ALPHA structure, in J/mol, valid from 600 to 1800 K.</li>
+<li><code>PARAMETER L(ALPHA,A,B;0) ...</code> is the interaction parameter of A and B in
+ALPHA; the <code>;0</code> marks the composition-independent (zeroth-order) term.</li>
+</ul>
+<p>From these entries pycalphad builds the molar Gibbs energy of ALPHA at B fraction
+x (J/mol of atoms):</p>
+<p>$$g_{\rm ALPHA}(x)=(1-x)\,G_{\rm A}+x\,G_{\rm B}+RT\,[x\ln x+(1-x)\ln(1-x)]+\Omega\,x(1-x),$$</p>
+<p>the weighted pure-element energies, plus the ideal mixing term, plus the
+interaction term. This is the same formula you used in f3 and f4.</p>
+<p>The cell below only prints the file. <code>Path</code> (from Python's <code>pathlib</code>) represents a
+file location; <code>.read_text()</code> returns the whole file as one string.</p>
 </div>
 </div>
 </div>
@@ -13184,7 +13218,7 @@ mixing term RT·q(x) is added by pycalphad's phase model; it is not in the file.
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="n">TDB</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"course/foundations/binary_family.tdb"</span><span class="p">)</span>
+<span class="n">TDB</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"course/foundations/binary_family.tdb"</span><span class="p">)</span>   <span class="c1"># relative to the course folder (the setup cell moved there)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">TDB</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
 </pre></div>
 </div>
@@ -13223,9 +13257,60 @@ PARAMETER G(BETA,B;0) 600 1000-10*T; 1800 N !
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=1ff911e5"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Find in the printout: the two <code>PHASE</code> lines, the four pure-element <code>G</code>
+parameters, the one <code>L</code> parameter, and the function <code>LZERO</code> it refers to.
+BETA has no <code>L</code> line, so it is always an ideal solution here.</p>
 <h2 id="2.-One-phase-at-one-composition:-calculate">2. One phase at one composition: <code>calculate</code><a class="anchor-link" href="#2.-One-phase-at-one-composition:-calculate">¶</a></h2><p><code>calculate</code> evaluates a phase at the compositions you give (<code>points</code> are site
 fractions [A, B]), stable or not. At 1000 K and x = 0.20 ALPHA should give the
 step 02 value.</p>
+<p>First the file is read into a pycalphad <code>Database</code> object. Then the arguments
+of <code>calculate</code>, in order:</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>database</code></td>
+<td>the model, as read from the TDB file</td>
+</tr>
+<tr>
+<td><code>["A", "B"]</code></td>
+<td>the components to include</td>
+</tr>
+<tr>
+<td><code>"ALPHA"</code></td>
+<td>the phase to evaluate (one name, or a list)</td>
+</tr>
+<tr>
+<td><code>T=1000, P=100000</code></td>
+<td>temperature in K and pressure in Pa</td>
+</tr>
+<tr>
+<td><code>N=1</code></td>
+<td>total amount: 1 mol of atoms</td>
+</tr>
+<tr>
+<td><code>points=np.array([[0.8, 0.2]])</code></td>
+<td>the states to evaluate: one row per state, one column per constituent in the order of the <code>CONSTITUENT</code> line (A, B); each row must add up to 1</td>
+</tr>
+<tr>
+<td><code>output="GM"</code></td>
+<td>the property to compute: molar Gibbs energy, J/mol of atoms</td>
+</tr>
+<tr>
+<td><code>fake_points=False</code></td>
+<td>return only the points you asked for (no extra helper points)</td>
+</tr>
+</tbody>
+</table>
+<p>The result is an <strong>xarray Dataset</strong>: a set of named arrays whose axes have names
+(here <code>N</code>, <code>P</code>, <code>T</code> and <code>points</code>) instead of only numbers. <code>point.GM</code> is the
+GM array; <code>.values</code> turns it into a plain numpy array; <code>.squeeze()</code> removes all
+axes of length 1, leaving a single number that <code>float(...)</code> prints.</p>
 </div>
 </div>
 </div>
@@ -13237,9 +13322,9 @@ step 02 value.</p>
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pycalphad</span><span class="w"> </span><span class="kn">import</span> <span class="n">Database</span><span class="p">,</span> <span class="n">calculate</span><span class="p">,</span> <span class="n">equilibrium</span><span class="p">,</span> <span class="n">variables</span> <span class="k">as</span> <span class="n">v</span>
 
-<span class="n">database</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">TDB</span><span class="p">))</span>
+<span class="n">database</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">TDB</span><span class="p">))</span>        <span class="c1"># parse the TDB text into a model pycalphad can evaluate</span>
 <span class="n">point</span> <span class="o">=</span> <span class="n">calculate</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">],</span> <span class="s2">"ALPHA"</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                  <span class="n">points</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]]),</span> <span class="n">output</span><span class="o">=</span><span class="s2">"GM"</span><span class="p">,</span> <span class="n">fake_points</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                  <span class="n">points</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]]),</span> <span class="n">output</span><span class="o">=</span><span class="s2">"GM"</span><span class="p">,</span> <span class="n">fake_points</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>   <span class="c1"># site fractions y_A = 0.8, y_B = 0.2</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"ALPHA at x = 0.20, 1000 K: GM ="</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()),</span> <span class="s2">"J/mol"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -13260,9 +13345,17 @@ step 02 value.</p>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=62d9bfa4"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>You can check this number by hand with the formula of section 1 (Ω = 0 here):
+weighted pure energies $0.8(-9000)+0.2(3000)=-6600$ J/mol, ideal mixing
+$8314.5\,[0.2\ln0.2+0.8\ln0.8]\approx-4161$ J/mol, total about −10761 J/mol.</p>
 <h3 id="Your-turn">Your turn<a class="anchor-link" href="#Your-turn">¶</a></h3><p>Predict GM for <strong>homogeneous</strong> ALPHA at x = 0.5 and 1000 K with Ω = 0, in J/mol
 to 4 significant figures. Use R = 8.3145 J/(mol K). Then change <code>points</code> above
 to check.</p>
+<p>"Homogeneous" means one single ALPHA solution at exactly this composition,
+whether or not it is the stable state; that is what <code>calculate</code> gives.</p>
+<p>In the cell below, replace <code>None</code> by your number and run it. <code>check</code> says whether
+your value matches the stored one (to about four significant figures) without
+showing the stored value; with <code>None</code> it only reminds you to try.</p>
 </div>
 </div>
 </div>
@@ -13292,7 +13385,10 @@ to check.</p>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=f4996a10"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="3.-Reading-an-equilibrium-result">3. Reading an equilibrium result<a class="anchor-link" href="#3.-Reading-an-equilibrium-result">¶</a></h2><p><code>equilibrium</code> minimises G at fixed T, p, amount and overall composition z (here
+<h2 id="3.-Reading-an-equilibrium-result">3. Reading an equilibrium result<a class="anchor-link" href="#3.-Reading-an-equilibrium-result">¶</a></h2><p><code>calculate</code> evaluates a phase where you tell it to. <code>equilibrium</code> instead searches
+for the state of lowest total Gibbs energy: it decides which phases are present,
+how much of each, and at which compositions.</p>
+<p><code>equilibrium</code> minimises G at fixed T, p, amount and overall composition z (here
 <code>v.X("B")</code>). The result is a labelled array (xarray) with one slot per
 <strong>vertex</strong>, a possible coexisting phase. pycalphad keeps one slot more than the
 number of components, so a binary has 3 vertex slots; slots that are not used
@@ -13303,6 +13399,51 @@ have an empty phase name.</p>
 <li><code>X</code>: composition inside each phase</li>
 <li><code>GM</code>: the minimum molar Gibbs energy of the whole sample</li>
 </ul>
+<p>The result also holds <code>MU</code>, the chemical potential of each component (J/mol),
+and <code>Y</code>, the site fractions inside each phase; they are not used in this
+notebook.</p>
+<p><strong>The conditions dictionary.</strong> The fourth argument is a Python dictionary
+<code>{key: value, ...}</code> that fixes the state. The keys come from
+<code>pycalphad.variables</code>, imported as <code>v</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Meaning</th>
+<th>Value here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>v.T</code></td>
+<td>temperature, K</td>
+<td>1000</td>
+</tr>
+<tr>
+<td><code>v.P</code></td>
+<td>pressure, Pa</td>
+<td>100000 (1 bar)</td>
+</tr>
+<tr>
+<td><code>v.N</code></td>
+<td>total amount of atoms, mol</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>v.X("B")</code></td>
+<td>overall mole fraction of B in the whole sample, z</td>
+<td>0.5</td>
+</tr>
+</tbody>
+</table>
+<p>For a binary these four conditions fix the state completely; the overall
+fraction of A is then 1 − z. The third argument, <code>["ALPHA", "BETA"]</code>, lists the
+phases the search may use. A phase left out of this list can never appear in the
+answer.</p>
+<p><strong>Shape of the result.</strong> Every array has one axis per condition (<code>N</code>, <code>P</code>, <code>T</code>,
+<code>X_B</code>), each of length 1 here, then <code>vertex</code> (length 3) and, for <code>X</code>, also
+<code>component</code> (A, B). The first <code>print</code> shows these lengths. <code>.sel(component="B")</code>
+picks the B entries by name. <code>NP</code> is <code>nan</code> ("not a number") in an unused slot.</p>
 <p>Two ideal phases ALPHA and BETA at z = 0.5 and 1000 K (f4 part A):</p>
 </div>
 </div>
@@ -13313,12 +13454,13 @@ have an empty phase name.</p>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"ALPHA"</span><span class="p">,</span> <span class="s2">"BETA"</span><span class="p">],</span>
-                     <span class="p">{</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">P</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">N</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"B"</span><span class="p">):</span> <span class="mf">0.5</span><span class="p">})</span>
+                     <span class="p">{</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">P</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">N</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"B"</span><span class="p">):</span> <span class="mf">0.5</span><span class="p">})</span>   <span class="c1"># K, Pa, mol, overall B fraction</span>
+<span class="c1"># Pair each axis name with its length, e.g. {'N': 1, 'P': 1, ...}.</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"dimensions:"</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">Phase</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">Phase</span><span class="o">.</span><span class="n">shape</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"GM    :"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Phase :"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">Phase</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"NP    :"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">NP</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"X(B)  :"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"GM    :"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()))</span>              <span class="c1"># J/mol of atoms, whole sample</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Phase :"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">Phase</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>                  <span class="c1"># one name per vertex slot</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"NP    :"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">NP</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>                     <span class="c1"># mol of each phase per mol of atoms</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"X(B)  :"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>   <span class="c1"># B fraction inside each phase</span>
 </pre></div>
 </div>
 </div>
@@ -13329,7 +13471,7 @@ have an empty phase name.</p>
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>dimensions: {'N': 1, 'P': 1, 'T': 1, 'X_B': 1, 'vertex': 3}
-GM    : -10762.73001746401
+GM    : -10762.730017464008
 Phase : ['ALPHA' 'BETA' '']
 NP    : [0.5 0.5 nan]
 X(B)  : [0.19104075 0.80895925        nan]
@@ -13342,9 +13484,16 @@ X(B)  : [0.19104075 0.80895925        nan]
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=246468c5"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Read the output column by column: slot 0 and slot 1 are used (ALPHA and BETA),
+slot 2 is empty. The amounts <code>NP</code> of the used slots add up to 1 mol, and the
+two <code>X(B)</code> values lie on either side of z = 0.5. That is the two-phase split you
+found in f4 part A. A mass balance check you can do in your head: the amounts
+times the compositions must add up to z.</p>
 <h3 id="Your-turn">Your turn<a class="anchor-link" href="#Your-turn">¶</a></h3><p>Now allow <strong>only ALPHA</strong> but give it Ω = 20000 J/mol
 (<code>parameters={"LZERO": 20000}</code>), at the same T and z. Before running: how many
 used vertices will there be, and what phase name will they have?</p>
+<p>Think back to the regular solution of f4 at 1000 K before you answer. Enter your
+count in the next cell; the cell after it runs the calculation.</p>
 </div>
 </div>
 </div>
@@ -13371,6 +13520,18 @@ used vertices will there be, and what phase name will they have?</p>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=129c0737"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next cell runs that calculation. <code>parameters={"LZERO": 20000}</code> replaces the
+value of the function <code>LZERO</code> for this one call; the file itself is not changed.</p>
+<p>The <code>for</code> loop walks through the three vertex slots together: <code>zip(a, b, c)</code>
+hands out the first entries of the three arrays, then the second entries, and
+so on. <code>if phase:</code> skips the unused slots, because an empty text <code>''</code> counts as
+False in Python.</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=5abf4365">
 <div class="input">
 <div class="prompt input_prompt">In [7]:</div>
@@ -13378,10 +13539,10 @@ used vertices will there be, and what phase name will they have?</p>
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">regular</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"ALPHA"</span><span class="p">],</span>
                       <span class="p">{</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">P</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">N</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"B"</span><span class="p">):</span> <span class="mf">0.5</span><span class="p">},</span>
-                      <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s2">"LZERO"</span><span class="p">:</span> <span class="mi">20000</span><span class="p">})</span>
+                      <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s2">"LZERO"</span><span class="p">:</span> <span class="mi">20000</span><span class="p">})</span>   <span class="c1"># Ω = 20000 J/mol for this call only</span>
 <span class="k">for</span> <span class="n">phase</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">regular</span><span class="o">.</span><span class="n">Phase</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">regular</span><span class="o">.</span><span class="n">NP</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span>
                             <span class="n">regular</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()):</span>
-    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>   <span class="c1"># skip empty slots</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">phase</span><span class="si">}</span><span class="s2">: amount </span><span class="si">{</span><span class="n">amount</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, x(B) = </span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -13407,6 +13568,8 @@ ALPHA: amount 0.5000, x(B) = 0.830856
 miscibility gap of f4). Storing results in a dictionary keyed by phase name would
 silently keep only one of them. The energy GM belongs to the whole sample: do not
 add it once per row.</p>
+<p>The two compositions lie symmetrically about 0.5 because this model is symmetric
+in A and B apart from the linear term, which does not affect where the gap is.</p>
 </div>
 </div>
 </div>
@@ -13415,6 +13578,16 @@ add it once per row.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="4.-From-one-point-to-a-scan-to-a-small-diagram">4. From one point to a scan to a small diagram<a class="anchor-link" href="#4.-From-one-point-to-a-scan-to-a-small-diagram">¶</a></h2><p>Conditions can be arrays. One call scans temperature at z = 0.3; collecting the
 two compositions at each temperature draws the gap you built by hand in f4.</p>
+<p><code>np.arange(600.0, 1201.0, 50.0)</code> gives 600, 650, …, 1200 K (the stop value 1201
+itself is not included). Passing this array as <code>v.T</code> makes pycalphad solve all
+13 temperatures in one call; the <code>T</code> axis of the result then has length 13.</p>
+<p>To read one temperature, the loop indexes the arrays by position:
+<code>scan.Phase.values[0, 0, i, 0]</code> means N slot 0, P slot 0, temperature number <code>i</code>,
+X_B slot 0, and all vertex slots. <code>enumerate(temperatures)</code> gives the position
+<code>i</code> together with the value <code>T</code>.</p>
+<p>For every temperature with two used slots, the loop stores the lower and the
+higher composition in the list <code>gap</code> as a tuple <code>(T, x_low, x_high)</code>; these are
+the two sides of the miscibility gap at that temperature.</p>
 </div>
 </div>
 </div>
@@ -13423,18 +13596,18 @@ two compositions at each temperature draws the gap you built by hand in f4.</p>
 <div class="prompt input_prompt">In [8]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">temperatures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">600.0</span><span class="p">,</span> <span class="mf">1201.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">temperatures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">600.0</span><span class="p">,</span> <span class="mf">1201.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">)</span>   <span class="c1"># K: 600, 650, …, 1200</span>
 <span class="n">scan</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"ALPHA"</span><span class="p">],</span>
                    <span class="p">{</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="n">temperatures</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">P</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">N</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"B"</span><span class="p">):</span> <span class="mf">0.3</span><span class="p">},</span>
                    <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s2">"LZERO"</span><span class="p">:</span> <span class="mi">20000</span><span class="p">})</span>
-<span class="n">gap</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">gap</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1"># will hold (T, lower x(B), upper x(B)) wherever two compositions coexist</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">" T (K)   phases and compositions x(B)"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temperatures</span><span class="p">):</span>
-    <span class="n">phases</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">Phase</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="n">xs</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="n">used</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">phases</span><span class="p">,</span> <span class="n">xs</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span><span class="p">]</span>
+    <span class="n">phases</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">Phase</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>                   <span class="c1"># 3 phase names (vertex slots) at this T</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>        <span class="c1"># B fraction in each slot</span>
+    <span class="n">used</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">phases</span><span class="p">,</span> <span class="n">xs</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span><span class="p">]</span>   <span class="c1"># keep only the used slots</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">6.0f</span><span class="si">}</span><span class="s2">   "</span> <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">used</span><span class="p">))</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">used</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">used</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>   <span class="c1"># two coexisting compositions: a point on each side of the gap</span>
         <span class="n">gap</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">T</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">used</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">used</span><span class="p">)))</span>
 </pre></div>
 </div>
@@ -13468,9 +13641,13 @@ two compositions at each temperature draws the gap you built by hand in f4.</p>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=421564f6"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Read the table from the top: at low temperature z = 0.3 splits into two
+compositions; as T rises, the two compositions move towards each other.</p>
 <h3 id="Your-turn">Your turn<a class="anchor-link" href="#Your-turn">¶</a></h3><p>Above which temperature in this scan is z = 0.3 a single phase? (Give the lowest
 scanned temperature with one phase, in K.) Why is that below the critical
 temperature of about 1203 K, where the gap closes at x = 0.5?</p>
+<p>The critical temperature of the regular solution is $T_c=\Omega/(2R)$; with
+Ω = 20000 J/mol this is about 1203 K.</p>
 </div>
 </div>
 </div>
@@ -13500,7 +13677,27 @@ temperature of about 1203 K, where the gap closes at x = 0.5?</p>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=be27f7f3"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="After-your-attempt:-pycalphad-against-the-plain-model,-and-three-wrong-problems">After your attempt: pycalphad against the plain model, and three wrong problems<a class="anchor-link" href="#After-your-attempt:-pycalphad-against-the-plain-model,-and-three-wrong-problems">¶</a></h2>
+<h2 id="After-your-attempt:-pycalphad-against-the-plain-model,-and-three-wrong-problems">After your attempt: pycalphad against the plain model, and three wrong problems<a class="anchor-link" href="#After-your-attempt:-pycalphad-against-the-plain-model,-and-three-wrong-problems">¶</a></h2><p>The next cell does three things.</p>
+<ol>
+<li><strong>Compare.</strong> <code>confirm</code> checks the pycalphad numbers of this notebook against
+the course's own plain-Python model (<code>binary_family</code>), which uses the formulas
+of f3 and f4. <code>regular_binodal(T)</code> returns the two gap compositions at
+temperature T.</li>
+<li><strong>Three wrong problems</strong> (Lesson 8.4). Each one gives a correct answer to a
+different question:<ul>
+<li>leaving BETA out of the phase list: pycalphad then finds the best state with
+ALPHA alone, which is higher in energy than the true equilibrium with BETA;</li>
+<li>forgetting Ω: the homogeneous energy is lower by exactly
+$\Omega\,x(1-x)=20000\cdot0.25=5000$ J/mol at x = 0.5;</li>
+<li>using the enthalpy of the equilibrium split as if it were the homogeneous
+enthalpy (you meet this again in f6).</li>
+</ul>
+</li>
+<li><strong>Plot.</strong> The grey lines are the gap from the plain model on a fine
+temperature grid; the markers are the pycalphad compositions from the scan of
+section 4. The dotted vertical line marks z = 0.3. Where the markers sit on
+the lines, pycalphad and the plain model agree.</li>
+</ol>
 </div>
 </div>
 </div>
@@ -13514,31 +13711,35 @@ temperature of about 1203 K, where the gap closes at x = 0.5?</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations</span><span class="w"> </span><span class="kn">import</span> <span class="n">binary_family</span> <span class="k">as</span> <span class="n">plain</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations.binary_family_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">binary_equilibrium</span><span class="p">,</span> <span class="n">homogeneous_properties</span>
 
+<span class="c1"># 1. pycalphad results of this notebook against the lesson values (J/mol).</span>
 <span class="n">confirm</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()),</span> <span class="o">-</span><span class="mf">10760.595951</span><span class="p">,</span> <span class="s2">"ALPHA at x = 0.20 (step 02)"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()),</span> <span class="o">-</span><span class="mf">10762.730017</span><span class="p">,</span> <span class="s2">"Two-phase minimum at z = 0.5 (step 03)"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+<span class="c1"># The two gap compositions found by pycalphad, sorted from low to high x(B).</span>
 <span class="n">xs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">regular</span><span class="o">.</span><span class="n">Phase</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">regular</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span> <span class="k">if</span> <span class="n">p</span><span class="p">)</span>
-<span class="n">reference</span> <span class="o">=</span> <span class="n">plain</span><span class="o">.</span><span class="n">regular_binodal</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">)[</span><span class="s2">"compositions"</span><span class="p">]</span>
+<span class="n">reference</span> <span class="o">=</span> <span class="n">plain</span><span class="o">.</span><span class="n">regular_binodal</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">)[</span><span class="s2">"compositions"</span><span class="p">]</span>   <span class="c1"># the same gap from the plain formulas</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reference</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"Gap composition at 1000 K, pycalphad vs plain model"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 
+<span class="c1"># 2. Three ways to answer a different question.</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Three ways to answer a different question (Lesson 8.4):"</span><span class="p">)</span>
-<span class="n">with_beta</span> <span class="o">=</span> <span class="n">binary_equilibrium</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"I2"</span><span class="p">)[</span><span class="s2">"GM"</span><span class="p">]</span>
+<span class="n">with_beta</span> <span class="o">=</span> <span class="n">binary_equilibrium</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"I2"</span><span class="p">)[</span><span class="s2">"GM"</span><span class="p">]</span>   <span class="c1"># "I2": ALPHA and BETA allowed, Ω = 0</span>
 <span class="n">alpha_only</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"ALPHA"</span><span class="p">],</span> <span class="p">{</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">P</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">N</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"B"</span><span class="p">):</span> <span class="mf">0.5</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  BETA left out: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">alpha_only</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> J/mol instead of </span><span class="si">{</span><span class="n">with_beta</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">alpha_only</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()),</span> <span class="o">-</span><span class="mf">8763.172233</span><span class="p">,</span> <span class="s2">"ALPHA-only result (a different question)"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
-<span class="n">with_omega</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">homogeneous_properties</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"ALPHA"</span><span class="p">,</span> <span class="mf">20000.0</span><span class="p">)[</span><span class="s2">"GM"</span><span class="p">])</span>
-<span class="n">without_omega</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">homogeneous_properties</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"ALPHA"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)[</span><span class="s2">"GM"</span><span class="p">])</span>
+<span class="n">with_omega</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">homogeneous_properties</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"ALPHA"</span><span class="p">,</span> <span class="mf">20000.0</span><span class="p">)[</span><span class="s2">"GM"</span><span class="p">])</span>   <span class="c1"># homogeneous ALPHA, Ω = 20000</span>
+<span class="n">without_omega</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">homogeneous_properties</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"ALPHA"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)[</span><span class="s2">"GM"</span><span class="p">])</span>    <span class="c1"># homogeneous ALPHA, Ω = 0</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Ω forgotten: homogeneous GM </span><span class="si">{</span><span class="n">without_omega</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> instead of </span><span class="si">{</span><span class="n">with_omega</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (lower by </span><span class="si">{</span><span class="n">with_omega</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">without_omega</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J/mol)"</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">with_omega</span> <span class="o">-</span> <span class="n">without_omega</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="s2">"Ω·x(1−x) at x = 0.5"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"  Enthalpy of the equilibrium split is not the homogeneous enthalpy: equilibrium minimises G, not H."</span><span class="p">)</span>
 
-<span class="n">T_fine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">1190</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-<span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span><span class="n">plain</span><span class="o">.</span><span class="n">regular_binodal</span><span class="p">(</span><span class="n">T</span><span class="p">)[</span><span class="s2">"compositions"</span><span class="p">]</span> <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">T_fine</span><span class="p">]</span>
+<span class="c1"># 3. Plot: plain-model gap (lines) and pycalphad scan (markers).</span>
+<span class="n">T_fine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">1190</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>                                 <span class="c1"># K, stays below the critical temperature</span>
+<span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span><span class="n">plain</span><span class="o">.</span><span class="n">regular_binodal</span><span class="p">(</span><span class="n">T</span><span class="p">)[</span><span class="s2">"compositions"</span><span class="p">]</span> <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">T_fine</span><span class="p">]</span>  <span class="c1"># (left, right) gap edges at each T</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">],</span> <span class="n">T_fine</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.4"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"plain model (f4)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">],</span> <span class="n">T_fine</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.4"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">g</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gap</span><span class="p">],</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gap</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pycalphad, z = 0.3"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">g</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gap</span><span class="p">],</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gap</span><span class="p">],</span> <span class="s2">"s"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.5"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">],</span> <span class="n">T_fine</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.4"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"plain model (f4)"</span><span class="p">)</span>   <span class="c1"># left edge; color "0.4" is a grey</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">],</span> <span class="n">T_fine</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.4"</span><span class="p">)</span>                             <span class="c1"># right edge</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">g</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gap</span><span class="p">],</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gap</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pycalphad, z = 0.3"</span><span class="p">)</span>   <span class="c1"># lower x(B) from the scan</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">g</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gap</span><span class="p">],</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gap</span><span class="p">],</span> <span class="s2">"s"</span><span class="p">)</span>                               <span class="c1"># upper x(B) from the scan</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.5"</span><span class="p">)</span>   <span class="c1"># vertical line at the overall composition z = 0.3</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"x(B)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"T (K)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Miscibility gap: pycalphad on the f4 model"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -13555,13 +13756,7 @@ temperature of about 1203 K, where the gap closes at x = 0.5?</p>
 ✓ Two-phase minimum at z = 0.5 (step 03) reproduces the lesson value.
 ✓ Gap composition at 1000 K, pycalphad vs plain model reproduces the lesson value.
 Three ways to answer a different question (Lesson 8.4):
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>  BETA left out: -8763.172233 J/mol instead of -10762.730017
+  BETA left out: -8763.172233 J/mol instead of -10762.730017
 ✓ ALPHA-only result (a different question) reproduces the lesson value.
   Ω forgotten: homogeneous GM -8763.172233 instead of -3763.172233 (lower by 5000 J/mol)
 ✓ Ω·x(1−x) at x = 0.5 reproduces the lesson value.

@@ -22,6 +22,7 @@ published thermodynamic databases.
 |---|---|
 | A learner in a course | [Course index](course/README.md), then [primer day 1](course/primer/README.md) |
 | A learner on your own | [Notebooks](notebooks/README.md) (Colab links in the table) or the self-study site (`site/`) |
+| Curious how an equilibrium calculation works inside | [f4b](notebooks/f4b_lens_from_scratch.ipynb): one phase diagram from scratch in numpy/SciPy, then the same in pycalphad |
 | An instructor | [Instructor overview](course/instructor_overview.md) |
 
 ## Setup

@@ -1,0 +1,44 @@
+{
+ "f4b_tm_B": {
+  "value": 1800.0,
+  "tol": 0.01,
+  "hint": "T_m = (h_L − h_S)/(s_L − s_S) with B's numbers from the table."
+ },
+ "f4b_g_solid_040": {
+  "value": -20434.057707,
+  "tol": 0.01,
+  "hint": "0.6·g°(A,SOLID) + 0.4·g°(B,SOLID) + RT[0.4 ln 0.4 + 0.6 ln 0.6] at T = 1400 K, or g_phase(\"SOLID\", 0.4, 1400.0)."
+ },
+ "f4b_g_liquid_040": {
+  "value": -20274.057707,
+  "tol": 0.01,
+  "hint": "The same formula with the LIQUID g° values, or g_phase(\"LIQUID\", 0.4, 1400.0)."
+ },
+ "f4b_split_lower_by": {
+  "value": 39.066511,
+  "tol": 0.02,
+  "hint": "Lower of the two homogeneous energies minus the best split's G; both are printed by the brute-force cell."
+ },
+ "f4b_f_liquid_1400": {
+  "value": 0.316275,
+  "tol": 1e-05,
+  "hint": "Lever rule: f_L = (z − x_S)/(x_L − x_S), printed as f_L in the fsolve cell."
+ },
+ "f4b_phase_1600": {
+  "value": "LIQUID",
+  "hint": "Type one of \"SOLID\", \"LIQUID\" or \"both\". If the lever rule gives f_L above 1, no split can hold the sample: all of it is one phase. Which one?"
+ },
+ "f4b_x_liquidus_1600": {
+  "value": 0.593733,
+  "tol": 0.0001,
+  "hint": "Row of lens with T = 1600 (third column), or closed_form(1600.0)[1]."
+ },
+ "f4b_solid_richer": {
+  "value": "richer",
+  "hint": "Type \"richer\" or \"poorer\". Compare x_S and x_L at the same temperature: a larger x means more B."
+ },
+ "f4b_phase_1200": {
+  "value": "SOLID",
+  "hint": "Type one of \"SOLID\", \"LIQUID\" or \"both\". Look at the Phase values pycalphad prints (empty strings are unused vertices)."
+ }
+}

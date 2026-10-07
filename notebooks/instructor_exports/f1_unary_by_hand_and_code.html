@@ -13095,6 +13095,14 @@ div#notebook {
 which phase is stable at a given temperature, and what may an optimiser change?</p>
 <p>Used in: Day 1 W4–W6 and W8 (W5 is the demonstration), Lesson 1, self-study step 01.
 Work each "your turn" on paper first, then type your value.</p>
+<p><strong>The plan.</strong> f0 showed that at fixed T and p the equilibrium state has the lowest
+Gibbs energy G. Here that idea is used on the simplest possible case: one kind of
+atom that can be either solid or liquid. You will (1) write down each phase's
+Gibbs energy as a straight line in T, (2) compare the two lines at several
+temperatures, first by hand and then with NumPy, and (3) see what a computer
+"optimiser" is allowed to change when it looks for the minimum.</p>
+<p>Run the setup cell first (see f0 for what it prints and for the <code>check</code> and
+<code>confirm</code> helpers).</p>
 </div>
 </div>
 </div>
@@ -13107,7 +13115,7 @@ Work each "your turn" on paper first, then type your value.</p>
 <span class="c1"># downloads the tested course release and the locked package versions.</span>
 <span class="c1"># In Colab, the first run then restarts the session on purpose and Colab reports</span>
 <span class="c1"># a crash: that is expected. Run this cell again, then the rest of the notebook.</span>
-<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.1"</span>
+<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.2"</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span>
              <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"pyproject.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"course"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
@@ -13146,7 +13154,7 @@ Work each "your turn" on paper first, then type your value.</p>
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Course release v0.1.1 · Python 3.12.14
+<pre>Course release v0.1.2 · Python 3.12.14
   numpy       2.5.3
   scipy       1.18.1
   matplotlib  3.11.2
@@ -13194,6 +13202,21 @@ g = h − Ts:</p>
 </tr>
 </tbody>
 </table>
+<p><strong>Reading the table.</strong> Lower-case letters are <em>molar</em> quantities, per mole of
+atoms: h is the molar enthalpy (J/mol), s the molar entropy (J/(mol K)) and
+g = h − Ts the molar Gibbs energy (J/mol). The words in the setup matter:
+<em>closed</em> means no atoms enter or leave, <em>bulk</em> means the sample is large enough
+that surfaces do not matter.</p>
+<p>The numbers make physical sense. The LIQUID has the higher h, because melting
+breaks bonds and that costs energy (here 7000 − 1000 = 6000 J/mol, the heat of
+melting). The LIQUID also has the higher s, because its atoms are more disordered.
+Each g is a straight line in T: it starts at h when T = 0 and falls with slope
+−s. The LIQUID line starts higher but falls faster, so at some temperature the
+two lines cross. Below the crossing one phase has the lower g; above it, the
+other.</p>
+<p><strong>The Python.</strong> <code>def g_solid(T):</code> defines a <em>function</em>: a named recipe that takes
+an input T and <code>return</code>s a result. The indented line is the body of the
+function. Calling <code>g_solid(900)</code> runs the recipe with T = 900.</p>
 </div>
 </div>
 </div>
@@ -13203,11 +13226,12 @@ g = h − Ts:</p>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">g_solid</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
-    <span class="k">return</span> <span class="mf">1000.0</span> <span class="o">-</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">T</span>   <span class="c1"># J/mol, T in K</span>
+    <span class="k">return</span> <span class="mf">1000.0</span> <span class="o">-</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">T</span>   <span class="c1"># J/mol, T in K  (h = 1000 J/mol, s = 10 J/(mol K))</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">g_liquid</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
-    <span class="k">return</span> <span class="mf">7000.0</span> <span class="o">-</span> <span class="mf">16.0</span> <span class="o">*</span> <span class="n">T</span>   <span class="c1"># J/mol</span>
+    <span class="k">return</span> <span class="mf">7000.0</span> <span class="o">-</span> <span class="mf">16.0</span> <span class="o">*</span> <span class="n">T</span>   <span class="c1"># J/mol  (h = 7000 J/mol, s = 16 J/(mol K))</span>
 
+<span class="c1"># Call both functions at 900 K and print the results with 0 decimals.</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"900 K: g_SOLID = </span><span class="si">{</span><span class="n">g_solid</span><span class="p">(</span><span class="mi">900</span><span class="p">)</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J/mol, g_LIQUID = </span><span class="si">{</span><span class="n">g_liquid</span><span class="p">(</span><span class="mi">900</span><span class="p">)</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -13228,8 +13252,13 @@ g = h − Ts:</p>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=d3154408"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>What to look at.</strong> Both energies are negative, and the <em>lower</em> (more negative)
+one belongs to the phase that is stable at 900 K. A negative Gibbs energy is
+normal: only differences between Gibbs energies have a physical meaning.</p>
 <h3 id="Your-turn">Your turn<a class="anchor-link" href="#Your-turn">¶</a></h3><p>Fill the 1000 K and 1100 K rows, then solve 1000 − 10T = 7000 − 16T for the
 crossing temperature (K).</p>
+<p>To solve the equation, collect the T terms on one side and the numbers on the
+other. You may type the arithmetic itself as your answer.</p>
 </div>
 </div>
 </div>
@@ -13267,6 +13296,18 @@ f1_crossing: not attempted yet. Replace None with your value and run the cell ag
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="2.-The-same-arithmetic-as-a-code-cell-(W5)">2. The same arithmetic as a code cell (W5)<a class="anchor-link" href="#2.-The-same-arithmetic-as-a-code-cell-(W5)">¶</a></h2><p>This is the Lesson 1 cell, unchanged. The constants 1000, 10, 7000 and 16 are
 the <strong>model</strong>; the temperatures are the <strong>question</strong> we ask it.</p>
+<p>Instead of calling a function once per temperature, the cell puts all five
+temperatures into one NumPy array and computes every row of the table at once.</p>
+<ul>
+<li><code>np.array([...])</code> turns a Python list of numbers into an array.</li>
+<li><code>1000.0 - 10.0 * temperatures</code> acts on each element: the result is again an
+array of five numbers, one g_SOLID per temperature.</li>
+<li><code>np.minimum(solid, liquid)</code> compares the two arrays element by element and
+keeps the smaller value at each position: the lowest Gibbs energy at each T.</li>
+<li><code>np.column_stack([...])</code> places the four arrays side by side as the columns of
+a table, so the printout has one row per temperature: T, g_SOLID, g_LIQUID and
+the lower of the two (all in J/mol).</li>
+</ul>
 </div>
 </div>
 </div>
@@ -13277,11 +13318,11 @@ the <strong>model</strong>; the temperatures are the <strong>question</strong> w
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="n">temperatures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">800.0</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1100.0</span><span class="p">,</span> <span class="mf">1200.0</span><span class="p">])</span>
-<span class="n">solid</span> <span class="o">=</span> <span class="mf">1000.0</span> <span class="o">-</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">temperatures</span>
-<span class="n">liquid</span> <span class="o">=</span> <span class="mf">7000.0</span> <span class="o">-</span> <span class="mf">16.0</span> <span class="o">*</span> <span class="n">temperatures</span>
-<span class="n">lowest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">solid</span><span class="p">,</span> <span class="n">liquid</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">solid</span><span class="p">,</span> <span class="n">liquid</span><span class="p">,</span> <span class="n">lowest</span><span class="p">]))</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">800.0</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1100.0</span><span class="p">,</span> <span class="mf">1200.0</span><span class="p">])</span>   <span class="c1"># K, the question</span>
+<span class="n">solid</span> <span class="o">=</span> <span class="mf">1000.0</span> <span class="o">-</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">temperatures</span>       <span class="c1"># J/mol, one value per temperature</span>
+<span class="n">liquid</span> <span class="o">=</span> <span class="mf">7000.0</span> <span class="o">-</span> <span class="mf">16.0</span> <span class="o">*</span> <span class="n">temperatures</span>      <span class="c1"># J/mol</span>
+<span class="n">lowest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">solid</span><span class="p">,</span> <span class="n">liquid</span><span class="p">)</span>         <span class="c1"># J/mol, the smaller of the two at each T</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">solid</span><span class="p">,</span> <span class="n">liquid</span><span class="p">,</span> <span class="n">lowest</span><span class="p">]))</span>   <span class="c1"># columns: T, SOLID, LIQUID, lowest</span>
 </pre></div>
 </div>
 </div>
@@ -13305,8 +13346,13 @@ the <strong>model</strong>; the temperatures are the <strong>question</strong> w
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=ef8c44d9"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>What to look at.</strong> Compare the last column with the two before it: in each row
+it equals one of them. The phase whose value it copies is the stable phase at
+that temperature. Watch where the choice switches from one column to the other.</p>
 <h3 id="Your-turn">Your turn<a class="anchor-link" href="#Your-turn">¶</a></h3><p>Predict both energies at 950 K on paper, then change the temperatures in the
 cell above to check. Enter your predictions here.</p>
+<p>(To change the temperatures, edit the numbers inside <code>np.array([...])</code> above,
+for example add <code>950.0</code> to the list, and run that cell again with Shift+Enter.)</p>
 </div>
 </div>
 </div>
@@ -13343,6 +13389,21 @@ f1_gl_950: not attempted yet. Replace None with your value and run the cell agai
 T and p the optimiser minimises
 $g_{mix} = (1 - f_L)\,g_S + f_L\,g_L$. It may change the fractions, never the model.
 The cell below shows the idea at 1100 K; your turn is at 900 K.</p>
+<p><strong>Where the formula comes from.</strong> Our one mole of atoms may split into two
+portions: f_L mol in the LIQUID and f_S = 1 − f_L mol in the SOLID. Each portion
+contributes its amount times its molar Gibbs energy, so the total is the
+weighted average above. ("mix" here means a mixture of two phases side by side,
+not atoms mixed within one phase.) The two fractions must add up to 1 because no
+atoms are created or lost, and neither may be negative because a phase cannot
+hold a negative amount of atoms.</p>
+<p>Note the division of roles. The <em>model</em> (the lines g_S and g_L) is fixed input.
+The <em>fractions</em> are the only thing the optimiser is allowed to vary. An optimiser
+that changed the model to lower the energy would be answering a different
+question.</p>
+<p><strong>The Python.</strong> <code>g_mix</code> calls the two functions from section 1. The expression
+<code>[g_mix(1100, f) for f in (0, 0.5, 1)]</code> is a <em>list comprehension</em>: it evaluates
+<code>g_mix(1100, f)</code> for f = 0, then 0.5, then 1, and collects the three results in a
+list.</p>
 </div>
 </div>
 </div>
@@ -13352,7 +13413,7 @@ The cell below shows the idea at 1100 K; your turn is at 900 K.</p>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">g_mix</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">f_liquid</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">f_liquid</span><span class="p">)</span> <span class="o">*</span> <span class="n">g_solid</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">f_liquid</span> <span class="o">*</span> <span class="n">g_liquid</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">f_liquid</span><span class="p">)</span> <span class="o">*</span> <span class="n">g_solid</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">f_liquid</span> <span class="o">*</span> <span class="n">g_liquid</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>   <span class="c1"># J/mol, weighted by the phase fractions</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"f_L:"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">"→ g_mix(1100 K) ="</span><span class="p">,</span> <span class="p">[</span><span class="n">g_mix</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span> <span class="s2">"J/mol"</span><span class="p">)</span>
 </pre></div>
@@ -13374,6 +13435,8 @@ The cell below shows the idea at 1100 K; your turn is at 900 K.</p>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=502fc8f9"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>What to look at.</strong> How does g_mix change as f_L goes from 0 to 0.5 to 1? Is the
+change steady (equal steps) or curved? Use that observation in your turn.</p>
 <h3 id="Your-turn">Your turn<a class="anchor-link" href="#Your-turn">¶</a></h3><p>What is g_mix at 900 K for f_L = 0.25? And which f_L minimises it?
 At f_L = −0.2 the formula gives a lower number; why must that be rejected?</p>
 </div>
@@ -13410,6 +13473,31 @@ f1_best_fl_900: not attempted yet. Replace None with your value and run the cell
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="After-your-attempt:-the-optimiser-and-the-plots">After your attempt: the optimiser and the plots<a class="anchor-link" href="#After-your-attempt:-the-optimiser-and-the-plots">¶</a></h2><p>The course code solves the same problem with SciPy's <code>linprog</code>: variables
 [f_S, f_L], objective [g_S, g_L], balance f_S + f_L = 1, bounds 0…1.</p>
+<p><strong>What <code>linprog</code> does.</strong> SciPy is a package of scientific routines; <code>linprog</code>
+solves a <em>linear programme</em>: find the unknowns that make a weighted sum as small
+as possible, while some linear equations hold and each unknown stays within
+bounds. Here:</p>
+<ul>
+<li>the unknowns are the fractions f_S and f_L;</li>
+<li>the quantity to minimise is f_S g_S + f_L g_L, so the weights are the two
+Gibbs energies at the chosen temperature;</li>
+<li>the one equation is f_S + f_L = 1 (one mole of atoms in total);</li>
+<li>the bounds are 0 ≤ f_S ≤ 1 and 0 ≤ f_L ≤ 1.</li>
+</ul>
+<p>The course function <code>unary.equilibrium_at(T)</code> sets this up and returns a
+<em>dictionary</em> (a lookup table of named entries): <code>result["GM"]</code> is the minimum
+molar Gibbs energy in J/mol, and <code>result["fractions"]</code> is another dictionary
+mapping each phase name to its fraction. <code>.items()</code> walks through its
+name/value pairs.</p>
+<p>The plotting part draws two panels side by side:</p>
+<ul>
+<li>Left: the two Gibbs lines against T (divided by 1000 to show kJ/mol), with the
+lower of the two drawn as a thick, faint line underneath.</li>
+<li>Right: g_mix at 900 K against f_L, including values of f_L outside 0…1. The
+line <code>inside = (f &gt;= 0) &amp; (f &lt;= 1)</code> makes an array of True/False values, True
+where f is allowed; <code>f[inside]</code> keeps only the allowed points and
+<code>f[~inside]</code> (<code>~</code> means "not") the forbidden ones, which are drawn as crosses.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -13419,26 +13507,26 @@ f1_best_fl_900: not attempted yet. Replace None with your value and run the cell
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: run to check with the course code and plot</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations</span><span class="w"> </span><span class="kn">import</span> <span class="n">one_component_manual</span> <span class="k">as</span> <span class="n">unary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations</span><span class="w"> </span><span class="kn">import</span> <span class="n">one_component_manual</span> <span class="k">as</span> <span class="n">unary</span>   <span class="c1"># the course's plain-Python version of this model</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">unary</span><span class="o">.</span><span class="n">equilibrium_at</span><span class="p">(</span><span class="mf">900.0</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">unary</span><span class="o">.</span><span class="n">equilibrium_at</span><span class="p">(</span><span class="mf">900.0</span><span class="p">)</span>   <span class="c1"># dictionary with "GM" (J/mol) and "fractions"</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"900 K: GM = </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'GM'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J/mol, fractions"</span><span class="p">,</span>
       <span class="p">{</span><span class="n">phase</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">phase</span><span class="p">,</span> <span class="n">amount</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">"fractions"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>  <span class="c1"># + 0.0 shows −0 as 0</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"GM"</span><span class="p">],</span> <span class="o">-</span><span class="mf">8000.0</span><span class="p">,</span> <span class="s2">"Minimum at 900 K"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">unary</span><span class="o">.</span><span class="n">transition_temperature</span><span class="p">(),</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="s2">"Crossing temperature"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span>
 
-<span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">1200</span><span class="p">,</span> <span class="mi">81</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">))</span>
-<span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">g_solid</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"SOLID"</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">1200</span><span class="p">,</span> <span class="mi">81</span><span class="p">)</span>   <span class="c1"># K, 81 temperatures in steps of 5 K</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">))</span>   <span class="c1"># 1 row, 2 panels</span>
+<span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">g_solid</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"SOLID"</span><span class="p">)</span>           <span class="c1"># / 1000: J/mol → kJ/mol</span>
 <span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">g_liquid</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"LIQUID"</span><span class="p">)</span>
-<span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">g_solid</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">g_liquid</span><span class="p">(</span><span class="n">T</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"lower one"</span><span class="p">)</span>
+<span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">g_solid</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">g_liquid</span><span class="p">(</span><span class="n">T</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"lower one"</span><span class="p">)</span>   <span class="c1"># lw: line width, alpha: transparency</span>
 <span class="n">left</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"T (K)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"g (kJ/mol)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Two Gibbs lines"</span><span class="p">)</span>
 <span class="n">left</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mi">33</span><span class="p">)</span>
-<span class="n">inside</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">f</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mi">33</span><span class="p">)</span>       <span class="c1"># trial liquid fractions, some outside 0…1 on purpose</span>
+<span class="n">inside</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">f</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span>         <span class="c1"># True where the fraction is physically allowed</span>
 <span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">inside</span><span class="p">],</span> <span class="n">g_mix</span><span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="n">inside</span><span class="p">]),</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"allowed 0 ≤ f_L ≤ 1"</span><span class="p">)</span>
-<span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">~</span><span class="n">inside</span><span class="p">],</span> <span class="n">g_mix</span><span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="o">~</span><span class="n">inside</span><span class="p">]),</span> <span class="s2">"x"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"not allowed"</span><span class="p">)</span>
+<span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">~</span><span class="n">inside</span><span class="p">],</span> <span class="n">g_mix</span><span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="o">~</span><span class="n">inside</span><span class="p">]),</span> <span class="s2">"x"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"not allowed"</span><span class="p">)</span>   <span class="c1"># ~ flips True and False</span>
 <span class="n">right</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"liquid fraction f_L"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"g_mix (J/mol)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"900 K: phase-fraction line"</span><span class="p">)</span>
 <span class="n">right</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -13469,6 +13557,17 @@ f1_best_fl_900: not attempted yet. Replace None with your value and run the cell
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=743999aa"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>What to look at.</strong> Left: the two lines cross at one temperature, and the faint
+"lower one" line follows SOLID on one side of it and LIQUID on the other. Right:
+g_mix is a straight line in f_L, so its lowest <em>allowed</em> point is at one end of
+the allowed range; the crosses beyond the ends would be lower still, but they
+need a negative amount of one phase.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=3eb101d5"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="4.-Consolidate-and-catch-an-error-(W8)">4. Consolidate and catch an error (W8)<a class="anchor-link" href="#4.-Consolidate-and-catch-an-error-(W8)">¶</a></h2><p>At <strong>1050 K</strong>: compute both energies, decide which phase is lower and give the
 minimum energy. Then correct two fictional reports:</p>
 <ul>
@@ -13478,6 +13577,8 @@ correct g_S in J/mol.</li>
 reported sum f_S + f_L, and say whether the report satisfies the one-mole
 balance (<code>True</code> or <code>False</code>).</li>
 </ul>
+<p>For the last answer type the Python word <code>True</code> or <code>False</code> (capital first
+letter, no quotes).</p>
 </div>
 </div>
 </div>

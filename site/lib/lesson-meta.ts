@@ -28,12 +28,12 @@ export const labViews: Partial<Record<LearningID, [string, string, string][]>> =
 };
 
 /** Course notebooks (notebooks/<file>.ipynb) to run after the attempt; RELEASE must match the notebooks' setup cell. */
-export const NOTEBOOK_RELEASE = 'v0.1.1';
+export const NOTEBOOK_RELEASE = 'v0.1.2';
 export const notebooks: Partial<Record<LearningID, [string, string][]>> = {
   start: [['f0_jupyter_and_potentials', 'Potentials: U, H, F and G']],
   unary: [['f1_unary_by_hand_and_code', 'One component, two phases: by hand and in code'], ['f2_unary_pycalphad', 'Optional: the same model in pycalphad']],
   binary: [['f3_binary_mixing_potentials', 'Binary mixtures: ideal mixing and chemical potentials']],
-  twophase: [['f4_two_phases_and_diagrams', 'Two phases: common tangent, lever rule and phase diagrams']],
+  twophase: [['f4_two_phases_and_diagrams', 'Two phases: common tangent, lever rule and phase diagrams'], ['f4b_lens_from_scratch', 'Optional: one melting lens from scratch in numpy/SciPy, then pycalphad']],
   boundary: [['f7_boundary_open_closed', 'A grain boundary in an open or closed cell'], ['f8_boundary_states', 'Extension: two candidate boundary states']],
   cuni: [['setup_check', 'First: check your setup and fetch the databases'], ['f5_binary_pycalphad', 'Optional: a binary in pycalphad, before the real alloy'], ['task01_cuni_equilibria', 'Task 01: Cu–Ni phase equilibria with a published database']],
   ninb: [['task05_ninb_sublattices', 'Task 05: Ni–Nb, sublattices and the amount basis']],

@@ -13098,6 +13098,21 @@ before two energies may be compared at all?</p>
 It continues <a href="f7_boundary_open_closed.ipynb">f7</a>: same cell, same bulk, closed
 inventory. Work each "your turn" on paper first, then type your value; four
 significant figures are enough unless a question asks for more.</p>
+<p><strong>The idea.</strong> A grain boundary can sometimes exist in more than one atomic
+arrangement. Each arrangement has its own energy and its own liking for B. Which
+one is stable can depend on how much B is around, so the stable arrangement can
+switch as the composition changes. Here two invented arrangements, State I and
+State II, are compared in the closed cell of f7. The main lesson is about
+fair comparison: two energies may be compared only when they describe the same
+cell, on the same basis, each at its own minimum.</p>
+<p><strong>The route through the notebook.</strong></p>
+<ol>
+<li>Define both states and the shared inventory.</li>
+<li>Let each state settle separately, then compare the two energies.</li>
+<li>Scan the starting composition to find where the lower state switches.</li>
+<li>Practise on a fresh card, then compare with the course code and pictures.</li>
+</ol>
+<p>Run the setup cell first; it makes the helpers <code>check</code> and <code>confirm</code> available.</p>
 </div>
 </div>
 </div>
@@ -13110,7 +13125,7 @@ significant figures are enough unless a question asks for more.</p>
 <span class="c1"># downloads the tested course release and the locked package versions.</span>
 <span class="c1"># In Colab, the first run then restarts the session on purpose and Colab reports</span>
 <span class="c1"># a crash: that is expected. Run this cell again, then the rest of the notebook.</span>
-<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.1"</span>
+<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.2"</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span>
              <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"pyproject.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"course"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
@@ -13149,7 +13164,7 @@ significant figures are enough unless a question asks for more.</p>
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Course release v0.1.1 · Python 3.12.14
+<pre>Course release v0.1.2 · Python 3.12.14
   numpy       2.5.3
   scipy       1.18.1
   matplotlib  3.11.2
@@ -13209,6 +13224,22 @@ sites</strong> (f7, section 3), now with the baseline included:</p>
 <p>$$\bar g_i(\theta)=\frac{8000\,g_b[x_b(\theta)]+200\,g_{s,i}(\theta)}{8200}.$$</p>
 <p>The baseline does not depend on $\theta$, so it does not move the selected
 occupancy; it only shifts the energy, by $200\,\eta_i/8200$ J/mol all cell sites.</p>
+<p>Reminder of the symbols from f7: $\theta$ is the fraction of boundary sites that
+hold B, $x_b$ the fraction of bulk sites that hold B, and a negative $\delta$
+means the boundary prefers B. The index $i$ stands for I or II.</p>
+<p><strong>The trade-off.</strong> State II pays its baseline $\eta_{II}$ on every boundary site,
+whatever it holds, but gains $\delta_{II}\theta$, which grows with the amount of B
+on the boundary. How much B the boundary can take depends on how much B the cell
+has, so the balance between cost and gain can depend on the inventory. Which
+state wins, and for which inventories, is what this notebook calculates.</p>
+<p><strong>New Python in this cell.</strong> <code>STATES</code> is a dictionary from the state's name to
+a pair <code>(δ, η)</code>. <code>STATES.items()</code> gives the name and the pair together, and
+<code>for name, (delta, eta) in ...</code> unpacks the pair into two names. In
+<code>g_bar(trial, 850, *STATES['I'])</code> the star unpacks the pair into the last two
+arguments, so it means <code>g_bar(trial, 850, -5000.0, 0.0)</code>.</p>
+<p>The last lines print <strong>unrelaxed</strong> trials: both states at a few chosen
+occupancies, not at their minima. They show how ḡ depends on θ, but they are not
+yet the energies to compare.</p>
 </div>
 </div>
 </div>
@@ -13239,7 +13270,7 @@ occupancy; it only shifts the energy, by $200\,\eta_i/8200$ J/mol all cell sites
     <span class="k">return</span> <span class="p">(</span><span class="n">B_tot</span> <span class="o">-</span> <span class="n">N_BOUNDARY</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span> <span class="o">/</span> <span class="n">N_BULK</span>                                      <span class="c1"># B per bulk site</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">g_bar</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">B_tot</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">eta</span><span class="p">):</span>
-    <span class="n">xb</span> <span class="o">=</span> <span class="n">x_bulk</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">B_tot</span><span class="p">)</span>
+    <span class="n">xb</span> <span class="o">=</span> <span class="n">x_bulk</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">B_tot</span><span class="p">)</span>   <span class="c1"># the bulk keeps whatever B the boundaries do not hold</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">N_BULK</span> <span class="o">*</span> <span class="n">g_bulk</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="o">+</span> <span class="n">N_BOUNDARY</span> <span class="o">*</span> <span class="n">g_site</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">eta</span><span class="p">))</span> <span class="o">/</span> <span class="n">N_SITES</span>  <span class="c1"># J/mol all cell sites</span>
 
 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span> <span class="ow">in</span> <span class="n">STATES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -13276,6 +13307,9 @@ Unrelaxed trials at B_tot = 850 (not yet minima):
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=a7c2fe64"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Among these trials each state has its own θ at which ḡ is lowest, and State II's
+lowest trial lies at a higher θ than State I's, because it prefers B more. The
+fair comparison takes each state at its own lowest point, which is the next step.</p>
 <h2 id="2.-Let-each-state-settle,-then-compare-(D7)">2. Let each state settle, then compare (D7)<a class="anchor-link" href="#2.-Let-each-state-settle,-then-compare-(D7)">¶</a></h2><p>Each state is minimised <strong>separately</strong> at the shared inventory. As in f7, the
 minimum satisfies the exchange condition $g_{s,i}'(\theta)=g_b'(x_b)$, which
 gives the odds formula with that state's own preference:</p>
@@ -13286,6 +13320,14 @@ $x_b$ from the fixed inventory. The cell below runs that loop for both states.
 Compare the two settled energies with</p>
 <p>$$D=\bar g_{II}^*-\bar g_I^*\quad\text{at one } x_0 .$$</p>
 <p>Positive $D$: State I is lower. Negative $D$: State II is lower.</p>
+<p>The star in $\bar g^*$ and $\theta^*$ marks the settled (minimum) value. The
+function <code>settle</code> runs 60 rounds of the hand method, far more than needed, and
+returns three values: the settled θ, the final $x_b$ and the settled ḡ. In
+<code>for _ in range(rounds):</code> the underscore is a name for a loop counter that is not
+used. The text in triple quotes right under <code>def</code> is a <em>docstring</em>, a short
+description of the function.</p>
+<p>The printed table has one row per start $x_0$ and state. Compare the two states
+only <strong>within</strong> the same $x_0$ (the same $B_{\rm tot}$).</p>
 </div>
 </div>
 </div>
@@ -13296,19 +13338,19 @@ Compare the two settled energies with</p>
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">settle</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">rounds</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Hand iteration at fixed inventory: odds formula, then update x_b."""</span>
-    <span class="n">B_tot</span> <span class="o">=</span> <span class="n">B_total</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
-    <span class="n">xb</span> <span class="o">=</span> <span class="n">x0</span>
+    <span class="n">B_tot</span> <span class="o">=</span> <span class="n">B_total</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>   <span class="c1"># fixed for this cell</span>
+    <span class="n">xb</span> <span class="o">=</span> <span class="n">x0</span>               <span class="c1"># round 1 starts from the starting bulk fraction</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rounds</span><span class="p">):</span>
-        <span class="n">odds</span> <span class="o">=</span> <span class="n">xb</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">delta</span> <span class="o">/</span> <span class="n">RT</span><span class="p">)</span>
+        <span class="n">odds</span> <span class="o">=</span> <span class="n">xb</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">delta</span> <span class="o">/</span> <span class="n">RT</span><span class="p">)</span>   <span class="c1"># odds formula with this state's δ</span>
         <span class="n">theta</span> <span class="o">=</span> <span class="n">odds</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">odds</span><span class="p">)</span>
-        <span class="n">xb</span> <span class="o">=</span> <span class="n">x_bulk</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">B_tot</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">theta</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="n">g_bar</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">B_tot</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span>
+        <span class="n">xb</span> <span class="o">=</span> <span class="n">x_bulk</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">B_tot</span><span class="p">)</span>                    <span class="c1"># the bulk gives up (or takes back) B</span>
+    <span class="k">return</span> <span class="n">theta</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="n">g_bar</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">B_tot</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span>   <span class="c1"># θ*, final x_b, ḡ* in J/mol all cell sites</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"x0     B_tot   state  θ*           ḡ* (J/mol all cell sites)"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">x0</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span> <span class="ow">in</span> <span class="n">STATES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">theta</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">settle</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">B_total</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span><span class="si">:</span><span class="s2">5.0f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">g</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">B_total</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span><span class="si">:</span><span class="s2">5.0f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">g</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>   <span class="c1"># {name:&lt;5}: left-aligned, 5 wide</span>
 </pre></div>
 </div>
 </div>
@@ -13345,6 +13387,11 @@ the baseline, and which state would that report call lower?</li>
 <li>Someone compares both states at the unrelaxed start $\theta=0.25$ in the
 $x_0=0.25$ cell. What $D$ do they get, and which state would they pick?</li>
 </ol>
+<p>The three cells below hold the answers to questions 1, 2 and 3–4. Names of
+states are text, so type them with quotes: <code>"I"</code> or <code>"II"</code>. For the counts in
+question 2, $\theta$ is a fraction of the 200 boundary sites and $x_b$ a fraction
+of the 8000 bulk sites. For question 4 you can evaluate any occupancy with
+<code>g_bar(theta, B_tot, delta, eta)</code>.</p>
 </div>
 </div>
 </div>
@@ -13353,7 +13400,8 @@ $x_0=0.25$ cell. What $D$ do they get, and which state would they pick?</li>
 <div class="prompt input_prompt">In [4]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">D_010</span> <span class="o">=</span> <span class="kc">None</span>                  <span class="c1"># J/mol all cell sites</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Question 1</span>
+<span class="n">D_010</span> <span class="o">=</span> <span class="kc">None</span>                  <span class="c1"># J/mol all cell sites</span>
 <span class="n">lower_010</span> <span class="o">=</span> <span class="kc">None</span>              <span class="c1"># "I" or "II"</span>
 <span class="n">D_025</span> <span class="o">=</span> <span class="kc">None</span>                  <span class="c1"># J/mol all cell sites</span>
 <span class="n">lower_025</span> <span class="o">=</span> <span class="kc">None</span>              <span class="c1"># "I" or "II"</span>
@@ -13388,7 +13436,8 @@ f8_d7_cross_row: not attempted yet. Replace None with your value and run the cel
 <div class="prompt input_prompt">In [5]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">boundary_B_II</span> <span class="o">=</span> <span class="kc">None</span>          <span class="c1"># B atoms on both boundaries, State II, 850 B</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Question 2 (row x0 = 0.10, 850 B in the cell)</span>
+<span class="n">boundary_B_II</span> <span class="o">=</span> <span class="kc">None</span>          <span class="c1"># B atoms on both boundaries, State II, 850 B</span>
 <span class="n">bulk_B_II</span> <span class="o">=</span> <span class="kc">None</span>              <span class="c1"># B atoms in the bulk, State II</span>
 <span class="n">x_b_II</span> <span class="o">=</span> <span class="kc">None</span>                 <span class="c1"># B per bulk site, State II</span>
 <span class="n">bulk_B_I</span> <span class="o">=</span> <span class="kc">None</span>               <span class="c1"># B atoms in the bulk, State I</span>
@@ -13423,7 +13472,8 @@ f8_d7_same_x_b: not attempted yet. Replace None with your value and run the cell
 <div class="prompt input_prompt">In [6]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">baseline_all_sites</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1"># J/mol all cell sites, η_II = 2000</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Questions 3 and 4</span>
+<span class="n">baseline_all_sites</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1"># J/mol all cell sites, η_II = 2000</span>
 <span class="n">g_II_no_baseline</span> <span class="o">=</span> <span class="kc">None</span>       <span class="c1"># J/mol all cell sites, x0 = 0.10</span>
 <span class="n">lower_no_baseline</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1"># "I" or "II"</span>
 <span class="n">D_unrelaxed_025</span> <span class="o">=</span> <span class="kc">None</span>        <span class="c1"># J/mol all cell sites, both at θ = 0.25, x0 = 0.25</span>
@@ -13459,6 +13509,11 @@ f8_l14_lower_unrelaxed: not attempted yet. Replace None with your value and run 
 <h2 id="3.-Where-does-the-order-switch?-(Lesson-14B)">3. Where does the order switch? (Lesson 14B)<a class="anchor-link" href="#3.-Where-does-the-order-switch?-(Lesson-14B)">¶</a></h2><p>$D$ is positive at $x_0=0.10$ and negative at $x_0=0.25$, so it changes sign
 somewhere in between. Each $x_0$ is a <strong>different</strong> closed cell; the scan below
 simply repeats the same-inventory comparison for several cells from 0.10 to 0.35.</p>
+<p><code>D_at(x0)</code> settles both states in the cell that starts at <code>x0</code> and returns
+$D$. Its second argument <code>eta_II</code> has the default 2000 J/mol; <code>D_at(x0, eta_II=2100.0)</code>
+repeats the comparison with a different baseline for State II. <code>np.round(..., 2)</code>
+rounds the start values to two decimals, so that they print as 0.15 and not
+0.15000000000000002 (decimal fractions are not exact in binary arithmetic).</p>
 </div>
 </div>
 </div>
@@ -13470,7 +13525,7 @@ simply repeats the same-inventory comparison for several cells from 0.10 to 0.35
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.351</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># 6 starting bulk fractions, 0.10 to 0.35</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">D_at</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">eta_II</span><span class="o">=</span><span class="mf">2000.0</span><span class="p">):</span>
-    <span class="n">g_I</span> <span class="o">=</span> <span class="n">settle</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">g_I</span> <span class="o">=</span> <span class="n">settle</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>          <span class="c1"># [2] picks ḡ* from (θ*, x_b, ḡ*)</span>
     <span class="n">g_II</span> <span class="o">=</span> <span class="n">settle</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10000.0</span><span class="p">,</span> <span class="n">eta_II</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">g_II</span> <span class="o">-</span> <span class="n">g_I</span>                                   <span class="c1"># J/mol all cell sites</span>
 
@@ -13509,6 +13564,23 @@ by hand with <code>D_at</code>, or write a short loop.</li>
 much does $D$ shift at any fixed $x_0$? Does State II's selected $\theta$
 change? Where does the crossing move (four decimals)?</li>
 </ol>
+<p><strong>Halving the interval (bisection).</strong> Take two starts from the table, <code>lo</code> with
+$D&gt;0$ and <code>hi</code> with $D&lt;0$. The crossing lies between them. Evaluate $D$ at the
+midpoint; if it is positive the crossing lies above the midpoint, so the
+midpoint becomes the new <code>lo</code>, otherwise the new <code>hi</code>. Each round halves the
+interval. As a loop (fill in <code>lo</code> and <code>hi</code> from the table):</p>
+<div class="highlight"><pre><span></span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span> <span class="o">...</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">D_at</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">lo</span> <span class="o">=</span> <span class="n">mid</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">hi</span> <span class="o">=</span> <span class="n">mid</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">)</span>
+</pre></div>
+<p>After 20 halvings the interval is about a millionth of its starting width. For
+question 2, look at the exchange condition of section 2 and ask which terms
+$\eta$ appears in.</p>
 </div>
 </div>
 </div>
@@ -13578,6 +13650,9 @@ lower state. Give State II's equal-site excess $5(\theta-x_b)$ in atom/nm²
 (f7, section 1). Finally write two sentences for a presenter who calls this a
 measured Ni–Cu result and the switch a confirmed boundary transition: one thing
 this invented model does show, and one missing piece of evidence.</p>
+<p>The <strong>B balance</strong> is the check that no atoms were lost or created: boundary B
+plus bulk B, $200\,\theta^*+8000\,x_b$, must equal the total B of the cell for
+each state.</p>
 </div>
 </div>
 </div>
@@ -13622,6 +13697,27 @@ f8_clinic_excess_II: not attempted yet. Replace None with your value and run the
 <h2 id="5.-After-your-attempt:-the-course-code-and-the-pictures">5. After your attempt: the course code and the pictures<a class="anchor-link" href="#5.-After-your-attempt:-the-course-code-and-the-pictures">¶</a></h2><p>The course module <code>boundary_two_state</code> minimises each state's full closed-cell
 energy with a bounded minimiser (not the hand iteration above) and brackets
 the crossing with a root finder.</p>
+<ul>
+<li><code>compare_states(x0, eta_II=2000)</code> settles both states in the cell that starts
+at <code>x0</code> and returns a dictionary: <code>pair["I"]</code> and <code>pair["II"]</code> hold each
+state's <code>theta</code>, <code>x_bulk</code> and <code>G_molar_J_per_mol_sites</code> (ḡ*), and
+<code>pair["difference_J_per_mol_sites"]</code> is $D$.</li>
+<li><code>crossing(eta_II)</code> finds the $x_0$ where $D=0$ with a <strong>root finder</strong>
+(<code>scipy.optimize.brentq</code>): like the bisection above, it keeps an interval in
+which $D$ changes sign and shrinks it, but faster. <code>cross[eta]["x_initial"]</code> is
+the crossing.</li>
+</ul>
+<p>The cell confirms the D7 table, the B balances, the baseline effect, the
+crossing for three baselines and the Clinic D cards, then draws two panels:</p>
+<ul>
+<li><strong>left:</strong> the settled energies of both states against $x_0$. Each point is a
+different closed cell; the two curves are close, so their difference is
+hard to see on this scale;</li>
+<li><strong>right:</strong> $D$ itself for three values of $\eta_{II}$. Above the zero line
+State I is lower, below it State II. The × marks the crossing. A larger
+baseline shifts the whole $D$ curve up by the same amount and moves the
+crossing to higher $x_0$.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -13634,21 +13730,24 @@ the crossing with a root finder.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations.boundary_two_state</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_states</span><span class="p">,</span> <span class="n">crossing</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
+<span class="c1"># Lesson values for the two rows of the D7 table: (θ_I, ḡ_I, θ_II, ḡ_II, D).</span>
 <span class="n">lesson</span> <span class="o">=</span> <span class="p">{</span><span class="mf">0.10</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.17160753</span><span class="p">,</span> <span class="o">-</span><span class="mf">10541.72679</span><span class="p">,</span> <span class="mf">0.26898258</span><span class="p">,</span> <span class="o">-</span><span class="mf">10519.50695</span><span class="p">,</span> <span class="mf">22.21984</span><span class="p">),</span>
           <span class="mf">0.25</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.37428128</span><span class="p">,</span> <span class="o">-</span><span class="mf">10713.32958</span><span class="p">,</span> <span class="mf">0.51703766</span><span class="p">,</span> <span class="o">-</span><span class="mf">10718.80845</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.47887</span><span class="p">)}</span>
 <span class="k">for</span> <span class="n">x0</span><span class="p">,</span> <span class="p">(</span><span class="n">th_I</span><span class="p">,</span> <span class="n">g_I</span><span class="p">,</span> <span class="n">th_II</span><span class="p">,</span> <span class="n">g_II</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span> <span class="ow">in</span> <span class="n">lesson</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">pair</span> <span class="o">=</span> <span class="n">compare_states</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+    <span class="n">pair</span> <span class="o">=</span> <span class="n">compare_states</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>   <span class="c1"># course minimiser for both states at this inventory</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"x0 = </span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">: θ_I = </span><span class="si">{</span><span class="n">pair</span><span class="p">[</span><span class="s1">'I'</span><span class="p">][</span><span class="s1">'theta'</span><span class="p">]</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">, ḡ_I = </span><span class="si">{</span><span class="n">pair</span><span class="p">[</span><span class="s1">'I'</span><span class="p">][</span><span class="s1">'G_molar_J_per_mol_sites'</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">; "</span>
           <span class="sa">f</span><span class="s2">"θ_II = </span><span class="si">{</span><span class="n">pair</span><span class="p">[</span><span class="s1">'II'</span><span class="p">][</span><span class="s1">'theta'</span><span class="p">]</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">, ḡ_II = </span><span class="si">{</span><span class="n">pair</span><span class="p">[</span><span class="s1">'II'</span><span class="p">][</span><span class="s1">'G_molar_J_per_mol_sites'</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">; "</span>
-          <span class="sa">f</span><span class="s2">"D = </span><span class="si">{</span><span class="n">pair</span><span class="p">[</span><span class="s1">'difference_J_per_mol_sites'</span><span class="p">]</span><span class="si">:</span><span class="s2">+.5f</span><span class="si">}</span><span class="s2"> J/mol all cell sites"</span><span class="p">)</span>
+          <span class="sa">f</span><span class="s2">"D = </span><span class="si">{</span><span class="n">pair</span><span class="p">[</span><span class="s1">'difference_J_per_mol_sites'</span><span class="p">]</span><span class="si">:</span><span class="s2">+.5f</span><span class="si">}</span><span class="s2"> J/mol all cell sites"</span><span class="p">)</span>   <span class="c1"># :+ always prints the sign</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"I"</span><span class="p">][</span><span class="s2">"theta"</span><span class="p">],</span> <span class="n">th_I</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"θ_I at x0 = </span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"II"</span><span class="p">][</span><span class="s2">"theta"</span><span class="p">],</span> <span class="n">th_II</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"θ_II at x0 = </span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"I"</span><span class="p">][</span><span class="s2">"G_molar_J_per_mol_sites"</span><span class="p">],</span> <span class="n">g_I</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"ḡ_I at x0 = </span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"II"</span><span class="p">][</span><span class="s2">"G_molar_J_per_mol_sites"</span><span class="p">],</span> <span class="n">g_II</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"ḡ_II at x0 = </span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"difference_J_per_mol_sites"</span><span class="p">],</span> <span class="n">D</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"D at x0 = </span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+    <span class="c1"># The hand iteration of section 2 must give the same D as the course minimiser.</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">settle</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10000.0</span><span class="p">,</span> <span class="mf">2000.0</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">settle</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span> <span class="n">D</span><span class="p">,</span>
             <span class="sa">f</span><span class="s2">"D at x0 = </span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> from the hand iteration above"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 
+<span class="c1"># Question 2: atom counts in the 850-B cell; boundary B + bulk B must be 850 for each state.</span>
 <span class="n">row</span> <span class="o">=</span> <span class="n">compare_states</span><span class="p">(</span><span class="mf">0.10</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"I"</span><span class="p">,</span> <span class="s2">"II"</span><span class="p">):</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
@@ -13657,18 +13756,21 @@ the crossing with a root finder.</p>
 <span class="n">confirm</span><span class="p">(</span><span class="mi">200</span> <span class="o">*</span> <span class="n">row</span><span class="p">[</span><span class="s2">"II"</span><span class="p">][</span><span class="s2">"theta"</span><span class="p">],</span> <span class="mf">53.796516</span><span class="p">,</span> <span class="s2">"State II boundary B"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="mi">8000</span> <span class="o">*</span> <span class="n">row</span><span class="p">[</span><span class="s2">"II"</span><span class="p">][</span><span class="s2">"x_bulk"</span><span class="p">],</span> <span class="mf">796.203484</span><span class="p">,</span> <span class="s2">"State II bulk B"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="mi">8000</span> <span class="o">*</span> <span class="n">row</span><span class="p">[</span><span class="s2">"I"</span><span class="p">][</span><span class="s2">"x_bulk"</span><span class="p">],</span> <span class="mf">815.678494</span><span class="p">,</span> <span class="s2">"State I bulk B"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+<span class="c1"># Questions 3 and 4: the baseline on the all-site basis, and the unrelaxed comparison.</span>
 <span class="n">confirm</span><span class="p">(</span><span class="mi">200</span> <span class="o">*</span> <span class="mi">2000</span> <span class="o">/</span> <span class="mi">8200</span><span class="p">,</span> <span class="mf">48.78049</span><span class="p">,</span> <span class="s2">"Baseline per mole of all cell sites"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Without the baseline, State II at x0 = 0.10 would read </span><span class="si">{</span><span class="o">-</span><span class="mf">10519.50695</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2000</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8200</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> J/mol, "</span>
       <span class="s2">"below State I: the report would pick the wrong state."</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unrelaxed comparison at θ = 0.25, x0 = 0.25: D = </span><span class="si">{</span><span class="n">g_bar</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span><span class="w"> </span><span class="mi">2050</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">10000</span><span class="p">,</span><span class="w"> </span><span class="mi">2000</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">g_bar</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span><span class="w"> </span><span class="mi">2050</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">5000</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">:</span><span class="s2">+.5f</span><span class="si">}</span><span class="s2"> "</span>
       <span class="s2">"J/mol (= 200(2000 − 5000·0.25)/8200), the opposite sign to the settled D."</span><span class="p">)</span>
 
+<span class="c1"># Section 3: the crossing for three baselines of State II.</span>
 <span class="n">cross</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">eta</span><span class="p">,</span> <span class="n">expected</span> <span class="ow">in</span> <span class="p">((</span><span class="mi">1900</span><span class="p">,</span> <span class="mf">0.20187111</span><span class="p">),</span> <span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mf">0.21618678</span><span class="p">),</span> <span class="p">(</span><span class="mi">2100</span><span class="p">,</span> <span class="mf">0.23094775</span><span class="p">)):</span>
     <span class="n">cross</span><span class="p">[</span><span class="n">eta</span><span class="p">]</span> <span class="o">=</span> <span class="n">crossing</span><span class="p">(</span><span class="n">eta</span><span class="p">)</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">cross</span><span class="p">[</span><span class="n">eta</span><span class="p">][</span><span class="s2">"x_initial"</span><span class="p">],</span> <span class="n">expected</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Crossing for η_II = </span><span class="si">{</span><span class="n">eta</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">cross</span><span class="p">[</span><span class="mi">2000</span><span class="p">][</span><span class="s2">"I"</span><span class="p">][</span><span class="s2">"theta"</span><span class="p">],</span> <span class="mf">0.332074</span><span class="p">,</span> <span class="s2">"θ_I at the crossing"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">cross</span><span class="p">[</span><span class="mi">2000</span><span class="p">][</span><span class="s2">"II"</span><span class="p">][</span><span class="s2">"theta"</span><span class="p">],</span> <span class="mf">0.470497</span><span class="p">,</span> <span class="s2">"θ_II at the crossing"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+<span class="c1"># Raising η_II by 100 J/mol shifts D by 200·100/8200 J/mol all cell sites.</span>
 <span class="n">shift</span> <span class="o">=</span> <span class="n">compare_states</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mi">2100</span><span class="p">)[</span><span class="s2">"difference_J_per_mol_sites"</span><span class="p">]</span> <span class="o">-</span> <span class="n">compare_states</span><span class="p">(</span><span class="mf">0.10</span><span class="p">)[</span><span class="s2">"difference_J_per_mol_sites"</span><span class="p">]</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="mf">2.43902</span><span class="p">,</span> <span class="s2">"D shift for η_II = 2100"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 
@@ -13678,7 +13780,7 @@ the crossing with a root finder.</p>
 <span class="n">confirm</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="n">card</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]</span> <span class="o">-</span> <span class="n">card</span><span class="p">[</span><span class="s2">"x_bulk"</span><span class="p">]),</span> <span class="mf">1.4520929</span><span class="p">,</span> <span class="s2">"Clinic D: State II excess at x0 = 0.40"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 
 <span class="c1"># Pictures: both settled energies against the inventory, and their difference.</span>
-<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.901</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.901</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># starts 0.10, 0.15, …, 0.90</span>
 <span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span><span class="n">compare_states</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x0</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">]</span>
 <span class="n">g_I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="s2">"I"</span><span class="p">][</span><span class="s2">"G_molar_J_per_mol_sites"</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">])</span>
 <span class="n">g_II</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="s2">"II"</span><span class="p">][</span><span class="s2">"G_molar_J_per_mol_sites"</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">])</span>
@@ -13688,11 +13790,11 @@ the crossing with a root finder.</p>
 <span class="n">left</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"starting bulk B fraction x0 (sets B_tot = 8000 x0 + 50)"</span><span class="p">,</span>
          <span class="n">ylabel</span><span class="o">=</span><span class="s2">"settled ḡ* (kJ/mol all cell sites)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Each point is its own closed cell"</span><span class="p">)</span>
 <span class="n">left</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">right</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"grey"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">right</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"grey"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>   <span class="c1"># D = 0: both states equally low</span>
 <span class="k">for</span> <span class="n">eta</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">((</span><span class="mi">1900</span><span class="p">,</span> <span class="s2">"^:"</span><span class="p">),</span> <span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="s2">"o-"</span><span class="p">),</span> <span class="p">(</span><span class="mi">2100</span><span class="p">,</span> <span class="s2">"v--"</span><span class="p">)):</span>
     <span class="n">D</span> <span class="o">=</span> <span class="p">[</span><span class="n">compare_states</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">eta</span><span class="p">)[</span><span class="s2">"difference_J_per_mol_sites"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x0</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">]</span>
     <span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"η_II = </span><span class="si">{</span><span class="n">eta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">cross</span><span class="p">[</span><span class="n">eta</span><span class="p">][</span><span class="s2">"x_initial"</span><span class="p">]],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"kx"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">cross</span><span class="p">[</span><span class="n">eta</span><span class="p">][</span><span class="s2">"x_initial"</span><span class="p">]],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"kx"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>   <span class="c1"># "kx": black cross at the crossing</span>
 <span class="n">right</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"starting bulk B fraction x0"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"D = ḡ_II* − ḡ_I* (J/mol all cell sites)"</span><span class="p">,</span>
           <span class="n">title</span><span class="o">=</span><span class="s2">"Above 0: I lower · below 0: II lower (× = crossing)"</span><span class="p">)</span>
 <span class="n">right</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>

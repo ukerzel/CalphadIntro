@@ -1,6 +1,6 @@
 # Task 05 — Ni–Nb: ordered phases in a published database
 
-**Notebook:** [task05_ninb_sublattices](../../../notebooks/task05_ninb_sublattices.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.1/notebooks/task05_ninb_sublattices.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
+**Notebook:** [task05_ninb_sublattices](../../../notebooks/task05_ninb_sublattices.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.2/notebooks/task05_ninb_sublattices.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
 
 For detailed download/member/hash and paper-access steps, use the
 [source guide](../../sources/README.md). Only open-source software and the

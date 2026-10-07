@@ -13096,6 +13096,23 @@ take up, where do those atoms come from, and does the answer change when the
 cell can exchange atoms with a large reservoir or is closed?</p>
 <p>Used in: Day 2 D4–D6 and D9, Lessons 11–13, self-study step 04.
 Work each "your turn" on paper first, then type your value.</p>
+<p><strong>Background.</strong> A grain boundary is the thin region where two crystals of
+different orientation meet. Atoms there sit in a less regular environment than
+in the bulk crystal, so some kinds of atoms are more comfortable there. When the
+boundary takes up more B than the bulk has, B is said to <strong>segregate</strong> to the
+boundary. Segregation changes boundary properties, and it is one of the uses of
+CALPHAD-type bulk descriptions beyond phase diagrams.</p>
+<p><strong>The route through the notebook.</strong></p>
+<ol>
+<li>Counting: sites, atoms and the boundary <strong>excess</strong> (how much extra B the
+boundary holds), before any energy appears.</li>
+<li><strong>Open cell:</strong> the bulk is connected to a very large reservoir, so its
+composition stays fixed. A closed formula gives the boundary occupancy.</li>
+<li><strong>Closed cell:</strong> the total number of B atoms is fixed, so B that goes to the
+boundary is missing from the bulk. The answer is found step by step.</li>
+<li>Practice with fresh numbers, then the course code and pictures for both cells.</li>
+</ol>
+<p>Run the setup cell first; it makes the helpers <code>check</code> and <code>confirm</code> available.</p>
 </div>
 </div>
 </div>
@@ -13108,7 +13125,7 @@ Work each "your turn" on paper first, then type your value.</p>
 <span class="c1"># downloads the tested course release and the locked package versions.</span>
 <span class="c1"># In Colab, the first run then restarts the session on purpose and Colab reports</span>
 <span class="c1"># a crash: that is expected. Run this cell again, then the rest of the notebook.</span>
-<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.1"</span>
+<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.2"</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span>
              <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"pyproject.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"course"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
@@ -13147,7 +13164,7 @@ Work each "your turn" on paper first, then type your value.</p>
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Course release v0.1.1 · Python 3.12.14
+<pre>Course release v0.1.2 · Python 3.12.14
   numpy       2.5.3
   scipy       1.18.1
   matplotlib  3.11.2
@@ -13214,6 +13231,10 @@ one A or one B atom.</p>
 </table>
 <p>So the cell has 8000 + 200 = 8200 sites and 40 nm² of boundary. Counts such as
 $8000\,x_b$ are expected (average) counts and need not be whole numbers.</p>
+<p>"Periodic" means the cell repeats itself in every direction, as in a computer
+simulation; that is why a slab of bulk between two boundaries gives exactly two
+equivalent boundaries. The occupancy $\theta$ (Greek "theta") is the fraction of
+boundary sites that hold B; $x_b$ is the same for the bulk sites.</p>
 <p>Occupancy $\theta$ is a fraction; it has no area in it. The <strong>equal-site excess</strong>
 compares the cell with bulk material of fraction $x_b$ filling the same 8200
 sites:</p>
@@ -13221,6 +13242,15 @@ sites:</p>
 =\frac{S(\theta-x_b)}{A}=5(\theta-x_b)\ \mathrm{atom/nm^2}.$$</p>
 <p>For mol/m²: $1\ \mathrm{nm^2}=10^{-18}\ \mathrm{m^2}$ and one mole is
 $N_{\rm Av}=6.02214076\times10^{23}$ atoms.</p>
+<p>Reading the formula term by term: the numerator is (B atoms actually in the
+cell) minus (B atoms the same 8200 sites would hold if they all had the bulk
+fraction). That difference is the extra B that exists <em>because</em> of the
+boundaries. Dividing by the boundary area makes it a property of the boundary
+per unit area, so it does not depend on how large the cell is. The simplification
+to $5(\theta-x_b)$ uses $200=2\cdot100$ boundary sites and $40=2\cdot20$ nm²; the
+5 is the site density of a boundary, 100 sites per 20 nm².</p>
+<p>The code turns this into two small functions. <code>K, S = 2, 100</code> assigns two names in
+one line. Python writes $6.02214076\times10^{23}$ as <code>6.02214076e23</code>.</p>
 </div>
 </div>
 </div>
@@ -13239,7 +13269,7 @@ $N_{\rm Av}=6.02214076\times10^{23}$ atoms.</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">excess_atoms_per_nm2</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x_b</span><span class="p">):</span>
     <span class="n">cell_B</span> <span class="o">=</span> <span class="n">N_BULK</span> <span class="o">*</span> <span class="n">x_b</span> <span class="o">+</span> <span class="n">K</span> <span class="o">*</span> <span class="n">S</span> <span class="o">*</span> <span class="n">theta</span>   <span class="c1"># expected B atoms in the cell</span>
     <span class="n">reference_B</span> <span class="o">=</span> <span class="n">N_SITES</span> <span class="o">*</span> <span class="n">x_b</span>             <span class="c1"># same sites, all at bulk fraction</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">cell_B</span> <span class="o">-</span> <span class="n">reference_B</span><span class="p">)</span> <span class="o">/</span> <span class="n">AREA_TOTAL_NM2</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">cell_B</span> <span class="o">-</span> <span class="n">reference_B</span><span class="p">)</span> <span class="o">/</span> <span class="n">AREA_TOTAL_NM2</span>   <span class="c1"># extra B per nm² of boundary</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">atoms_per_nm2_to_mol_per_m2</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">value</span> <span class="o">*</span> <span class="mf">1e18</span> <span class="o">/</span> <span class="n">N_AV</span>   <span class="c1"># 1 m² = 1e18 nm²; N_AV atoms per mol</span>
@@ -13248,9 +13278,9 @@ $N_{\rm Av}=6.02214076\times10^{23}$ atoms.</p>
 <span class="n">x_b</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.25</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"bulk B = </span><span class="si">{</span><span class="n">N_BULK</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x_b</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">, boundary B = </span><span class="si">{</span><span class="n">K</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">theta</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">, "</span>
       <span class="sa">f</span><span class="s2">"reference B = </span><span class="si">{</span><span class="n">N_SITES</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x_b</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="n">gamma</span> <span class="o">=</span> <span class="n">excess_atoms_per_nm2</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x_b</span><span class="p">)</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="n">excess_atoms_per_nm2</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x_b</span><span class="p">)</span>   <span class="c1"># atom/nm²</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"excess = </span><span class="si">{</span><span class="n">gamma</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> atom/nm² (site-density route: </span><span class="si">{</span><span class="n">S</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">AREA_NM2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">theta</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">x_b</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"       = </span><span class="si">{</span><span class="n">atoms_per_nm2_to_mol_per_m2</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span><span class="si">:</span><span class="s2">.4e</span><span class="si">}</span><span class="s2"> mol/m²"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"       = </span><span class="si">{</span><span class="n">atoms_per_nm2_to_mol_per_m2</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span><span class="si">:</span><span class="s2">.4e</span><span class="si">}</span><span class="s2"> mol/m²"</span><span class="p">)</span>   <span class="c1"># .4e: scientific notation, 4 decimals</span>
 </pre></div>
 </div>
 </div>
@@ -13272,6 +13302,10 @@ excess = 0.75 atom/nm² (site-density route: 0.75)
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=79a875a0"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>The printout follows the formula: 800 B in the bulk, 50 on the boundaries,
+820 in the reference, so 30 extra B over 40 nm², and the short route
+$5(\theta-x_b)$ gives the same number. In mol/m² the excess is a very small
+number, because one mole is about $6\times10^{23}$ atoms.</p>
 <h3 id="Your-turn">Your turn<a class="anchor-link" href="#Your-turn">¶</a></h3><p>The worksheet trial is $x_b=0.10$, $\theta=0.15$: 800 B in bulk, 30 B on both
 boundaries, an excess of ten B over 40 nm², so 0.25 atom/nm² (not 30/20).</p>
 <ol>
@@ -13281,6 +13315,10 @@ boundaries, an excess of ten B over 40 nm², so 0.25 atom/nm² (not 30/20).</p>
 negative number of B atoms?</li>
 <li>Units drill: convert 0.25 atom/nm² to mol/m².</li>
 </ol>
+<p>Every site holds exactly one atom, so on any group of sites the number of A atoms
+is the number of sites minus the number of B atoms. You may call the two
+functions above, e.g. <code>excess_atoms_per_nm2(0.08, 0.10)</code>, to check your hand
+result.</p>
 </div>
 </div>
 </div>
@@ -13319,6 +13357,9 @@ f7_d4_mol_m2_025: not attempted yet. Replace None with your value and run the ce
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=eb318246"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Counting is done; now the boundary gets an energy, which decides how much B it
+actually takes up. The first case is the simpler one: the bulk is so large that
+the boundary cannot change its composition.</p>
 <h2 id="2.-Open-cell:-a-large-reservoir-sets-the-bulk-(D5,-Lesson-12)">2. Open cell: a large reservoir sets the bulk (D5, Lesson 12)<a class="anchor-link" href="#2.-Open-cell:-a-large-reservoir-sets-the-bulk-(D5,-Lesson-12)">¶</a></h2><p>A very large ALPHA bulk reservoir fixes $x_b$ and both chemical potentials
 $\mu_A$, $\mu_B$. When a B arrives at a boundary site it replaces an A, which
 goes back to the reservoir; the cell alone does not keep a fixed B count.</p>
@@ -13330,6 +13371,23 @@ $g_s(\theta)=g_b(\theta)+\delta\theta$ with $\delta=-5000$ J/mol of boundary
 sites. The open boundary minimises the grand potential per mole of boundary
 sites, subtracting <strong>both</strong> reservoirs:</p>
 <p>$$\phi(\theta)=g_s(\theta)-(1-\theta)\mu_A-\theta\mu_B .$$</p>
+<p><strong>What the symbols mean.</strong> $g_b(x)$ is the ALPHA curve of f3–f5 at 1000 K:
+$-9000+12000\,x$ are the weighted pure-element energies ($(1-x)(-9000)+x(3000)$),
+and the $RT[\dots]$ term is the ideal mixing. The <strong>chemical potential</strong> $\mu_B$
+is the Gibbs energy change when one mole of B is added to the reservoir (in
+J/mol); likewise $\mu_A$. For this curve they are</p>
+<p>$$\mu_A=-9000+RT\ln(1-x_b),\qquad \mu_B=-9000+12000+RT\ln x_b ,$$</p>
+<p>the two ends (at x = 0 and x = 1) of the tangent line to $g_b$ at $x_b$, as in f3.</p>
+<p>The sign of $\delta$: a <strong>negative</strong> $\delta$ lowers the boundary energy more the
+more B it holds, so the boundary prefers B. $\delta=0$ would make a boundary site
+exactly like a bulk site.</p>
+<p><strong>Why $\phi$ and not $g_s$.</strong> The boundary does not create its atoms; it takes
+them from the reservoir. Filling the boundary sites with $(1-\theta)$ mol A and
+$\theta$ mol B removes atoms whose Gibbs energy in the reservoir is
+$(1-\theta)\mu_A+\theta\mu_B$. $\phi$ is the energy of the boundary sites minus
+what those atoms would have had in the reservoir, so it is the net change for the
+whole system. With the reservoir fixed, the stable $\theta$ is the one with the
+lowest $\phi$.</p>
 <p><strong>Where the odds formula comes from.</strong> At the minimum, moving one more B onto a
 boundary site (and one A off it) gains nothing against the reservoir:
 $d\phi/d\theta = g_s'(\theta)-(\mu_B-\mu_A)=0$. With
@@ -13338,6 +13396,16 @@ $\mu_B-\mu_A=g_b'(x_b)=12000+RT\ln\frac{x_b}{1-x_b}$, the 12000 cancels:</p>
 <p>$$\frac{\theta}{1-\theta}=\frac{x_b}{1-x_b}\,\exp(-\delta/RT),
 \qquad \exp(5000/8314.5)=1.82459687 .$$</p>
 <p>If the odds are $r$, then $\theta=r/(1+r)$.</p>
+<p>The steps in between: the derivative of the mixing term is
+$\frac{d}{dx}[x\ln x+(1-x)\ln(1-x)]=\ln x-\ln(1-x)=\ln\frac{x}{1-x}$. Setting the
+two derivatives equal and cancelling 12000 leaves
+$RT\ln\frac{\theta}{1-\theta}+\delta=RT\ln\frac{x_b}{1-x_b}$; divide by RT and
+take the exponential of both sides. The ratio $\theta/(1-\theta)$ is called the
+<strong>odds</strong> (B against A on a site). Solving $\theta/(1-\theta)=r$ for $\theta$ gives
+$\theta=r(1-\theta)$, so $\theta=r/(1+r)$.</p>
+<p>In the code, <code>np.log</code> is the natural logarithm ln and <code>np.exp</code> the exponential.
+A function argument written <code>delta=DELTA</code> has a default value: <code>phi(0.15, 0.10)</code>
+uses δ = −5000 J/mol, and <code>phi(0.15, 0.10, delta=0.0)</code> overrides it.</p>
 </div>
 </div>
 </div>
@@ -13364,11 +13432,12 @@ $\mu_B-\mu_A=g_b'(x_b)=12000+RT\ln\frac{x_b}{1-x_b}$, the 12000 cancels:</p>
     <span class="k">return</span> <span class="n">g_bulk</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">theta</span>              <span class="c1"># J/mol boundary sites</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">phi</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x_b</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">DELTA</span><span class="p">):</span>
+    <span class="c1"># grand potential: boundary energy minus the reservoir energy of the same atoms, J/mol boundary sites</span>
     <span class="k">return</span> <span class="n">g_site</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">mu_A</span><span class="p">(</span><span class="n">x_b</span><span class="p">)</span> <span class="o">-</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">mu_B</span><span class="p">(</span><span class="n">x_b</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">theta_open</span><span class="p">(</span><span class="n">x_b</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">DELTA</span><span class="p">):</span>
-    <span class="n">odds</span> <span class="o">=</span> <span class="n">x_b</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x_b</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">delta</span> <span class="o">/</span> <span class="n">RT</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">odds</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">odds</span><span class="p">)</span>
+    <span class="n">odds</span> <span class="o">=</span> <span class="n">x_b</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x_b</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">delta</span> <span class="o">/</span> <span class="n">RT</span><span class="p">)</span>   <span class="c1"># bulk odds times the preference factor</span>
+    <span class="k">return</span> <span class="n">odds</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">odds</span><span class="p">)</span>                       <span class="c1"># from odds r to occupancy θ = r/(1 + r)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"factor exp(-δ/RT) = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">DELTA</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">RT</span><span class="p">)</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"reservoir at x_b = 0.10: μ_A = </span><span class="si">{</span><span class="n">mu_A</span><span class="p">(</span><span class="mf">0.10</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, μ_B = </span><span class="si">{</span><span class="n">mu_B</span><span class="p">(</span><span class="mf">0.10</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, "</span>
@@ -13406,6 +13475,9 @@ number of B atoms on both boundaries, and the excess in both units. Then set
 $\delta=0$: what is $\theta$? Why is $\theta$ above $x_b$ for $\delta&lt;0$?</p>
 <p>Also reject, in words: "The boundary has 0.16856 mol B, and $\phi$ is its
 absolute grain-boundary free energy." (Two errors.)</p>
+<p>Work from the odds formula with the printed factor. <code>theta_open(x_b)</code> and
+<code>theta_open(x_b, delta=0.0)</code> let you check your hand values; the functions of
+section 1 convert an occupancy into an excess.</p>
 </div>
 </div>
 </div>
@@ -13450,6 +13522,9 @@ f7_d5_theta_delta0: not attempted yet. Replace None with your value and run the 
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=fe2502e3"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>In the open cell the reservoir supplied every extra B atom without noticing. A
+real grain usually has no such reservoir: whatever goes to the boundary must
+come out of the bulk next to it.</p>
 <h2 id="3.-Closed-cell:-a-fixed-inventory-(D6,-Lesson-13)">3. Closed cell: a fixed inventory (D6, Lesson 13)<a class="anchor-link" href="#3.-Closed-cell:-a-fixed-inventory-(D6,-Lesson-13)">¶</a></h2><p>Now no atoms enter or leave the 8200-site cell. Start with bulk $x_0=0.10$ and
 both boundaries at $\theta_0=0.25$. Total B is $8000x_0+200\theta_0$ and total
 A is $8200-B_{\rm tot}$. B that moves to the boundaries must come from the
@@ -13462,6 +13537,18 @@ cell sites (no reservoir subtraction):</p>
 as the open cell, $g_s'(\theta)=g_b'(x_b)$, but now $x_b$ moves with $\theta$.
 A hand method: put the current $x_b$ into the odds formula to get $\theta$,
 update $x_b$ from the inventory, and repeat.</p>
+<p>The derivative written out (chain rule for the bulk term):</p>
+<p>$$\frac{d\bar g}{d\theta}=\frac{8000\,g_b'(x_b)\left(-\frac{200}{8000}\right)+200\,g_s'(\theta)}{8200}
+=\frac{200}{8200}\,\bigl[g_s'(\theta)-g_b'(x_b)\bigr]=0 .$$</p>
+<p>The bar in $\bar g$ marks an average over all cell sites. Here there is nothing to
+subtract: no atoms leave the cell, so its total Gibbs energy is the quantity to
+minimise. The two unknowns $\theta$ and $x_b$ are tied together by the B balance,
+so one equation cannot be solved for $\theta$ alone in closed form. The hand
+method solves it by repetition: every round moves a little B between bulk and
+boundary, and because the boundaries have only 200 sites against 8000 in the bulk,
+$x_b$ changes only slightly from round to round, so the rounds settle quickly.</p>
+<p>In the code, <code>hand_round</code> performs one round and returns two values,
+<code>(θ, new x_b)</code>.</p>
 </div>
 </div>
 </div>
@@ -13481,7 +13568,7 @@ update $x_b$ from the inventory, and repeat.</p>
     <span class="n">theta</span> <span class="o">=</span> <span class="n">theta_open</span><span class="p">(</span><span class="n">x_b</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>              <span class="c1"># odds formula at the current bulk</span>
     <span class="k">return</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x_bulk_closed</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">B_total</span><span class="p">)</span> <span class="c1"># new occupancy, updated bulk</span>
 
-<span class="n">B_total</span> <span class="o">=</span> <span class="n">N_BULK</span> <span class="o">*</span> <span class="mf">0.10</span> <span class="o">+</span> <span class="n">K</span> <span class="o">*</span> <span class="n">S</span> <span class="o">*</span> <span class="mf">0.25</span>
+<span class="n">B_total</span> <span class="o">=</span> <span class="n">N_BULK</span> <span class="o">*</span> <span class="mf">0.10</span> <span class="o">+</span> <span class="n">K</span> <span class="o">*</span> <span class="n">S</span> <span class="o">*</span> <span class="mf">0.25</span>   <span class="c1"># B atoms in the cell, fixed from now on</span>
 <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">):</span>   <span class="c1"># Lesson 13 trials of the same closed cell</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  trial θ = </span><span class="si">{</span><span class="n">trial</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">: x_b = </span><span class="si">{</span><span class="n">x_bulk_closed</span><span class="p">(</span><span class="n">trial</span><span class="p">,</span><span class="w"> </span><span class="n">B_total</span><span class="p">)</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">, "</span>
           <span class="sa">f</span><span class="s2">"ḡ = </span><span class="si">{</span><span class="n">g_bar_closed</span><span class="p">(</span><span class="n">trial</span><span class="p">,</span><span class="w"> </span><span class="n">B_total</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> J/mol all cell sites"</span><span class="p">)</span>
@@ -13509,6 +13596,8 @@ update $x_b$ from the inventory, and repeat.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>These ḡ values compare states of the <strong>same</strong> closed cell. They cannot be ranked
 against the open φ values: different energies on different bases.</p>
+<p>Note how $x_b$ in the printout falls as the trial $\theta$ rises: B on the
+boundary is B missing from the bulk.</p>
 <h3 id="Your-turn">Your turn<a class="anchor-link" href="#Your-turn">¶</a></h3><ol>
 <li>Total B and total A of the cell.</li>
 <li>Trial $\theta=0.35$: boundary B, bulk B and $x_b$. How many B would the cell
@@ -13518,6 +13607,14 @@ formula, then the updated $x_b$.</li>
 <li>Keep going (use <code>hand_round</code> in a loop) until θ stops changing in the fifth
 decimal. Give the settled $\theta$, $x_b$ and boundary B count.</li>
 </ol>
+<p>A loop for question 4 can look like this (type it into a new cell):</p>
+<div class="highlight"><pre><span></span><span class="n">x_b</span> <span class="o">=</span> <span class="mf">0.10</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">theta</span><span class="p">,</span> <span class="n">x_b</span> <span class="o">=</span> <span class="n">hand_round</span><span class="p">(</span><span class="n">x_b</span><span class="p">,</span> <span class="n">B_total</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">x_b</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+</pre></div>
+<p><code>range(8)</code> repeats the indented lines 8 times; each round starts from the <code>x_b</code>
+that the previous round returned.</p>
 </div>
 </div>
 </div>
@@ -13592,6 +13689,10 @@ $\eta=2000$ J/mol of boundary sites. How much does that add per mole of all
 <p>Then write two sentences about a colleague who calls a model energy crossing
 a measured Ni–Cu boundary transition that strengthens the alloy: one statement
 this invented model does support, and one exact reason the claim does not follow.</p>
+<p>A <strong>baseline</strong> $\eta$ (Greek "eta") is a constant added to the boundary-site energy,
+$g_s(\theta)+\eta$, the same for every occupancy. For the baseline question, look
+again at how $\bar g$ in section 3 weights the boundary sites against all cell
+sites.</p>
 </div>
 </div>
 </div>
@@ -13651,6 +13752,25 @@ f7_baseline_eta: not attempted yet. Replace None with your value and run the cel
 <h2 id="5.-After-your-attempt:-the-course-code-and-the-pictures">5. After your attempt: the course code and the pictures<a class="anchor-link" href="#5.-After-your-attempt:-the-course-code-and-the-pictures">¶</a></h2><p>The course modules <code>boundary_one_state</code> and <code>boundary_closed</code> solve the same
 model independently: a bounded minimiser on the full energy, checked against
 the odds formula (open) or the exchange root (closed).</p>
+<p>A <strong>bounded minimiser</strong> (here <code>scipy.optimize.minimize_scalar</code> with
+<code>method="bounded"</code>) searches for the lowest value of a function of one variable
+between two limits, here $0\le\theta\le1$, without using any formula for the
+answer. That makes it an independent check on the odds formula.</p>
+<p><strong>The first cell (open cell)</strong> confirms your D4 and D5 values and then draws two
+panels.</p>
+<ul>
+<li><strong>Left, the tangent picture.</strong> The dotted line is the tangent to the bulk curve
+$g_b$ at the reservoir composition $x_b=0.10$; its height at any x is
+$(1-x)\mu_A+x\mu_B$. The boundary curve $g_s$ (dashed) lies below $g_b$ because
+of $\delta$. The selected $\theta$ is where a line <strong>parallel</strong> to the reservoir
+tangent just touches $g_s$: there the slope of $g_s$ equals $\mu_B-\mu_A$, which
+is the exchange condition. The arrow is $\phi$, the vertical distance between
+$g_s$ and the reservoir tangent at $\theta$.</li>
+<li><strong>Right:</strong> $\phi(\theta)$ itself, with the three Lesson 12 trials and the
+minimum.</li>
+</ul>
+<p><code>lambda z: ...</code> defines a small unnamed function in one line; here it is the
+reservoir tangent line.</p>
 </div>
 </div>
 </div>
@@ -13663,6 +13783,7 @@ the odds formula (open) or the exchange root (closed).</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations</span><span class="w"> </span><span class="kn">import</span> <span class="n">boundary_one_state</span> <span class="k">as</span> <span class="n">one_state</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
+<span class="c1"># D4: A atoms = 8000(1 − 0.10) in the bulk + 200(1 − 0.15) on the boundaries.</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"D4:"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"A = </span><span class="si">{</span><span class="mi">8000</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.90</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.85</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">;"</span><span class="p">,</span>
       <span class="sa">f</span><span class="s2">"excess at θ = 0.08: </span><span class="si">{</span><span class="n">excess_atoms_per_nm2</span><span class="p">(</span><span class="mf">0.08</span><span class="p">,</span><span class="w"> </span><span class="mf">0.10</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> atom/nm²;"</span><span class="p">,</span>
       <span class="sa">f</span><span class="s2">"0.25 atom/nm² = </span><span class="si">{</span><span class="n">atoms_per_nm2_to_mol_per_m2</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2"> mol/m²"</span><span class="p">)</span>
@@ -13670,9 +13791,10 @@ the odds formula (open) or the exchange root (closed).</p>
 <span class="n">confirm</span><span class="p">(</span><span class="n">excess_atoms_per_nm2</span><span class="p">(</span><span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">),</span> <span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="s2">"Excess at θ = 0.08"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">atoms_per_nm2_to_mol_per_m2</span><span class="p">(</span><span class="mf">0.25</span><span class="p">),</span> <span class="mf">4.15135e-7</span><span class="p">,</span> <span class="s2">"0.25 atom/nm² in mol/m²"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-11</span><span class="p">)</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">one_state</span><span class="o">.</span><span class="n">open_equilibrium</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">)</span>
+<span class="c1"># D5: the course minimiser against the odds formula.</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">one_state</span><span class="o">.</span><span class="n">open_equilibrium</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">)</span>   <span class="c1"># dict with θ (minimiser), θ (formula), φ and the excess in mol/m²</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Open cell at x_b = 0.10:"</span><span class="p">,</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="s2">"theta_analytic"</span><span class="p">,</span> <span class="s2">"phi_J_per_mol_sites"</span><span class="p">,</span> <span class="s2">"gamma_B_mol_per_m2"</span><span class="p">)})</span>
-<span class="n">odds</span> <span class="o">=</span> <span class="mf">0.10</span> <span class="o">/</span> <span class="mf">0.90</span> <span class="o">*</span> <span class="mf">1.82459687</span>
+<span class="n">odds</span> <span class="o">=</span> <span class="mf">0.10</span> <span class="o">/</span> <span class="mf">0.90</span> <span class="o">*</span> <span class="mf">1.82459687</span>   <span class="c1"># bulk odds times the preference factor</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"odds = </span><span class="si">{</span><span class="n">odds</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">, θ = </span><span class="si">{</span><span class="n">odds</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">odds</span><span class="p">)</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">, boundary B = </span><span class="si">{</span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">odds</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">odds</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, "</span>
       <span class="sa">f</span><span class="s2">"excess = </span><span class="si">{</span><span class="mi">5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">odds</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">odds</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.10</span><span class="p">)</span><span class="si">:</span><span class="s2">.7f</span><span class="si">}</span><span class="s2"> atom/nm²"</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">odds</span><span class="p">,</span> <span class="mf">0.20273299</span><span class="p">,</span> <span class="s2">"Open odds"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span>
@@ -13685,23 +13807,24 @@ the odds formula (open) or the exchange root (closed).</p>
 
 <span class="c1"># Tangent picture at x_b = 0.10: the boundary settles where a line parallel to</span>
 <span class="c1"># the reservoir tangent touches g_s; φ is the vertical gap between the two lines.</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>   <span class="c1"># composition grid; avoids x = 0, where ln x is undefined</span>
 <span class="n">xb</span><span class="p">,</span> <span class="n">th</span> <span class="o">=</span> <span class="mf">0.10</span><span class="p">,</span> <span class="n">theta_open</span><span class="p">(</span><span class="mf">0.10</span><span class="p">)</span>
-<span class="n">reservoir_line</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z</span><span class="p">)</span> <span class="o">*</span> <span class="n">mu_A</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="o">+</span> <span class="n">z</span> <span class="o">*</span> <span class="n">mu_B</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span>
-<span class="n">slope</span> <span class="o">=</span> <span class="n">mu_B</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu_A</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span>
+<span class="n">reservoir_line</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z</span><span class="p">)</span> <span class="o">*</span> <span class="n">mu_A</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="o">+</span> <span class="n">z</span> <span class="o">*</span> <span class="n">mu_B</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span>   <span class="c1"># tangent to g_b at x_b, J/mol</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="n">mu_B</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu_A</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span>                                    <span class="c1"># slope of that tangent, J/mol</span>
 <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">g_bulk</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"bulk g_b"</span><span class="p">)</span>
 <span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">g_site</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"boundary g_s (δ = −5000)"</span><span class="p">)</span>
 <span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">reservoir_line</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"reservoir tangent at x_b = 0.10"</span><span class="p">)</span>
-<span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">g_site</span><span class="p">(</span><span class="n">th</span><span class="p">)</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">th</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"parallel line touching g_s"</span><span class="p">)</span>
+<span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">g_site</span><span class="p">(</span><span class="n">th</span><span class="p">)</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">th</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"parallel line touching g_s"</span><span class="p">)</span>   <span class="c1"># same slope, through (θ, g_s(θ))</span>
 <span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">xb</span><span class="p">],</span> <span class="p">[</span><span class="n">g_bulk</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"reservoir x_b"</span><span class="p">)</span>
 <span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">th</span><span class="p">],</span> <span class="p">[</span><span class="n">g_site</span><span class="p">(</span><span class="n">th</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">],</span> <span class="s2">"s"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"selected θ"</span><span class="p">)</span>
+<span class="c1"># Double-headed arrow from the tangent down to g_s at θ: its length is φ.</span>
 <span class="n">left</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">th</span><span class="p">,</span> <span class="n">g_site</span><span class="p">(</span><span class="n">th</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">th</span><span class="p">,</span> <span class="n">reservoir_line</span><span class="p">(</span><span class="n">th</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span>
               <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">"&lt;-&gt;"</span><span class="p">))</span>
 <span class="n">left</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">th</span> <span class="o">+</span> <span class="mf">0.012</span><span class="p">,</span> <span class="p">(</span><span class="n">g_site</span><span class="p">(</span><span class="n">th</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">reservoir_line</span><span class="p">(</span><span class="n">th</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3000</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"φ = </span><span class="si">{</span><span class="n">phi</span><span class="p">(</span><span class="n">th</span><span class="p">,</span><span class="w"> </span><span class="n">xb</span><span class="p">)</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">,</span>
-          <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"none"</span><span class="p">))</span>
+          <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"none"</span><span class="p">))</span>   <span class="c1"># label placed one third of the way down the arrow</span>
 <span class="n">left</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"B fraction x or θ"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"g (kJ/mol sites)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Open cell: tangent picture"</span><span class="p">)</span>
-<span class="n">left</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"upper center"</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.15</span><span class="p">),</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">left</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"upper center"</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.15</span><span class="p">),</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>   <span class="c1"># legend below the panel</span>
 <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 <span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">phi</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">xb</span><span class="p">),</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"φ(θ), x_b = 0.10"</span><span class="p">)</span>
 <span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span> <span class="p">[</span><span class="n">phi</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">xb</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)],</span> <span class="s2">"^"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Lesson 12 trials"</span><span class="p">)</span>
@@ -13759,6 +13882,31 @@ odds = 0.20273299, θ = 0.16856026, boundary B = 33.7121, excess = 0.3428013 ato
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=f08c003a"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>The second cell (closed cell)</strong> confirms your D6 values, prints the hand
+iteration round by round, and compares the open and closed cells.</p>
+<ul>
+<li><code>closed.closed_trial(θ, B_tot, δ, 8000)</code> evaluates one trial occupancy of a
+closed cell with 8000 bulk sites; <code>closed.closed_equilibrium(x0, δ, n_bulk)</code>
+finds its minimum (starting from $\theta_0=0.25$).</li>
+<li>The loop over 80000 and 800000 bulk sites makes the bulk 10 and 100 times
+larger. The closed occupancy then moves towards the open result: a very large
+closed bulk behaves like a reservoir.</li>
+<li><strong>Left panel:</strong> the selected occupancy against $x_b$ (open) or $x_0$ (closed).
+The dotted line $\theta=x$ is "no preference"; both curves lie above it because
+$\delta&lt;0$. The closed cell starts with $\theta_0=0.25$ (dash-dotted line).
+Where the selected $\theta$ is above 0.25, the boundary has to take extra B out
+of the finite bulk, which lowers $x_b$, so the closed $\theta$ ends a little below
+the open one. Where it is below 0.25 (at 0.10), the boundary gives B back to
+the bulk and the closed $\theta$ ends a little above the open one.</li>
+<li><strong>Right panel:</strong> $\theta$ after each round of the hand iteration, approaching
+the closed minimum (dashed), not the open result (dotted).</li>
+</ul>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=3868a8cf">
 <div class="input">
 <div class="prompt input_prompt">In [10]:</div>
@@ -13768,21 +13916,22 @@ odds = 0.20273299, θ = 0.16856026, boundary B = 33.7121, excess = 0.3428013 ato
 <span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations</span><span class="w"> </span><span class="kn">import</span> <span class="n">boundary_closed</span> <span class="k">as</span> <span class="n">closed</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">course.self_study.boundary_export</span><span class="w"> </span><span class="kn">import</span> <span class="n">hand_iteration</span>
 
-<span class="n">trial</span> <span class="o">=</span> <span class="n">closed</span><span class="o">.</span><span class="n">closed_trial</span><span class="p">(</span><span class="mf">0.35</span><span class="p">,</span> <span class="mi">850</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">,</span> <span class="mi">8000</span><span class="p">)</span>
+<span class="n">trial</span> <span class="o">=</span> <span class="n">closed</span><span class="o">.</span><span class="n">closed_trial</span><span class="p">(</span><span class="mf">0.35</span><span class="p">,</span> <span class="mi">850</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">,</span> <span class="mi">8000</span><span class="p">)</span>   <span class="c1"># θ = 0.35 in the 850-B cell with 8000 bulk sites</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Closed trial θ = 0.35: boundary B = </span><span class="si">{</span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.35</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">, bulk B = </span><span class="si">{</span><span class="mi">850</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.35</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">, x_b = </span><span class="si">{</span><span class="n">trial</span><span class="p">[</span><span class="s1">'x_bulk'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">trial</span><span class="p">[</span><span class="s2">"x_bulk"</span><span class="p">],</span> <span class="mf">0.0975</span><span class="p">,</span> <span class="s2">"Bulk fraction at θ = 0.35"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+<span class="c1"># ḡ at the four Lesson 13 trials, from the course module and from g_bar_closed above.</span>
 <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">expected</span> <span class="ow">in</span> <span class="p">((</span><span class="mf">0.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">10537.4054</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="o">-</span><span class="mf">10541.3690</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.20</span><span class="p">,</span> <span class="o">-</span><span class="mf">10541.1526</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="o">-</span><span class="mf">10537.6008</span><span class="p">)):</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">closed</span><span class="o">.</span><span class="n">closed_trial</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">850</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">,</span> <span class="mi">8000</span><span class="p">)[</span><span class="s2">"G_molar_J_per_mol_sites"</span><span class="p">],</span> <span class="n">expected</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"ḡ at θ = </span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">g_bar_closed</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">850</span><span class="p">),</span> <span class="n">expected</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"ḡ at θ = </span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> from the formula above"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
 
-<span class="n">steps</span> <span class="o">=</span> <span class="n">hand_iteration</span><span class="p">()[</span><span class="s2">"steps"</span><span class="p">]</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="n">hand_iteration</span><span class="p">()[</span><span class="s2">"steps"</span><span class="p">]</span>   <span class="c1"># list of rounds; each round is a dict with k, x_b_used, theta, boundary_B, bulk_B</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">round  x_b used    θ           boundary B  bulk B"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'k'</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'x_b_used'</span><span class="p">]</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'theta'</span><span class="p">]</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'boundary_B'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">     </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'bulk_B'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"theta"</span><span class="p">],</span> <span class="mf">0.16856026</span><span class="p">,</span> <span class="s2">"Round 1 occupancy"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">((</span><span class="mi">850</span> <span class="o">-</span> <span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"boundary_B"</span><span class="p">])</span> <span class="o">/</span> <span class="mi">8000</span><span class="p">,</span> <span class="mf">0.10203599</span><span class="p">,</span> <span class="s2">"Round 1 bulk fraction"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span>
 
-<span class="n">final</span> <span class="o">=</span> <span class="n">closed</span><span class="o">.</span><span class="n">closed_equilibrium</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">,</span> <span class="mi">8000</span><span class="p">)</span>
+<span class="n">final</span> <span class="o">=</span> <span class="n">closed</span><span class="o">.</span><span class="n">closed_equilibrium</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">,</span> <span class="mi">8000</span><span class="p">)</span>   <span class="c1"># minimiser and exchange root for x0 = 0.10, θ0 = 0.25</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Closed cell from x0 = 0.10, θ0 = 0.25:"</span><span class="p">,</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">final</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="s2">"theta_root"</span><span class="p">,</span> <span class="s2">"x_bulk"</span><span class="p">,</span> <span class="s2">"G_molar_J_per_mol_sites"</span><span class="p">)})</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">final</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">],</span> <span class="mf">0.17160753</span><span class="p">,</span> <span class="s2">"Closed occupancy (minimiser)"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">final</span><span class="p">[</span><span class="s2">"theta_root"</span><span class="p">],</span> <span class="mf">0.17160752</span><span class="p">,</span> <span class="s2">"Closed occupancy (exchange root)"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
@@ -13792,7 +13941,8 @@ odds = 0.20273299, θ = 0.16856026, boundary B = 33.7121, excess = 0.3428013 ato
 <span class="k">for</span> <span class="n">nb</span><span class="p">,</span> <span class="n">expected</span> <span class="ow">in</span> <span class="p">((</span><span class="mi">80000</span><span class="p">,</span> <span class="mf">0.16887598</span><span class="p">),</span> <span class="p">(</span><span class="mi">800000</span><span class="p">,</span> <span class="mf">0.16859187</span><span class="p">)):</span>   <span class="c1"># bigger bulk → open result</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">closed</span><span class="o">.</span><span class="n">closed_equilibrium</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">,</span> <span class="n">nb</span><span class="p">)[</span><span class="s2">"theta"</span><span class="p">],</span> <span class="n">expected</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Closed occupancy with </span><span class="si">{</span><span class="n">nb</span><span class="si">}</span><span class="s2"> bulk sites"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
 
-<span class="n">starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.901</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Open and closed occupancy for bulk fractions 0.10, 0.15, …, 0.90.</span>
+<span class="n">starts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.901</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># rounded to 2 decimals to avoid values like 0.15000000000000002</span>
 <span class="n">open_theta</span> <span class="o">=</span> <span class="p">[</span><span class="n">one_state</span><span class="o">.</span><span class="n">open_equilibrium</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">)[</span><span class="s2">"theta"</span><span class="p">]</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">]</span>
 <span class="n">closed_theta</span> <span class="o">=</span> <span class="p">[</span><span class="n">closed</span><span class="o">.</span><span class="n">closed_equilibrium</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">,</span> <span class="mi">8000</span><span class="p">)[</span><span class="s2">"theta"</span><span class="p">]</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">]</span>
 <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
@@ -13803,7 +13953,7 @@ odds = 0.20273299, θ = 0.16856026, boundary B = 33.7121, excess = 0.3428013 ato
 <span class="n">left</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"reservoir x_b (open) or start x0 (closed)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"selected occupancy θ"</span><span class="p">,</span>
          <span class="n">title</span><span class="o">=</span><span class="s2">"Occupancy at δ = −5000 J/mol"</span><span class="p">)</span>
 <span class="n">left</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-<span class="n">rounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s2">"k"</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">]</span>
+<span class="n">rounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s2">"k"</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">]</span>   <span class="c1"># round numbers 1, 2, …</span>
 <span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rounds</span><span class="p">,</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">],</span> <span class="s2">"o-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"θ after each round"</span><span class="p">)</span>
 <span class="n">right</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">final</span><span class="p">[</span><span class="s2">"theta_root"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"grey"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"closed minimum"</span><span class="p">)</span>
 <span class="n">right</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">theta_open</span><span class="p">(</span><span class="mf">0.10</span><span class="p">),</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"open result at 0.10"</span><span class="p">)</span>
@@ -13888,12 +14038,24 @@ Closed cell from x0 = 0.10, θ0 = 0.25: {'theta': 0.17160753314081367, 'theta_ro
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=1d91b819"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>The third cell</strong> confirms the D9 card. Note in the closed card how much B the
+"keep $x_b=0.20$" reasoning would need compared with the fixed total: the
+difference is B that the closed cell does not have. The baseline line shows the
+weighting $200\,\eta/8200$: only the 200 boundary sites carry $\eta$, but the
+energy is expressed per mole of all 8200 cell sites.</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=b998eb12">
 <div class="input">
 <div class="prompt input_prompt">In [11]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: the D9 card and the step 04 practice</span>
+<span class="c1"># Open card: reservoir x_b = 0.20.</span>
 <span class="n">odds</span> <span class="o">=</span> <span class="mf">0.20</span> <span class="o">/</span> <span class="mf">0.80</span> <span class="o">*</span> <span class="mf">1.82459687</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Open x_b = 0.20: odds = </span><span class="si">{</span><span class="n">odds</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">, θ = </span><span class="si">{</span><span class="n">theta_open</span><span class="p">(</span><span class="mf">0.20</span><span class="p">)</span><span class="si">:</span><span class="s2">.8f</span><span class="si">}</span><span class="s2">, "</span>
       <span class="sa">f</span><span class="s2">"excess = </span><span class="si">{</span><span class="mi">5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">theta_open</span><span class="p">(</span><span class="mf">0.20</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.20</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> atom/nm² = </span><span class="si">{</span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">theta_open</span><span class="p">(</span><span class="mf">0.20</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.20</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> B over 40 nm²"</span><span class="p">)</span>
@@ -13902,12 +14064,14 @@ Closed cell from x0 = 0.10, θ0 = 0.25: {'theta': 0.17160753314081367, 'theta_ro
 <span class="n">confirm</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta_open</span><span class="p">(</span><span class="mf">0.20</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.20</span><span class="p">),</span> <span class="mf">0.566286</span><span class="p">,</span> <span class="s2">"Open excess at 0.20"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">excess_atoms_per_nm2</span><span class="p">(</span><span class="n">theta_open</span><span class="p">(</span><span class="mf">0.20</span><span class="p">),</span> <span class="mf">0.20</span><span class="p">)</span> <span class="o">*</span> <span class="mi">40</span><span class="p">,</span> <span class="mf">22.6514</span><span class="p">,</span> <span class="s2">"Excess B count over 40 nm²"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
 
-<span class="n">card_B</span> <span class="o">=</span> <span class="mi">8000</span> <span class="o">*</span> <span class="mf">0.20</span> <span class="o">+</span> <span class="mi">200</span> <span class="o">*</span> <span class="mf">0.20</span>
+<span class="c1"># Closed card: x0 = 0.20, θ0 = 0.20, trial θ = 0.40.</span>
+<span class="n">card_B</span> <span class="o">=</span> <span class="mi">8000</span> <span class="o">*</span> <span class="mf">0.20</span> <span class="o">+</span> <span class="mi">200</span> <span class="o">*</span> <span class="mf">0.20</span>   <span class="c1"># fixed total B of this cell</span>
 <span class="n">card</span> <span class="o">=</span> <span class="n">closed</span><span class="o">.</span><span class="n">closed_trial</span><span class="p">(</span><span class="mf">0.40</span><span class="p">,</span> <span class="n">card_B</span><span class="p">,</span> <span class="n">DELTA</span><span class="p">,</span> <span class="mi">8000</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Closed x0 = 0.20, θ0 = 0.20: B_tot = </span><span class="si">{</span><span class="n">card_B</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">; trial θ = 0.40: boundary B = </span><span class="si">{</span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.40</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">, "</span>
       <span class="sa">f</span><span class="s2">"bulk B = </span><span class="si">{</span><span class="n">card_B</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.40</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">, x_b = </span><span class="si">{</span><span class="n">card</span><span class="p">[</span><span class="s1">'x_bulk'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">; keeping x_b = 0.20 would need </span><span class="si">{</span><span class="mi">8000</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.20</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.40</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> B"</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">card_B</span><span class="p">,</span> <span class="mi">1640</span><span class="p">,</span> <span class="s2">"Closed total B"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">card</span><span class="p">[</span><span class="s2">"x_bulk"</span><span class="p">],</span> <span class="mf">0.195</span><span class="p">,</span> <span class="s2">"Closed trial bulk fraction"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+<span class="c1"># Baseline: 2000 J/mol on 200 boundary sites, expressed per mole of all 8200 cell sites.</span>
 <span class="n">confirm</span><span class="p">(</span><span class="mi">200</span> <span class="o">*</span> <span class="mi">2000</span> <span class="o">/</span> <span class="mi">8200</span><span class="p">,</span> <span class="mf">48.78049</span><span class="p">,</span> <span class="s2">"Baseline per mole of all cell sites"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 </pre></div>
 </div>

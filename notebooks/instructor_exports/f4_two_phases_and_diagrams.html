@@ -13096,6 +13096,19 @@ compositions do they take, how much of each forms, and how do these answers
 at many temperatures draw a phase diagram?</p>
 <p>Used in: Lessons 5, 7; self-study step 03 (parts A, B, C).
 Work each "your turn" on paper first, then type your value.</p>
+<p><strong>The plan.</strong> f3 built the Gibbs-energy curve of <em>one</em> phase and read chemical
+potentials from its tangent. Here a sample may divide into two regions, and we
+ask whether that lowers the total Gibbs energy.</p>
+<ul>
+<li><strong>Part A</strong> (sections 1 and 2): two different phases, ALPHA and BETA. The lever
+rule counts the atoms, the common tangent picks the compositions, and a
+linear programme shows how a computer finds them.</li>
+<li><strong>Part B</strong> (section 3): one phase whose curve has a hump, so it splits into two
+regions of the <em>same</em> phase (a miscibility gap). Repeating the calculation at
+many temperatures draws a phase diagram.</li>
+<li><strong>Part C</strong> (section 4): a SOLID and a LIQUID, which together give the melting
+"lens" diagram.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -13108,7 +13121,7 @@ Work each "your turn" on paper first, then type your value.</p>
 <span class="c1"># downloads the tested course release and the locked package versions.</span>
 <span class="c1"># In Colab, the first run then restarts the session on purpose and Colab reports</span>
 <span class="c1"># a crash: that is expected. Run this cell again, then the rest of the notebook.</span>
-<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.1"</span>
+<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.2"</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span>
              <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"pyproject.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"course"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
@@ -13147,7 +13160,7 @@ Work each "your turn" on paper first, then type your value.</p>
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Course release v0.1.1 · Python 3.12.14
+<pre>Course release v0.1.2 · Python 3.12.14
   numpy       2.5.3
   scipy       1.18.1
   matplotlib  3.11.2
@@ -13174,6 +13187,17 @@ the B atom fraction inside a phase. Energies are J/mol of atoms, with
 R = 8.3145 J/(mol K) and q(x) = (1 − x) ln(1 − x) + x ln x:</p>
 <p>$$g_\alpha(x) = -9000 + 12000\,x + RT\,q(x),\qquad g_\beta(x) = 3000 - 12000\,x + RT\,q(x).$$</p>
 <p>The two curves are mirror images: g_β(0.8) = g_α(0.2).</p>
+<p><strong>Reading the formulas.</strong> g_α is exactly the ideal ALPHA curve of f3: a straight
+reference line plus the ideal mixing term RT q(x). ALPHA is cheap (low g) near
+pure A and expensive near pure B. BETA has the same mixing term but the opposite
+reference line, so it is cheap near pure B. Replacing x by 1 − x turns one
+formula into the other: −9000 + 12000(1 − x) = 3000 − 12000x, and q is symmetric.
+That is why the curves are mirror images about x = 0.5.</p>
+<p>Note the two different composition symbols: <strong>z</strong> is the overall B fraction of
+the whole sample (fixed, because the sample is closed), <strong>x</strong> is the B fraction
+inside one phase region (free to choose, as long as the atoms add up).</p>
+<p><strong>The Python.</strong> <code>def g_alpha(x, T=T_A):</code> gives the argument T a <em>default value</em>:
+<code>g_alpha(0.3)</code> uses T = 1000 K, while <code>g_alpha(0.3, 600.0)</code> would use 600 K.</p>
 </div>
 </div>
 </div>
@@ -13197,7 +13221,7 @@ R = 8.3145 J/(mol K) and q(x) = (1 − x) ln(1 − x) + x ln x:</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">g_beta</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_A</span><span class="p">):</span>
     <span class="k">return</span> <span class="mf">3000.0</span> <span class="o">-</span> <span class="mf">12000.0</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">R</span> <span class="o">*</span> <span class="n">T</span> <span class="o">*</span> <span class="n">q</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>    <span class="c1"># J/mol atoms (at 1000 K)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"g_alpha(0.3) = </span><span class="si">{</span><span class="n">g_alpha</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> J/mol, g_beta(0.3) = </span><span class="si">{</span><span class="n">g_beta</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"g_alpha(0.3) = </span><span class="si">{</span><span class="n">g_alpha</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> J/mol, g_beta(0.3) = </span><span class="si">{</span><span class="n">g_beta</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">)</span>   <span class="c1"># same x, two phases</span>
 </pre></div>
 </div>
 </div>
@@ -13224,6 +13248,15 @@ f_α + f_β = 1 and f_α x_α + f_β x_β = z, with 0 ≤ f ≤ 1. Solving gives
 <p>The split's energy per mole of atoms is f_α g_α(x_α) + f_β g_β(x_β). The lever
 rule fixes the amounts for given endpoints; it does not say which endpoints
 the sample chooses.</p>
+<p><strong>Solving step by step.</strong> Put f_α = 1 − f_β into the B balance:
+(1 − f_β) x_α + f_β x_β = z, so x_α + f_β (x_β − x_α) = z, so
+f_β = (z − x_α)/(x_β − x_α). The picture behind the name: on the composition
+axis, z sits between x_α and x_β like the pivot of a lever. The fraction of BETA
+is the length of the arm from x_α to z, divided by the whole length. The closer z
+lies to x_β, the more BETA forms.</p>
+<p>The two functions below turn these formulas into code. <code>f_beta</code> is the lever
+rule; <code>g_split</code> uses it to weight the two Gibbs energies. The printed example
+uses endpoints 0.1 and 0.9 at z = 0.6.</p>
 </div>
 </div>
 </div>
@@ -13239,7 +13272,7 @@ the sample chooses.</p>
     <span class="n">fb</span> <span class="o">=</span> <span class="n">f_beta</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">x_alpha</span><span class="p">,</span> <span class="n">x_beta</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">fb</span><span class="p">)</span> <span class="o">*</span> <span class="n">g_alpha</span><span class="p">(</span><span class="n">x_alpha</span><span class="p">)</span> <span class="o">+</span> <span class="n">fb</span> <span class="o">*</span> <span class="n">g_beta</span><span class="p">(</span><span class="n">x_beta</span><span class="p">)</span>   <span class="c1"># J/mol atoms</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"endpoints 0.1/0.9 at z = 0.6: f_beta = </span><span class="si">{</span><span class="n">f_beta</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.9</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"endpoints 0.1/0.9 at z = 0.6: f_beta = </span><span class="si">{</span><span class="n">f_beta</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.9</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>   <span class="c1"># arm 0.5 over length 0.8</span>
 </pre></div>
 </div>
 </div>
@@ -13265,6 +13298,7 @@ the sample chooses.</p>
 split energy using g_α(0.2) = g_β(0.8) = −10760.596 J/mol.</li>
 <li>How much lower is the split than the homogeneous state (a positive number)?</li>
 </ol>
+<p>"Homogeneous" means the whole sample stays one ALPHA region at x = z.</p>
 </div>
 </div>
 </div>
@@ -13307,6 +13341,8 @@ f4_split_lower_by: not attempted yet. Replace None with your value and run the c
 z, then find f_α and f_β at z = 0.35. What does the balance give for f_β at
 z = 0.1 (a fraction typed as a division, or three decimals), and can these
 endpoints make that sample?</p>
+<p>For <code>z01_possible</code> type the Python word <code>True</code> or <code>False</code>. You can use the
+<code>f_beta</code> function above to check your hand calculation.</p>
 </div>
 </div>
 </div>
@@ -13353,6 +13389,17 @@ same in both phases and atoms gain nothing by moving between them.</p>
 <p>The best split here uses x_α ≈ 0.19104 and x_β ≈ 0.80896, with energy
 −10762.730 J/mol. Every z between those two compositions splits into the same
 two compositions; only the amounts change, by the lever rule.</p>
+<p><strong>Why a straight line?</strong> Put the lever rule into the split energy:
+f_α g_α + f_β g_β with f_β = (z − x_α)/(x_β − x_α) is a weighted average of the
+two end values, with weights that change linearly with z. That is exactly the
+straight line (the <em>chord</em>) joining the two points, evaluated at z. Finding the
+best split therefore means finding the lowest chord that can be drawn from a point
+on the ALPHA curve to a point on the BETA curve. You can lower a chord until it
+just touches both curves; then it is tangent to both.</p>
+<p>Recall from f3 that a tangent's ends at x = 0 and x = 1 are μ_A and μ_B of the
+phase it touches. A <em>common</em> tangent has the same two ends for both phases, so
+μ_A(ALPHA) = μ_A(BETA) and μ_B(ALPHA) = μ_B(BETA): this equality of chemical
+potentials is the equilibrium condition between phases.</p>
 <h3 id="Your-turn:-the-tangent's-ends">Your turn: the tangent's ends<a class="anchor-link" href="#Your-turn:-the-tangent's-ends">¶</a></h3><p>The curves are mirror images, so the common tangent is horizontal. What is
 μ_A at the best split (J/mol)?</p>
 </div>
@@ -13391,6 +13438,25 @@ with a known energy; the unknowns are the amount fractions f ≥ 0. Minimising
 a feasible split, so its energy is an <strong>upper bound</strong> on the true minimum. A
 finer grid that contains the old points cannot do worse.</p>
 <p>Here is the whole idea on a 5-point grid, with SciPy's <code>linprog</code>:</p>
+<p><strong>Setting up the problem.</strong> With 5 grid points per phase there are 10 candidate
+regions: ALPHA at x = 0, 0.25, 0.5, 0.75, 1 and BETA at the same five
+compositions. Each candidate i has a known composition x_i and energy g_i; the
+unknown is its amount f_i. <code>linprog</code> then solves:</p>
+<ul>
+<li>minimise $\sum_i f_i\,g_i$ (argument 1, <code>energies</code>: the cost of each unknown);</li>
+<li>subject to the equations in <code>A_eq</code> and <code>b_eq</code>, read row by row as
+"row · f = value": the row of ones gives Σ f_i = 1 (one mole in total), the
+row <code>x_all</code> gives Σ f_i x_i = z (B balance);</li>
+<li>with <code>bounds=(0, None)</code>: every f_i ≥ 0 and no upper limit (the total of 1
+already caps them);</li>
+<li><code>method="highs"</code> chooses SciPy's standard solver for linear programmes.</li>
+</ul>
+<p><code>result.x</code> holds the best amounts f, <code>result.fun</code> the minimum Σ f g, and
+<code>result.success</code> says whether the solver finished properly.</p>
+<p><strong>Other Python here.</strong> <code>np.concatenate([a, b])</code> joins two arrays end to end;
+<code>f @ x_all</code> is the <em>dot product</em> Σ f_i x_i; <code>np.flatnonzero(f &gt; 0)</code> lists the
+positions where f is not zero; <code>'ALPHA' if i &lt; points else 'BETA'</code> picks a word
+depending on a condition (the first <code>points</code> entries are ALPHA).</p>
 </div>
 </div>
 </div>
@@ -13402,17 +13468,18 @@ finer grid that contains the old points cannot do worse.</p>
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">linprog</span>
 
 <span class="n">points</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>                        <span class="c1"># trial compositions 0, 0.25, 0.5, 0.75, 1</span>
 <span class="n">x_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">grid</span><span class="p">,</span> <span class="n">grid</span><span class="p">])</span>                        <span class="c1"># ALPHA points, then BETA points</span>
 <span class="n">energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">g_alpha</span><span class="p">(</span><span class="n">grid</span><span class="p">),</span> <span class="n">g_beta</span><span class="p">(</span><span class="n">grid</span><span class="p">)])</span>    <span class="c1"># J/mol atoms</span>
-<span class="n">z</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">z</span> <span class="o">=</span> <span class="mf">0.5</span>                                                     <span class="c1"># overall B fraction of the sample</span>
+<span class="c1"># minimise energies · f  with  [1 1 ... 1] · f = 1  and  x_all · f = z,  all f ≥ 0</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">linprog</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">A_eq</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x_all</span><span class="p">),</span> <span class="n">x_all</span><span class="p">],</span> <span class="n">b_eq</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
                  <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"highs"</span><span class="p">)</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"success:"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">,</span> <span class="s2">"| total:"</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="s2">"| B:"</span><span class="p">,</span> <span class="n">f</span> <span class="o">@</span> <span class="n">x_all</span><span class="p">,</span> <span class="s2">"| A:"</span><span class="p">,</span> <span class="n">f</span> <span class="o">@</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x_all</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>                                                <span class="c1"># amount of each candidate region, mol per mol atoms</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"success:"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">,</span> <span class="s2">"| total:"</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="s2">"| B:"</span><span class="p">,</span> <span class="n">f</span> <span class="o">@</span> <span class="n">x_all</span><span class="p">,</span> <span class="s2">"| A:"</span><span class="p">,</span> <span class="n">f</span> <span class="o">@</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x_all</span><span class="p">))</span>   <span class="c1"># balances: 1, z, 1 − z</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">f</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>                             <span class="c1"># only the regions that are used</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="s1">'ALPHA'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">points</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'BETA'</span><span class="si">}</span><span class="s2"> at x = </span><span class="si">{</span><span class="n">x_all</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">: f = </span><span class="si">{</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"grid energy: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">fun</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"grid energy: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">fun</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">)</span>               <span class="c1"># minimum Σ f g over this grid</span>
 </pre></div>
 </div>
 </div>
@@ -13435,6 +13502,11 @@ grid energy: -10675.536 J/mol
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=b9b807b7"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>What to look at.</strong> First check the balance line: total 1, B equal to z, A equal
+to 1 − z. Then see which candidates the solver used: of the ten, only two carry a
+non-zero amount, one of each phase. Finally compare the grid energy with the best
+split, −10762.730 J/mol. The grid result is higher, because the true touching
+points are not on this coarse grid.</p>
 <h3 id="Your-turn:-predict-the-finer-grids">Your turn: predict the finer grids<a class="anchor-link" href="#Your-turn:-predict-the-finer-grids">¶</a></h3><p>The Lesson 5 table uses 21, 101 and 501 uniform points per phase at z = 0.5.</p>
 <ol>
 <li>With 21 points (spacing 0.05) the search picks the grid points closest to
@@ -13471,6 +13543,20 @@ f4_x_alpha_101: not attempted yet. Replace None with your value and run the cell
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=9aff94a9"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next cell repeats the grid search with 21, 101 and 501 points through the
+course function <code>ideal_grid</code>, which does the same <code>linprog</code> set-up as above.
+Each printed row is: number of points per phase, grid energy (J/mol), its distance
+above the exact minimum (J/mol), and the three balances (total, A, B).
+<code>state['regions']</code> is a list of dictionaries, one per region used, each with the
+phase, composition <code>'x'</code> and amount <code>'f'</code>; <code>sum(r['f'] for r in regions)</code> adds up
+the amounts. <code>lesson5</code> is a dictionary from the number of points to the
+(energy, ALPHA composition) pair quoted in Lesson 5.</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=c5480bb9">
 <div class="input">
 <div class="prompt input_prompt">In [9]:</div>
@@ -13478,14 +13564,14 @@ f4_x_alpha_101: not attempted yet. Replace None with your value and run the cell
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: the Lesson 5 refinement, 21 → 101 → 501 points</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations.binary_family</span><span class="w"> </span><span class="kn">import</span> <span class="n">ideal_grid</span><span class="p">,</span> <span class="n">ideal_equilibrium</span>
-<span class="n">T</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span>
-<span class="n">reference</span> <span class="o">=</span> <span class="n">ideal_equilibrium</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">z</span><span class="p">)[</span><span class="s1">'GM'</span><span class="p">]</span>
+<span class="n">T</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span>   <span class="c1"># K, overall B fraction</span>
+<span class="n">reference</span> <span class="o">=</span> <span class="n">ideal_equilibrium</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">z</span><span class="p">)[</span><span class="s1">'GM'</span><span class="p">]</span>   <span class="c1"># exact (continuous) minimum, J/mol</span>
 <span class="k">for</span> <span class="n">points</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">501</span><span class="p">):</span>
     <span class="n">state</span> <span class="o">=</span> <span class="n">ideal_grid</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
-    <span class="n">regions</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s1">'regions'</span><span class="p">]</span>
-    <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">'f'</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">)</span>
-    <span class="n">B</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">'f'</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">)</span>
-    <span class="n">A</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">'f'</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="s1">'x'</span><span class="p">])</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">)</span>
+    <span class="n">regions</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s1">'regions'</span><span class="p">]</span>               <span class="c1"># list of {'phase', 'x', 'f'} for the regions used</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">'f'</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">)</span>          <span class="c1"># should be 1</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">'f'</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">)</span>       <span class="c1"># should be z</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">'f'</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="s1">'x'</span><span class="p">])</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">)</span>   <span class="c1"># should be 1 − z</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">state</span><span class="p">[</span><span class="s1">'GM'</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">state</span><span class="p">[</span><span class="s1">'GM'</span><span class="p">]</span><span class="o">-</span><span class="n">reference</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
           <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">total</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">A</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">B</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
@@ -13544,6 +13630,24 @@ separates into two ALPHA regions of different composition: a <strong>miscibility
 gap</strong>. The touching compositions solve RT ln(x/(1 − x)) + Ω(1 − 2x) = 0 away
 from the middle root x = 0.5. The hump disappears at the critical temperature
 T_c = Ω/(2R).</p>
+<p><strong>Where the new term comes from.</strong> In a random mixture, the chance that a given
+pair of neighbouring sites holds one A and one B is proportional to x(1 − x).
+If an A–B bond costs more energy than the average of A–A and B–B bonds, each
+unlike pair adds a little energy; Ω (in J/mol) collects that cost. Ω &gt; 0 means
+the atoms "prefer" like neighbours. Two effects now compete: the Ω term favours
+separating A and B, the entropy term RT q(x) favours mixing, and its weight grows
+with T.</p>
+<p><strong>Why the straight part can be ignored.</strong> Adding any straight line a + bx to a
+curve adds the same a + bz to <em>every</em> balanced split at overall composition z, so
+it does not change which split is lowest. Only the curved mixing part matters.</p>
+<p><strong>Where the two formulas come from.</strong> Δg_mix is symmetric about x = 0.5, so the
+tangent touching it twice is horizontal: it touches where the slope is zero. The
+slope is d/dx[Ω x(1 − x)] + d/dx[RT q(x)] = Ω(1 − 2x) + RT ln(x/(1 − x)). For T_c:
+the hump exists while the curve bends downwards at x = 0.5. The curvature (second
+derivative) is −2Ω + RT/(x(1 − x)), which at x = 0.5 is −2Ω + 4RT. It changes sign
+when 4RT = 2Ω, that is at T = Ω/(2R).</p>
+<p>The cell prints the mixing part at three compositions for one low and one high
+temperature. <strong>What to look at:</strong> does it rise or fall towards x = 0.5?</p>
 </div>
 </div>
 </div>
@@ -13557,7 +13661,8 @@ T_c = Ω/(2R).</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">g_mix_regular</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">OMEGA</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">R</span> <span class="o">*</span> <span class="n">T</span> <span class="o">*</span> <span class="n">q</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>   <span class="c1"># J/mol atoms</span>
 
-<span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">600.0</span><span class="p">,</span> <span class="mf">1500.0</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">600.0</span><span class="p">,</span> <span class="mf">1500.0</span><span class="p">):</span>   <span class="c1"># K, one temperature below and one above T_c</span>
+    <span class="c1"># round(float(...), 1): one decimal place; the list comprehension evaluates three compositions</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> K: mixing part at x = 0.3, 0.4, 0.5:"</span><span class="p">,</span>
           <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">g_mix_regular</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">T</span><span class="p">)),</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)],</span> <span class="s2">"J/mol"</span><span class="p">)</span>
 </pre></div>
@@ -13583,6 +13688,8 @@ T_c = Ω/(2R).</p>
 <h3 id="Your-turn:-predict,-then-compute-T_c">Your turn: predict, then compute T_c<a class="anchor-link" href="#Your-turn:-predict,-then-compute-T_c">¶</a></h3><p>As T rises towards T_c, do the two compositions move closer together or
 further apart? Answer with one word, <code>"together"</code> or <code>"apart"</code>. Then compute
 T_c in kelvin (four significant figures).</p>
+<p>The quotation marks matter: in Python, <code>"together"</code> is a piece of text (a
+<em>string</em>), while <code>together</code> without quotes would be an unknown variable name.</p>
 </div>
 </div>
 </div>
@@ -13620,6 +13727,20 @@ at or above T_c). Fill the list of temperatures (K, between 600 and 1200), run
 the cell and plot both compositions against T. That plot is a phase diagram:
 outside the curve one ALPHA is stable, inside the sample splits. Then enter
 the left composition at 900 K (four significant figures).</p>
+<p><strong>How the cell works.</strong> <code>regular_binodal(T)</code> solves the touching condition above
+numerically and returns a dictionary; its entry <code>"compositions"</code> is the list
+[x_left, x_right]. The loop collects the results in three lists with <code>.append</code>,
+which adds one item to the end of a list. <code>if ends:</code> is True only for a non-empty
+list, so temperatures without a gap are skipped. <code>if gap_T:</code> draws the plot only
+when there is something to draw, which is why the cell runs without error while
+your list is still empty.</p>
+<p>A phase diagram puts composition on the horizontal axis and temperature on the
+vertical axis, so the plot uses <code>plt.plot(compositions, temperatures)</code>.</p>
+<p>Typing the list: either by hand, <code>[600, 700, 800]</code>, or with
+<code>list(range(600, 1201, 50))</code>, which gives 600, 650, …, 1200 (<code>range</code> stops just
+before its second number). Include 900 so you can read the answer, and use
+enough temperatures to see the shape. The course function accepts temperatures
+from 600 to 1800 K.</p>
 </div>
 </div>
 </div>
@@ -13632,15 +13753,15 @@ the left composition at 900 K (four significant figures).</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="n">gap_temperatures</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1"># K, e.g. 600, 650, ...; your choice</span>
-<span class="n">gap_T</span><span class="p">,</span> <span class="n">gap_left</span><span class="p">,</span> <span class="n">gap_right</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="n">gap_T</span><span class="p">,</span> <span class="n">gap_left</span><span class="p">,</span> <span class="n">gap_right</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>   <span class="c1"># three empty lists, filled by the loop</span>
 <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">gap_temperatures</span><span class="p">:</span>
-    <span class="n">ends</span> <span class="o">=</span> <span class="n">regular_binodal</span><span class="p">(</span><span class="n">T</span><span class="p">)[</span><span class="s2">"compositions"</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">ends</span><span class="p">:</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="n">regular_binodal</span><span class="p">(</span><span class="n">T</span><span class="p">)[</span><span class="s2">"compositions"</span><span class="p">]</span>   <span class="c1"># [x_left, x_right], or [] at or above T_c</span>
+    <span class="k">if</span> <span class="n">ends</span><span class="p">:</span>                                    <span class="c1"># skip temperatures without a gap</span>
         <span class="n">gap_T</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
         <span class="n">gap_left</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">gap_right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="k">if</span> <span class="n">gap_T</span><span class="p">:</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gap_left</span><span class="p">,</span> <span class="n">gap_T</span><span class="p">,</span> <span class="s2">"o-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"B-poor region"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">gap_T</span><span class="p">:</span>                                       <span class="c1"># plot only if at least one temperature has a gap</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gap_left</span><span class="p">,</span> <span class="n">gap_T</span><span class="p">,</span> <span class="s2">"o-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"B-poor region"</span><span class="p">)</span>     <span class="c1"># x on the horizontal axis, T vertical</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gap_right</span><span class="p">,</span> <span class="n">gap_T</span><span class="p">,</span> <span class="s2">"s--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"B-rich region"</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"B atom fraction x"</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"T (K)"</span><span class="p">)</span>
@@ -13671,6 +13792,19 @@ the left composition at 900 K (four significant figures).</p>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=63c84ce8"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Reading the diagram.</strong> Each temperature contributes one horizontal <em>tie line</em>
+from x_left to x_right. A sample whose overall composition z lies between them
+splits into a B-poor and a B-rich ALPHA region with those compositions, in amounts
+given by the lever rule; a sample outside stays one homogeneous ALPHA.</p>
+<p>Parts A and B used one phase curve or two mirror-image ones. Part C applies the
+same common-tangent idea to a solid and a liquid, which gives the most common
+diagram for two metals that mix completely.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=d8d430d0"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="4.-Part-C:-melting-and-the-lens">4. Part C: melting and the lens<a class="anchor-link" href="#4.-Part-C:-melting-and-the-lens">¶</a></h2><p>Now a SOLID and a LIQUID, each an ideal solution of A and B. Component A is the
 one from f1 (SOLID h = 1000, s = 10; LIQUID h = 7000, s = 16), so it melts at
 1000 K. Component B is invented: SOLID h = 2000, s = 10; LIQUID h = 20000,
@@ -13682,6 +13816,28 @@ and B's, over 950–1850 K.</p>
 With $a = e^{(g^\circ_{A,S}-g^\circ_{A,L})/RT}$ and $b = e^{(g^\circ_{B,S}-g^\circ_{B,L})/RT}$:</p>
 <p>$$1 - x_L = a\,(1 - x_S),\qquad x_L = b\,x_S\quad\Rightarrow\quad x_S = \frac{1-a}{b-a},\; x_L = b\,x_S.$$</p>
 <p>x_S is the <strong>solidus</strong> composition and x_L the <strong>liquidus</strong> composition.</p>
+<p><strong>Symbols.</strong> $g^\circ_{A,S}$ is the molar Gibbs energy of <em>pure</em> A as a SOLID,
+h − Ts from the numbers above (likewise for L = LIQUID and for B). The melting
+points follow from $g^\circ_S = g^\circ_L$: for A, 1000 − 10T = 7000 − 16T gives
+T = 1000 K; for B, 2000 − 10T = 20000 − 20T gives T = 1800 K.</p>
+<p><strong>Deriving the two equations.</strong> In an ideal solution (f3, section 3) the chemical
+potential of A is $\mu_A = g^\circ_A + RT\ln(1-x)$, and of B is
+$\mu_B = g^\circ_B + RT\ln x$. Equal μ_A in SOLID and LIQUID means</p>
+<p>$$g^\circ_{A,S} + RT\ln(1-x_S) = g^\circ_{A,L} + RT\ln(1-x_L)
+\;\Rightarrow\; \ln\frac{1-x_L}{1-x_S} = \frac{g^\circ_{A,S}-g^\circ_{A,L}}{RT}
+\;\Rightarrow\; 1-x_L = a\,(1-x_S).$$</p>
+<p>The same steps for B give x_L = b x_S. Putting the second equation into the first,
+1 − b x_S = a − a x_S, and solving for x_S gives the formula above.</p>
+<p><strong>When is there a solution?</strong> a &gt; 1 means pure A's LIQUID is below its SOLID
+(A is above its melting point); b &lt; 1 means pure B's SOLID is below its LIQUID
+(B is below its melting point). Both hold only between the two melting points;
+outside that range the formula would give compositions outside 0…1, so the
+function returns <code>None</code> ("no answer"). Python allows the chained comparison
+<code>a &gt; 1 &gt; b</code>, which means <code>a &gt; 1 and 1 &gt; b</code>.</p>
+<p><strong>The Python.</strong> <code>H</code> and <code>S</code> are <em>nested dictionaries</em>: <code>H["B"]["LIQUID"]</code> first
+looks up B, then LIQUID inside it, giving 20000.0. The text in triple quotes
+under <code>def lens_ends</code> is a <em>docstring</em>, a short description of the function.
+<code>np.exp</code> is the exponential function.</p>
 </div>
 </div>
 </div>
@@ -13698,14 +13854,14 @@ With $a = e^{(g^\circ_{A,S}-g^\circ_{A,L})/RT}$ and $b = e^{(g^\circ_{B,S}-g^\ci
 
 <span class="k">def</span><span class="w"> </span><span class="nf">lens_ends</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""(x_SOLID, x_LIQUID) at T in K, or None outside the two-phase range."""</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">g0</span><span class="p">(</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span> <span class="o">-</span> <span class="n">g0</span><span class="p">(</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">g0</span><span class="p">(</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span> <span class="o">-</span> <span class="n">g0</span><span class="p">(</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">g0</span><span class="p">(</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span> <span class="o">-</span> <span class="n">g0</span><span class="p">(</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span>   <span class="c1"># dimensionless</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">g0</span><span class="p">(</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span> <span class="o">-</span> <span class="n">g0</span><span class="p">(</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span>   <span class="c1"># dimensionless</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">:</span>          <span class="c1"># only between the two melting points</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">x_solid</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">x_solid</span><span class="p">,</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x_solid</span>
+    <span class="n">x_solid</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>        <span class="c1"># solidus: B fraction of the SOLID</span>
+    <span class="k">return</span> <span class="n">x_solid</span><span class="p">,</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x_solid</span>        <span class="c1"># (solidus, liquidus)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"950 K:"</span><span class="p">,</span> <span class="n">lens_ends</span><span class="p">(</span><span class="mf">950.0</span><span class="p">),</span> <span class="s2">"| 1850 K:"</span><span class="p">,</span> <span class="n">lens_ends</span><span class="p">(</span><span class="mf">1850.0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"950 K:"</span><span class="p">,</span> <span class="n">lens_ends</span><span class="p">(</span><span class="mf">950.0</span><span class="p">),</span> <span class="s2">"| 1850 K:"</span><span class="p">,</span> <span class="n">lens_ends</span><span class="p">(</span><span class="mf">1850.0</span><span class="p">))</span>   <span class="c1"># both outside 1000–1800 K</span>
 </pre></div>
 </div>
 </div>
@@ -13725,9 +13881,15 @@ With $a = e^{(g^\circ_{A,S}-g^\circ_{A,L})/RT}$ and $b = e^{(g^\circ_{B,S}-g^\ci
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=bbe10cce"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>What to look at.</strong> Both test temperatures lie outside the range between the two
+melting points, so both calls return <code>None</code>: at 950 K everything is solid, at
+1850 K everything is liquid, whatever the composition.</p>
 <h3 id="Your-turn:-build-the-lens">Your turn: build the lens<a class="anchor-link" href="#Your-turn:-build-the-lens">¶</a></h3><p>Fill the temperatures (K, between 1000 and 1800), run and plot both edges.
 Then give x_S and x_L at 1400 K (four significant figures), and say which
 component the solid is richer in: <code>"A"</code> or <code>"B"</code>.</p>
+<p>The cell works like the gap cell above: list your temperatures, for example with
+<code>list(range(1050, 1800, 50))</code>, and include 1400. To answer the last question,
+compare x_S and x_L at the same temperature (x is the B fraction).</p>
 </div>
 </div>
 </div>
@@ -13739,8 +13901,8 @@ component the solid is richer in: <code>"A"</code> or <code>"B"</code>.</p>
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">lens_temperatures</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1"># K, your choice</span>
 <span class="n">lens_T</span><span class="p">,</span> <span class="n">lens_solid</span><span class="p">,</span> <span class="n">lens_liquid</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">lens_temperatures</span><span class="p">:</span>
-    <span class="n">ends</span> <span class="o">=</span> <span class="n">lens_ends</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ends</span><span class="p">:</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="n">lens_ends</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>                 <span class="c1"># (x_SOLID, x_LIQUID), or None</span>
+    <span class="k">if</span> <span class="n">ends</span><span class="p">:</span>                            <span class="c1"># None counts as False: skip temperatures outside the lens</span>
         <span class="n">lens_T</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
         <span class="n">lens_solid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">lens_liquid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -13784,6 +13946,17 @@ f4_lens_richer: not attempted yet. Replace None with your value and run the cell
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="5.-After-your-attempt:-check-with-the-course-code-and-plot">5. After your attempt: check with the course code and plot<a class="anchor-link" href="#5.-After-your-attempt:-check-with-the-course-code-and-plot">¶</a></h2><p>The cells below reproduce the step 03 and Lesson 7 numbers with the course
 functions, then draw the four pictures. Each plot has a small table beside it.</p>
+<p><strong>Part A cell.</strong> The <code>confirm</code> lines check your part A numbers against the course
+module <code>binary_family</code> (<code>bf</code>). <code>bf.ideal_equilibrium(1000.0, 0.5)</code> returns the
+exact best split: a dictionary with <code>"GM"</code> and a list of <code>"regions"</code>, here an ALPHA
+and a BETA region with their compositions <code>"x"</code>. <code>bf.ideal_derivatives</code> gives μ_A
+and μ_B in each phase at its touching point; they must be equal in both phases.</p>
+<p>The plot draws both curves, the common tangent and, below it, the two lever
+arms for z = 0.35. The tangent is the straight line from μ_A at x = 0 to μ_B at
+x = 1: ℓ(x) = μ_A + (μ_B − μ_A) x. The arm from x_α to z sets the amount of BETA,
+the arm from z to x_β sets the amount of ALPHA: each phase's amount is given by
+the arm on the <em>opposite</em> side. The marker style <code>"-|"</code> draws a line with short
+vertical end marks; <code>ylim</code> fixes the vertical range of the plot.</p>
 </div>
 </div>
 </div>
@@ -13804,10 +13977,10 @@ functions, then draw the four pictures. Each plot has a small table beside it.</
 <span class="n">confirm</span><span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">lever_fraction</span><span class="p">(</span><span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s2">"f_beta at z = 0.35"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">f_beta</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">"Balance at z = 0.1 (negative, so impossible)"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
 
-<span class="n">best</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">ideal_equilibrium</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
-<span class="n">xa</span><span class="p">,</span> <span class="n">xb</span> <span class="o">=</span> <span class="n">best</span><span class="p">[</span><span class="s2">"regions"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">best</span><span class="p">[</span><span class="s2">"regions"</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s2">"x"</span><span class="p">]</span>
-<span class="n">mu</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">ideal_derivatives</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="n">xa</span><span class="p">,</span> <span class="s2">"ALPHA"</span><span class="p">)</span>
-<span class="n">mu_beta</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">ideal_derivatives</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="s2">"BETA"</span><span class="p">)</span>
+<span class="n">best</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">ideal_equilibrium</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>                 <span class="c1"># exact best split at z = 0.5</span>
+<span class="n">xa</span><span class="p">,</span> <span class="n">xb</span> <span class="o">=</span> <span class="n">best</span><span class="p">[</span><span class="s2">"regions"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">best</span><span class="p">[</span><span class="s2">"regions"</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s2">"x"</span><span class="p">]</span>   <span class="c1"># touching compositions in ALPHA and BETA</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">ideal_derivatives</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="n">xa</span><span class="p">,</span> <span class="s2">"ALPHA"</span><span class="p">)</span>           <span class="c1"># mu_A, mu_B of ALPHA at its touching point</span>
+<span class="n">mu_beta</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">ideal_derivatives</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="s2">"BETA"</span><span class="p">)</span>       <span class="c1"># the same for BETA</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">xa</span><span class="p">,</span> <span class="mf">0.19104</span><span class="p">,</span> <span class="s2">"Best ALPHA composition"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">xb</span><span class="p">,</span> <span class="mf">0.80896</span><span class="p">,</span> <span class="s2">"Best BETA composition"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">best</span><span class="p">[</span><span class="s2">"GM"</span><span class="p">],</span> <span class="o">-</span><span class="mf">10762.730</span><span class="p">,</span> <span class="s2">"Best split energy"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
@@ -13816,18 +13989,19 @@ functions, then draw the four pictures. Each plot has a small table beside it.</
 <span class="n">confirm</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">mu_beta</span><span class="p">[</span><span class="s2">"mu_B"</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_B"</span><span class="p">]),</span> <span class="s2">"mu_B equal in both phases"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span>
-<span class="n">tangent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_A"</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_B"</span><span class="p">])</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_A"</span><span class="p">]))</span> <span class="o">*</span> <span class="n">x</span>
-<span class="n">z_show</span> <span class="o">=</span> <span class="mf">0.35</span>
-<span class="n">fb</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">lever_fraction</span><span class="p">(</span><span class="n">z_show</span><span class="p">,</span> <span class="n">xa</span><span class="p">,</span> <span class="n">xb</span><span class="p">)</span>
-<span class="n">g_at_z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_A"</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_B"</span><span class="p">])</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_A"</span><span class="p">]))</span> <span class="o">*</span> <span class="n">z_show</span>
+<span class="n">tangent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_A"</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_B"</span><span class="p">])</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_A"</span><span class="p">]))</span> <span class="o">*</span> <span class="n">x</span>   <span class="c1"># common tangent, J/mol</span>
+<span class="n">z_show</span> <span class="o">=</span> <span class="mf">0.35</span>                                              <span class="c1"># overall composition used for the lever arms</span>
+<span class="n">fb</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">lever_fraction</span><span class="p">(</span><span class="n">z_show</span><span class="p">,</span> <span class="n">xa</span><span class="p">,</span> <span class="n">xb</span><span class="p">)</span>                     <span class="c1"># f_beta at z_show</span>
+<span class="n">g_at_z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_A"</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_B"</span><span class="p">])</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="s2">"mu_A"</span><span class="p">]))</span> <span class="o">*</span> <span class="n">z_show</span>   <span class="c1"># tangent height at z_show</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">g_alpha</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"ALPHA"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">g_beta</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"BETA"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tangent</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"k"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"common tangent"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">xa</span><span class="p">,</span> <span class="n">xb</span><span class="p">],</span> <span class="p">[</span><span class="n">g_alpha</span><span class="p">(</span><span class="n">xa</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">g_beta</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">],</span> <span class="s2">"ko"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"touching points"</span><span class="p">)</span>
+<span class="c1"># the two lever arms, drawn 0.4 and 0.8 kJ/mol below the tangent so they do not hide it</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">xa</span><span class="p">,</span> <span class="n">z_show</span><span class="p">],</span> <span class="p">[</span><span class="n">g_at_z</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">-</span> <span class="mf">0.4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"-|"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"arm z − x_α → f_β = </span><span class="si">{</span><span class="n">fb</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">z_show</span><span class="p">,</span> <span class="n">xb</span><span class="p">],</span> <span class="p">[</span><span class="n">g_at_z</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">-</span> <span class="mf">0.8</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"--|"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"arm x_β − z → f_α = </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fb</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">z_show</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"grey"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">z_show</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"grey"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>                  <span class="c1"># vertical line at z</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"B atom fraction x"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"g (kJ/mol atoms)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"1000 K: ALPHA, BETA and the common tangent"</span><span class="p">,</span>
        <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">12.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"upper center"</span><span class="p">)</span>
@@ -13884,6 +14058,24 @@ z = 0.35 with the best endpoints: f_alpha = 0.7428, f_beta = 0.2572; the vertica
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=150ff008"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Part B cell.</strong> After checking T_c and the 600 K compositions, it draws two
+panels. <em>Left:</em> the mixing part at four temperatures; where a gap exists, the
+horizontal tangent is drawn in black between its two touching points. <em>Right:</em> the
+gap diagram from 600 K up to 1200 K in steps of 25 K, with T_c marked by a star.</p>
+<p>Python details: <code>np.arange(600.0, 1200.0, 25.0)</code> gives 600, 625, …, 1175 (it stops
+before 1200), so 1200 is added with <code>np.concatenate</code>. In
+<code>(T, *bf.regular_binodal(T)["compositions"], ...)</code> the <code>*</code> unpacks a list into
+separate entries, so each row becomes (T, x_left, x_right, spinodal_left,
+spinodal_right). The <em>spinodal</em> compositions are where the curve's curvature
+changes sign; they are stored but not plotted here. <code>table[:, 1]</code> takes column 1
+of every row; <code>rows[::4]</code> takes every fourth row; and <code>for T, xl, xr, *_ in ...</code>
+keeps the first three entries and ignores the rest.</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=a2cdf29c">
 <div class="input">
 <div class="prompt input_prompt">In [16]:</div>
@@ -13898,19 +14090,20 @@ z = 0.35 with the best endpoints: f_alpha = 0.7428, f_beta = 0.2572; the vertica
 <span class="n">confirm</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">regular_properties</span><span class="p">(</span><span class="mf">600.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)[</span><span class="s2">"GM_mix"</span><span class="p">]),</span> <span class="mf">1542.096660</span><span class="p">,</span> <span class="s2">"Mixing part at x = 0.5, 600 K"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">g_mix_regular</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">600.0</span><span class="p">)),</span> <span class="mf">1542.096660</span><span class="p">,</span> <span class="s2">"Same value from the formula above"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 
-<span class="n">x_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+<span class="n">x_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>   <span class="c1"># avoid the pure ends</span>
 <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">T</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">((</span><span class="mf">600.0</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">),</span> <span class="p">(</span><span class="mf">900.0</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">),</span> <span class="p">(</span><span class="mf">1100.0</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">),</span> <span class="p">(</span><span class="mf">1300.0</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)):</span>
+<span class="k">for</span> <span class="n">T</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="p">((</span><span class="mf">600.0</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">),</span> <span class="p">(</span><span class="mf">900.0</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">),</span> <span class="p">(</span><span class="mf">1100.0</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">),</span> <span class="p">(</span><span class="mf">1300.0</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)):</span>   <span class="c1"># K, line style</span>
     <span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_in</span><span class="p">,</span> <span class="n">g_mix_regular</span><span class="p">(</span><span class="n">x_in</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">style</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> K"</span><span class="p">)</span>
     <span class="n">ends</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">regular_binodal</span><span class="p">(</span><span class="n">T</span><span class="p">)[</span><span class="s2">"compositions"</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">ends</span><span class="p">:</span>
-        <span class="n">level</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">g_mix_regular</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">T</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>
+    <span class="k">if</span> <span class="n">ends</span><span class="p">:</span>                                         <span class="c1"># a gap exists at this T</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">g_mix_regular</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">T</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>   <span class="c1"># height of the horizontal tangent, kJ/mol</span>
         <span class="n">left</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="p">[</span><span class="n">level</span><span class="p">,</span> <span class="n">level</span><span class="p">],</span> <span class="s2">"ko-"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">left</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"B atom fraction x"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"mixing part Δg_mix (kJ/mol atoms)"</span><span class="p">,</span>
          <span class="n">title</span><span class="o">=</span><span class="s2">"Hump and horizontal tangent (black)"</span><span class="p">)</span>
 <span class="n">left</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
-<span class="n">temps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">600.0</span><span class="p">,</span> <span class="mf">1200.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">),</span> <span class="p">[</span><span class="mf">1200.0</span><span class="p">]])</span>
+<span class="n">temps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">600.0</span><span class="p">,</span> <span class="mf">1200.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">),</span> <span class="p">[</span><span class="mf">1200.0</span><span class="p">]])</span>   <span class="c1"># K</span>
+<span class="c1"># each row: T, x_left, x_right, spinodal_left, spinodal_right</span>
 <span class="n">rows</span> <span class="o">=</span> <span class="p">[(</span><span class="n">T</span><span class="p">,</span> <span class="o">*</span><span class="n">bf</span><span class="o">.</span><span class="n">regular_binodal</span><span class="p">(</span><span class="n">T</span><span class="p">)[</span><span class="s2">"compositions"</span><span class="p">],</span> <span class="o">*</span><span class="n">bf</span><span class="o">.</span><span class="n">regular_binodal</span><span class="p">(</span><span class="n">T</span><span class="p">)[</span><span class="s2">"spinodal"</span><span class="p">])</span> <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">temps</span><span class="p">]</span>
 <span class="n">table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
 <span class="n">right</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">table</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">table</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">"o-"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"B-poor region"</span><span class="p">)</span>
@@ -13920,7 +14113,7 @@ z = 0.35 with the best endpoints: f_alpha = 0.7428, f_beta = 0.2572; the vertica
 <span class="n">right</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"T (K)   x_left    x_right"</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">T</span><span class="p">,</span> <span class="n">xl</span><span class="p">,</span> <span class="n">xr</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[::</span><span class="mi">4</span><span class="p">]:</span>
+<span class="k">for</span> <span class="n">T</span><span class="p">,</span> <span class="n">xl</span><span class="p">,</span> <span class="n">xr</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[::</span><span class="mi">4</span><span class="p">]:</span>          <span class="c1"># every fourth row (every 100 K); spinodal columns ignored</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">6.0f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">xl</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">xr</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">bf</span><span class="o">.</span><span class="n">TC_R1</span><span class="si">:</span><span class="s2">6.1f</span><span class="si">}</span><span class="s2">  0.5 (the two compositions meet)"</span><span class="p">)</span>
 </pre></div>
@@ -13965,6 +14158,19 @@ z = 0.35 with the best endpoints: f_alpha = 0.7428, f_beta = 0.2572; the vertica
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=3c397ec7"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Part C cell.</strong> It checks the formula in <code>lens_ends</code> against the course function
+<code>tp.lens_coexistence</code> at 1400 K, checks that μ_A and μ_B are equal in SOLID and
+LIQUID there (<code>tp.lens_mu</code> returns the pair (μ_A, μ_B) of one phase), and checks the
+two melting points. It then draws the lens from 1010 K to 1790 K in 10 K steps:
+above the liquidus everything is LIQUID, below the solidus everything is SOLID,
+and in between a sample splits into a SOLID and a LIQUID whose compositions are
+read off the two edges at the same temperature (the dotted tie line at 1400 K).</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=b7348d02">
 <div class="input">
 <div class="prompt input_prompt">In [17]:</div>
@@ -13973,29 +14179,29 @@ z = 0.35 with the best endpoints: f_alpha = 0.7428, f_beta = 0.2572; the vertica
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: part C, the melting lens</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">course.self_study</span><span class="w"> </span><span class="kn">import</span> <span class="n">two_phase_export</span> <span class="k">as</span> <span class="n">tp</span>
 
-<span class="n">x_s</span><span class="p">,</span> <span class="n">x_l</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">lens_coexistence</span><span class="p">(</span><span class="mf">1400.0</span><span class="p">)</span>
+<span class="n">x_s</span><span class="p">,</span> <span class="n">x_l</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">lens_coexistence</span><span class="p">(</span><span class="mf">1400.0</span><span class="p">)</span>   <span class="c1"># (solidus, liquidus) at 1400 K</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">lens_ends</span><span class="p">(</span><span class="mf">1400.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_s</span><span class="p">,</span> <span class="s2">"Solidus at 1400 K (formula vs course function)"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">lens_ends</span><span class="p">(</span><span class="mf">1400.0</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_l</span><span class="p">,</span> <span class="s2">"Liquidus at 1400 K (formula vs course function)"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
-<span class="n">mu_s</span><span class="p">,</span> <span class="n">mu_l</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">lens_mu</span><span class="p">(</span><span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">x_s</span><span class="p">,</span> <span class="mf">1400.0</span><span class="p">),</span> <span class="n">tp</span><span class="o">.</span><span class="n">lens_mu</span><span class="p">(</span><span class="s2">"LIQUID"</span><span class="p">,</span> <span class="n">x_l</span><span class="p">,</span> <span class="mf">1400.0</span><span class="p">)</span>
+<span class="n">mu_s</span><span class="p">,</span> <span class="n">mu_l</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">lens_mu</span><span class="p">(</span><span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">x_s</span><span class="p">,</span> <span class="mf">1400.0</span><span class="p">),</span> <span class="n">tp</span><span class="o">.</span><span class="n">lens_mu</span><span class="p">(</span><span class="s2">"LIQUID"</span><span class="p">,</span> <span class="n">x_l</span><span class="p">,</span> <span class="mf">1400.0</span><span class="p">)</span>   <span class="c1"># (mu_A, mu_B) in each phase</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">mu_s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mu_l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"mu_A equal in SOLID and LIQUID"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">mu_s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mu_l</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"mu_B equal in SOLID and LIQUID"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">g0</span><span class="p">(</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"SOLID"</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">),</span> <span class="n">g0</span><span class="p">(</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">),</span> <span class="s2">"A melts at 1000 K"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">g0</span><span class="p">(</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"SOLID"</span><span class="p">,</span> <span class="mf">1800.0</span><span class="p">),</span> <span class="n">g0</span><span class="p">(</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">,</span> <span class="mf">1800.0</span><span class="p">),</span> <span class="s2">"B melts at 1800 K"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
 
-<span class="n">temps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1010.0</span><span class="p">,</span> <span class="mf">1800.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
-<span class="n">lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">T</span><span class="p">,</span> <span class="o">*</span><span class="n">tp</span><span class="o">.</span><span class="n">lens_coexistence</span><span class="p">(</span><span class="n">T</span><span class="p">))</span> <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">temps</span><span class="p">])</span>
+<span class="n">temps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1010.0</span><span class="p">,</span> <span class="mf">1800.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>   <span class="c1"># K, 1010 … 1790</span>
+<span class="n">lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">T</span><span class="p">,</span> <span class="o">*</span><span class="n">tp</span><span class="o">.</span><span class="n">lens_coexistence</span><span class="p">(</span><span class="n">T</span><span class="p">))</span> <span class="k">for</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">temps</span><span class="p">])</span>   <span class="c1"># columns: T, x_SOLID, x_LIQUID</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lens</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">lens</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"liquidus (LIQUID composition)"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lens</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">lens</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"solidus (SOLID composition)"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1800</span><span class="p">],</span> <span class="s2">"ko"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pure A and pure B melt"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x_l</span><span class="p">,</span> <span class="n">x_s</span><span class="p">],</span> <span class="p">[</span><span class="mi">1400</span><span class="p">,</span> <span class="mi">1400</span><span class="p">],</span> <span class="s2">"k:|"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"tie line at 1400 K"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.65</span><span class="p">,</span> <span class="mi">1150</span><span class="p">,</span> <span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mi">1650</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.65</span><span class="p">,</span> <span class="mi">1150</span><span class="p">,</span> <span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>     <span class="c1"># label placed inside the single-phase SOLID region</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mi">1650</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>     <span class="c1"># label placed inside the single-phase LIQUID region</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"B atom fraction x"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"T (K)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Ideal SOLID/LIQUID lens"</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"T (K)   x_LIQUID  x_SOLID"</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">T</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">xl</span> <span class="ow">in</span> <span class="n">lens</span><span class="p">[::</span><span class="mi">10</span><span class="p">]:</span>
+<span class="k">for</span> <span class="n">T</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">xl</span> <span class="ow">in</span> <span class="n">lens</span><span class="p">[::</span><span class="mi">10</span><span class="p">]:</span>              <span class="c1"># every tenth row, i.e. every 100 K</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">6.0f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">xl</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">xs</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -14052,7 +14258,9 @@ step 05 shows a gap and a lens in Cu–Ni.</p>
 <p>Worked answers, after your attempt: the worked answer of self-study step 03
 and Lessons <a href="../course/foundations/lesson_05_two_phase.md">5</a> and
 <a href="../course/foundations/lesson_07_regular_solution.md">7</a>.</p>
-<p>Next: <a href="f5_binary_pycalphad.ipynb">f5 · binary equilibrium in pycalphad</a>.</p>
+<p>Next: <a href="f4b_lens_from_scratch.ipynb">f4b · one phase diagram from scratch, then with pycalphad</a>
+(optional: the lens of part C built step by step and handed to pycalphad), or
+straight on to <a href="f5_binary_pycalphad.ipynb">f5 · binary equilibrium in pycalphad</a>.</p>
 </div>
 </div>
 </div>

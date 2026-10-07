@@ -13099,6 +13099,15 @@ one) explain; code cells run Python. Click a code cell and press <strong>Shift+E
 to run it and move on. Run the cells from top to bottom. If something gets
 muddled, use <em>Kernel → Restart</em> (Colab: <em>Runtime → Restart session</em>) and run
 from the top again.</p>
+<p><strong>What you will do here.</strong> You will meet the four energies that thermodynamics
+uses: the internal energy U, the enthalpy H, the Helmholtz energy F and the
+Gibbs energy G. Each is calculated once in code, and then you calculate one
+yourself. At the end you will know why every later notebook compares Gibbs
+energies. No Python knowledge is assumed; each new piece of Python is explained
+the first time it appears.</p>
+<p>The first code cell below prepares the notebook. You do not need to read it:
+it finds the course files, (in Colab) installs the course's package versions,
+and prints the versions it is using.</p>
 </div>
 </div>
 </div>
@@ -13111,7 +13120,7 @@ from the top again.</p>
 <span class="c1"># downloads the tested course release and the locked package versions.</span>
 <span class="c1"># In Colab, the first run then restarts the session on purpose and Colab reports</span>
 <span class="c1"># a crash: that is expected. Run this cell again, then the rest of the notebook.</span>
-<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.1"</span>
+<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.2"</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span>
              <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"pyproject.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"course"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
@@ -13150,7 +13159,7 @@ from the top again.</p>
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Course release v0.1.1 · Python 3.12.14
+<pre>Course release v0.1.2 · Python 3.12.14
   numpy       2.5.3
   scipy       1.18.1
   matplotlib  3.11.2
@@ -13171,8 +13180,46 @@ from the top again.</p>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=fbb84c09"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>What the setup cell printed.</strong> One line per package with its version number.
+If a line ends with "← locked run used …", your computer has a different version
+from the one the course was tested with; the notebook usually still works, but
+mention it if a later number disagrees.</p>
+<p>The setup cell also made two small helper functions available, which you will
+see in almost every cell:</p>
+<ul>
+<li><code>check(your_value, "name")</code> compares <em>your</em> answer with a stored answer
+without showing it. It prints "not attempted" while your value is still
+<code>None</code>, "✓ matches" when you are right, and a hint when you are not.</li>
+<li><code>confirm(value, expected, "what", tol=...)</code> is used in the worked cells. It
+makes sure the code reproduces the number given in the lesson, to within the
+tolerance <code>tol</code>, and prints a ✓ line. If it ever stops with an error, the
+calculation and the lesson disagree; check the package versions first.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=2a851e18"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="1.-Numbers-with-units">1. Numbers with units<a class="anchor-link" href="#1.-Numbers-with-units">¶</a></h2><p>Python does not know units, so we keep them in the variable names and comments.
 Pressure times volume is an energy: 1 Pa·m³ = 1 J.</p>
+<p><strong>The physics.</strong> The <em>internal energy</em> U is all the energy stored inside the
+sample: the motion of its atoms and the energy of the bonds between them. A
+sample also takes up space: at pressure p, making room for a volume V means
+pushing the surroundings back, which costs the work pV. The <em>enthalpy</em> adds that
+work to U:</p>
+<p>$$H = U + pV.$$</p>
+<p>Units: a pascal is a force per area, 1 Pa = 1 N/m², so Pa·m³ = N·m = J. For a
+solid or liquid at normal pressure the pV term is tiny compared with U (here
+1 J out of 1000 J), which is why H and U are often almost equal for condensed
+matter.</p>
+<p><strong>The Python.</strong> <code>U = 999.0</code> is an <em>assignment</em>: it stores the number 999.0
+under the name <code>U</code>. Writing <code>999.0</code> (with a decimal point) makes it a
+floating-point number. <code>*</code> multiplies, <code>+</code> adds. Everything after <code>#</code> on a line
+is a comment, ignored by Python; we use comments to note units.
+<code>print(f"...")</code> prints an <em>f-string</em>: the text between the quotes is printed
+as it is, except that <code>{pV:.0f}</code> is replaced by the value of <code>pV</code>, written with
+0 digits after the decimal point (<code>.2f</code> would give two digits).</p>
 </div>
 </div>
 </div>
@@ -13184,10 +13231,10 @@ Pressure times volume is an energy: 1 Pa·m³ = 1 J.</p>
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">U</span> <span class="o">=</span> <span class="mf">999.0</span>        <span class="c1"># internal energy, J</span>
 <span class="n">p</span> <span class="o">=</span> <span class="mf">100000.0</span>     <span class="c1"># pressure, Pa</span>
 <span class="n">V</span> <span class="o">=</span> <span class="mf">0.00001</span>      <span class="c1"># volume, m³</span>
-<span class="n">pV</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">V</span>       <span class="c1"># J</span>
+<span class="n">pV</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">V</span>       <span class="c1"># J  (Pa · m³ = N/m² · m³ = N·m = J)</span>
 <span class="n">H</span> <span class="o">=</span> <span class="n">U</span> <span class="o">+</span> <span class="n">pV</span>       <span class="c1"># enthalpy, J</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pV = </span><span class="si">{</span><span class="n">pV</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J, H = </span><span class="si">{</span><span class="n">H</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J"</span><span class="p">)</span>
-<span class="n">confirm</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="s2">"H = U + pV for the W1 worked state"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pV = </span><span class="si">{</span><span class="n">pV</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J, H = </span><span class="si">{</span><span class="n">H</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J"</span><span class="p">)</span>   <span class="c1"># the f-string fills in the values, rounded to whole J</span>
+<span class="n">confirm</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="s2">"H = U + pV for the W1 worked state"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>   <span class="c1"># stops with an error if H is not 1000 J</span>
 </pre></div>
 </div>
 </div>
@@ -13210,6 +13257,14 @@ Pressure times volume is an energy: 1 Pa·m³ = 1 J.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Your-turn-(W1)">Your turn (W1)<a class="anchor-link" href="#Your-turn-(W1)">¶</a></h3><p>A sample receives 80 J of heat and does 10 J of work, so the work <em>on</em> the sample
 is −10 J. Find ΔU = q + w_on. Replace <code>None</code> with your value (in J) and run the cell.</p>
+<p><strong>Sign convention.</strong> This is the first law of thermodynamics: the internal energy
+changes by the heat q that flows <em>into</em> the sample plus the work w_on done <em>on</em>
+the sample. Energy that enters the sample counts as positive, energy that leaves
+counts as negative. When the sample pushes on its surroundings it <em>does</em> work,
+so the work done <em>on</em> it is negative.</p>
+<p>You may type a number, or the arithmetic itself (for example <code>3 + 4</code>): Python
+evaluates it before <code>check</code> compares it. <code>None</code> is Python's word for "no value
+yet".</p>
 </div>
 </div>
 </div>
@@ -13219,7 +13274,7 @@ is −10 J. Find ΔU = q + w_on. Replace <code>None</code> with your value (in J
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">delta_U</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># J</span>
-<span class="n">check</span><span class="p">(</span><span class="n">delta_U</span><span class="p">,</span> <span class="s2">"f0_delta_u"</span><span class="p">)</span>
+<span class="n">check</span><span class="p">(</span><span class="n">delta_U</span><span class="p">,</span> <span class="s2">"f0_delta_u"</span><span class="p">)</span>   <span class="c1"># compares with the stored answer; prints a hint if it differs</span>
 </pre></div>
 </div>
 </div>
@@ -13242,6 +13297,14 @@ is −10 J. Find ΔU = q + w_on. Replace <code>None</code> with your value (in J
 <h2 id="2.-Entropy-(W2)">2. Entropy (W2)<a class="anchor-link" href="#2.-Entropy-(W2)">¶</a></h2><p>Entropy S has units J/K. For a reversible heat transfer at constant absolute
 temperature, $\Delta S = q_{rev}/T$ (T in kelvin). A reversible 600 J input at
 300 K gives ΔS = 2 J/K. Entropy is a state property, not a synonym for heat.</p>
+<p><strong>What the symbols mean.</strong> $q_{rev}$ is heat delivered <em>reversibly</em>, that is so
+slowly and gently that the sample stays in equilibrium the whole time. T must be
+the <em>absolute</em> temperature in kelvin (T/K = θ/°C + 273.15): dividing by a Celsius
+temperature would give nonsense, and at 0 °C would even divide by zero. Entropy
+measures how many microscopic arrangements are compatible with what we see
+from outside; adding heat lets the atoms explore more of them. The same amount of
+heat raises the entropy more at a low temperature than at a high one, which is
+why T is in the denominator. In Python, <code>/</code> divides.</p>
 </div>
 </div>
 </div>
@@ -13252,7 +13315,7 @@ temperature, $\Delta S = q_{rev}/T$ (T in kelvin). A reversible 600 J input at
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">q_rev</span> <span class="o">=</span> <span class="mf">600.0</span>      <span class="c1"># reversible heat received, J</span>
 <span class="n">T_bath</span> <span class="o">=</span> <span class="mf">300.0</span>     <span class="c1"># K</span>
-<span class="n">delta_S</span> <span class="o">=</span> <span class="n">q_rev</span> <span class="o">/</span> <span class="n">T_bath</span>   <span class="c1"># J/K</span>
+<span class="n">delta_S</span> <span class="o">=</span> <span class="n">q_rev</span> <span class="o">/</span> <span class="n">T_bath</span>   <span class="c1"># J/K  (J divided by K)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ΔS = </span><span class="si">{</span><span class="n">delta_S</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J/K"</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="n">delta_S</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s2">"ΔS for the W2 worked transfer"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
 </pre></div>
@@ -13307,6 +13370,16 @@ temperature, $\Delta S = q_{rev}/T$ (T in kelvin). A reversible 600 J input at
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="3.-From-U-to-G">3. From U to G<a class="anchor-link" href="#3.-From-U-to-G">¶</a></h2><p>$F = U - TS$ and $G = H - TS = F + pV$. Take the worked state from W1 at
 $T = 300$ K with $S = 10$ J/K.</p>
+<p><strong>Why subtract TS?</strong> F (the <em>Helmholtz energy</em>) and G (the <em>Gibbs energy</em>) are the
+energies that matter when the sample sits in surroundings at a fixed temperature.
+The product TS has units K · J/K = J, so it can be subtracted from an energy. At a
+high temperature the −TS term is large, so states with much entropy (much
+disorder) become favourable; at a low temperature the energy term U or H
+dominates. The second equality follows by substitution:
+$G = H - TS = (U + pV) - TS = (U - TS) + pV = F + pV$.</p>
+<p><strong>The Python.</strong> <code>T, S = 300.0, 10.0</code> assigns two values at once: the first goes to
+<code>T</code>, the second to <code>S</code>. The cell reuses <code>U</code>, <code>H</code> and <code>pV</code> from section 1, because
+a notebook remembers every variable from cells you have already run.</p>
 </div>
 </div>
 </div>
@@ -13317,10 +13390,10 @@ $T = 300$ K with $S = 10$ J/K.</p>
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">T</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">,</span> <span class="mf">10.0</span>   <span class="c1"># K, J/K</span>
 <span class="n">TS</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">S</span>           <span class="c1"># J</span>
-<span class="n">F</span> <span class="o">=</span> <span class="n">U</span> <span class="o">-</span> <span class="n">TS</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">H</span> <span class="o">-</span> <span class="n">TS</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">U</span> <span class="o">-</span> <span class="n">TS</span>           <span class="c1"># Helmholtz energy, J</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">H</span> <span class="o">-</span> <span class="n">TS</span>           <span class="c1"># Gibbs energy, J</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"TS = </span><span class="si">{</span><span class="n">TS</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J, F = </span><span class="si">{</span><span class="n">F</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J, G = </span><span class="si">{</span><span class="n">G</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J, G − F = </span><span class="si">{</span><span class="n">G</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">F</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J (= pV)"</span><span class="p">)</span>
-<span class="n">confirm</span><span class="p">(</span><span class="n">G</span> <span class="o">-</span> <span class="n">F</span><span class="p">,</span> <span class="n">pV</span><span class="p">,</span> <span class="s2">"G − F equals pV"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+<span class="n">confirm</span><span class="p">(</span><span class="n">G</span> <span class="o">-</span> <span class="n">F</span><span class="p">,</span> <span class="n">pV</span><span class="p">,</span> <span class="s2">"G − F equals pV"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>   <span class="c1"># G − F must be exactly the pV of section 1</span>
 </pre></div>
 </div>
 </div>
@@ -13343,6 +13416,9 @@ $T = 300$ K with $S = 10$ J/K.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Your-turn-(W3,-self-study-step-00-%22Try-it%22)">Your turn (W3, self-study step 00 "Try it")<a class="anchor-link" href="#Your-turn-(W3,-self-study-step-00-%22Try-it%22)">¶</a></h3><p>The state U = 1498 J, p = 100000 Pa, V = 0.00002 m³, T = 300 K, S = 4 J/K.
 Compute H, F and G in J. Write the formulas, not just the numbers.</p>
+<p>Tip: you can type each formula with the given numbers put in, for example
+<code>a * b + c</code> with numbers in place of the letters; Python does the arithmetic.
+The worked cell in section 3 shows which formula belongs to which energy.</p>
 </div>
 </div>
 </div>
@@ -13401,11 +13477,20 @@ f0_try_g: not attempted yet. Replace None with your value and run the cell again
 </tr>
 <tr>
 <td>T, p and the chemical potentials of the exchanged elements (open to a reservoir)</td>
-<td>G − Σ μᵢnᵢ, the grand potential (step 04)</td>
+<td>G − Σ μᵢnᵢ, summed over the exchanged elements only: a grand potential (step 04)</td>
 </tr>
 </tbody>
 </table>
 <p>Everything in this course is at fixed T and p, so we compare Gibbs energies.</p>
+<p><strong>Why G at fixed T and p?</strong> The basic law is the second law: the total entropy of
+the sample <em>plus</em> its surroundings cannot decrease. At constant pressure, heat
+q = ΔH flows from the surroundings into the sample when the sample's enthalpy
+changes by ΔH. The surroundings (a large bath at temperature T) lose that heat,
+so their entropy changes by −ΔH/T. The total change is</p>
+<p>$$\Delta S_{total} = \Delta S - \frac{\Delta H}{T} = -\frac{\Delta H - T\Delta S}{T} = -\frac{\Delta G}{T}.$$</p>
+<p>"Total entropy rises" is therefore the same statement as "the sample's G falls".
+A sample at fixed T and p keeps changing until G cannot go lower: that lowest-G
+state is the equilibrium. A CALPHAD program does exactly this search.</p>
 </div>
 </div>
 </div>
@@ -13415,6 +13500,27 @@ f0_try_g: not attempted yet. Replace None with your value and run the cell again
 <h2 id="5.-A-first-plot">5. A first plot<a class="anchor-link" href="#5.-A-first-plot">¶</a></h2><p>How do the four energies of the "Try it" state change with temperature, if U,
 p, V and S stay fixed? (Only T changes in this sketch, to show which terms
 contain T; a real sample's U and S would change too.)</p>
+<p><strong>New Python in this cell.</strong></p>
+<ul>
+<li><code>import numpy as np</code> loads NumPy, the package for arrays of numbers, under the
+short name <code>np</code>; <code>import matplotlib.pyplot as plt</code> loads the plotting package
+as <code>plt</code>. Every notebook starts its calculations with lines like these.</li>
+<li><code>np.linspace(0, 600, 61)</code> makes an <em>array</em> of 61 evenly spaced numbers from 0
+to 600, both ends included: 0, 10, 20, …, 600 K.</li>
+<li>Arithmetic with an array acts on every element at once ("vectorised"):
+<code>U2 - temperatures * S2</code> gives an array of 61 values of F, one per temperature,
+without writing a loop.</li>
+<li><code>np.full_like(temperatures, U2)</code> makes an array of the same length filled
+with the constant U2, so a constant can be plotted against T.</li>
+<li><code>plt.subplots(...)</code> creates a figure <code>fig</code> with one set of axes <code>ax</code>;
+<code>figsize</code> is its size in inches. <code>ax.plot(x, y, style, label=...)</code> draws one
+line; the style string <code>"-"</code>, <code>":"</code>, <code>"--"</code> or <code>"-."</code> gives a solid, dotted,
+dashed or dash-dotted line. <code>ax.legend()</code> lists the labels, <code>plt.show()</code>
+displays the figure.</li>
+</ul>
+<p><strong>What to look at.</strong> U and H are horizontal lines, since neither contains T. F and
+G fall with slope −S. G stays above F by the constant pV (only 2 J here, so the
+two lines nearly overlap at this scale).</p>
 </div>
 </div>
 </div>
@@ -13426,16 +13532,16 @@ contain T; a real sample's U and S would change too.)</p>
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="n">U2</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">V2</span><span class="p">,</span> <span class="n">S2</span> <span class="o">=</span> <span class="mf">1498.0</span><span class="p">,</span> <span class="mf">100000.0</span><span class="p">,</span> <span class="mf">0.00002</span><span class="p">,</span> <span class="mf">4.0</span>
-<span class="n">temperatures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">61</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">U2</span><span class="p">),</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"U"</span><span class="p">)</span>
+<span class="n">U2</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">V2</span><span class="p">,</span> <span class="n">S2</span> <span class="o">=</span> <span class="mf">1498.0</span><span class="p">,</span> <span class="mf">100000.0</span><span class="p">,</span> <span class="mf">0.00002</span><span class="p">,</span> <span class="mf">4.0</span>   <span class="c1"># J, Pa, m³, J/K: the "Try it" state</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">61</span><span class="p">)</span>            <span class="c1"># K, 61 values 0, 10, ..., 600</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">))</span>        <span class="c1"># one figure with one set of axes (size in inches)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">U2</span><span class="p">),</span> <span class="s2">"-"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"U"</span><span class="p">)</span>   <span class="c1"># constant: U has no T in it</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">U2</span> <span class="o">+</span> <span class="n">p2</span> <span class="o">*</span> <span class="n">V2</span><span class="p">),</span> <span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"H = U + pV"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">U2</span> <span class="o">-</span> <span class="n">temperatures</span> <span class="o">*</span> <span class="n">S2</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"F = U − TS"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">U2</span> <span class="o">-</span> <span class="n">temperatures</span> <span class="o">*</span> <span class="n">S2</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"F = U − TS"</span><span class="p">)</span>   <span class="c1"># one value per temperature</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">U2</span> <span class="o">+</span> <span class="n">p2</span> <span class="o">*</span> <span class="n">V2</span> <span class="o">-</span> <span class="n">temperatures</span> <span class="o">*</span> <span class="n">S2</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"G = H − TS"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"T (K)"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"energy (J)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>      <span class="c1"># box naming each line</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -13452,13 +13558,24 @@ contain T; a real sample's U and S would change too.)</p>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=59601b5e"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next cell prints the numbers behind three points of the plot. Its code is
+hidden in Colab (a "form" cell); double-click it to see the code.
+<code>for t in (0, 300, 600):</code> is a <em>loop</em>: the indented line below it runs three
+times, with <code>t</code> set to 0, then 300, then 600. <code>{t:3d}</code> prints the whole number
+t three characters wide, so the columns line up.</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=68c40b8d">
 <div class="input">
 <div class="prompt input_prompt">In [9]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: run to see the numbers behind the plot</span>
-<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">600</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">600</span><span class="p">):</span>   <span class="c1"># t in K</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"T = </span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2"> K: U = </span><span class="si">{</span><span class="n">U2</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">, H = </span><span class="si">{</span><span class="n">U2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">V2</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">, F = </span><span class="si">{</span><span class="n">U2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">S2</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">, G = </span><span class="si">{</span><span class="n">U2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">V2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">S2</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> J"</span><span class="p">)</span>
 </pre></div>
 </div>

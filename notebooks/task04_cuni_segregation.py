@@ -30,13 +30,25 @@
 # **Read this first:** the bulk is a published Cu–Ni description; the boundary
 # is **invented** for teaching. The numbers show how the bookkeeping works.
 # They are not a prediction of real Cu–Ni grain-boundary segregation.
+#
+# **Segregation** means that the composition at a grain boundary differs from
+# the composition inside the grains, because one element is more comfortable on
+# boundary sites than the other.
+#
+# **How this notebook works.** Run the cells from top to bottom (Shift + Enter).
+# In each "Your turn" cell, replace `None` with your value and run the cell:
+# `check(your_value, key)` (key: the name of the stored answer, in quotes) prints "✓ matches", "close" or "not yet" without
+# showing the stored answer. The "After your attempt" cells use
+# `confirm(value, expected, "what", tol=...)`, which prints a ✓ line when a
+# calculation reproduces the lesson value within `tol` and stops with an error
+# otherwise.
 
 # %%
 # Setup: run this cell first. Locally it finds the course folder; in Colab it
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.1"
+RELEASE = "v0.1.2"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)
@@ -90,6 +102,11 @@ show_versions(RELEASE)
 # B. Hallstedt, *Calphad* 89 (2025) 102833,
 # [doi:10.1016/j.calphad.2025.102833](https://doi.org/10.1016/j.calphad.2025.102833).
 #
+# Reading the formula: $g_s(y)$ is the Gibbs energy per mole of boundary sites
+# when a fraction $y$ of them holds Ni; it equals the bulk energy at the same
+# composition plus $\delta$ for every mole of Ni on boundary sites. $\delta$ is
+# "Ni minus Cu": the extra cost of a Ni atom over a Cu atom on a boundary site.
+#
 # **Database or not.** The next cell looks for your checked copy of
 # `CuNi-92Mey-LB.tdb` (see [setup_check](setup_check.ipynb); set `DOWNLOAD = True`
 # in that cell to fetch it). Without it the notebook runs in
@@ -97,6 +114,27 @@ show_versions(RELEASE)
 # ($g_b'(x)=RT\ln\frac{x}{1-x}$) so you can still try the formulas, and the
 # published-bulk numbers come from the saved course run. Every exercise works
 # in both modes.
+#
+# **The key quantity** is the slope $g_b'(x)=dg_b/dx$ of the bulk Gibbs energy
+# curve. For a binary it equals $\mu_{Ni}-\mu_{Cu}$, the energy gained or lost
+# when one mole of Cu is swapped for one mole of Ni (tangent construction, as in
+# Task 02). The cell defines a Python function `dg_bulk(x)` that returns it in
+# J/mol. For an ideal solution, $g=x\,G_{Ni}+(1-x)\,G_{Cu}+RT[x\ln x+(1-x)\ln(1-x)]$
+# and the slope is $RT\ln\frac{x}{1-x}$ plus the constant $G_{Ni}-G_{Cu}$; the
+# constant cancels in every equation below, so the stand-in leaves it out.
+#
+# **The code, with the database.** pycalphad's `Model(...).GM` is a *symbolic*
+# formula (a SymEngine expression) in T, P and the site fractions, i.e. the
+# fractions of each sublattice's sites held by each species. FCC_A1 has two
+# sublattices: the first holds Cu and Ni, the second only vacancies (VA). The
+# dictionary `fix` replaces T, P and N by numbers, the VA fraction by 1, the Ni
+# fraction by a new symbol `x_Ni` and the Cu fraction by `1 − x_Ni`. Then
+# `.subs(fix)` substitutes, `.diff(x_sym)` differentiates with respect to x, and
+# `dg_bulk(x)` puts a number in for x. `s.species.name` is the name of the
+# species a site-fraction symbol belongs to.
+#
+# `brentq` (from `scipy.optimize`) is used in the next section to solve an
+# equation in one unknown.
 
 # %%
 import json
@@ -110,20 +148,20 @@ SIGMA = 10.0                # boundary sites per nm², invented
 N_AV = 6.02214076e23        # atoms per mol
 R = 8.3145                  # J/(mol K), as in pycalphad 0.11.2
 
-SAVED = json.loads((ROOT / "course" / "materials" / "boundaries" / "segregation_results.json").read_text())
+SAVED = json.loads((ROOT / "course" / "materials" / "boundaries" / "segregation_results.json").read_text())  # course run
 DOWNLOAD = False            # True: fetch CuNi-92Mey-LB.tdb into your session (6,789 bytes, checked)
-tdb = database("cuni", download=DOWNLOAD)
+tdb = database("cuni", download=DOWNLOAD)  # path to the checked file, or None
 if tdb is not None:
     from pycalphad import Model, variables as v
     from symengine import Symbol
     from course.materials.cuni.worked_example import COMPONENTS, load_source
-    fcc = Model(load_source(tdb), COMPONENTS, "FCC_A1")
-    x_sym = Symbol("x_Ni")
+    fcc = Model(load_source(tdb), COMPONENTS, "FCC_A1")  # symbolic FCC Gibbs energy
+    x_sym = Symbol("x_Ni")                               # a new symbol for the Ni fraction
     fix = {v.T: T, v.P: P, v.N: 1}
     fix.update({s: (1 if s.species.name == "VA" else x_sym if s.species.name == "NI" else 1 - x_sym)
                 for s in fcc.site_fractions})       # one metal site: y_NI = x, y_CU = 1 − x; VA fixed
     g_expr = fcc.GM.subs(fix)                       # J/mol atoms, function of x only
-    dg_expr = g_expr.diff(x_sym)
+    dg_expr = g_expr.diff(x_sym)                    # dg/dx, still a formula in x
 
     def dg_bulk(x):
         return float(dg_expr.subs({x_sym: float(x)}))   # g_b'(x) = μ_Ni − μ_Cu, J/mol
@@ -137,15 +175,30 @@ print("Bulk used in the code cells:", BULK)
 # %% [markdown]
 # ## 2. Open reservoir and closed piece
 #
+# Two situations are compared: a boundary fed by an endless supply of alloy
+# (open), and a boundary inside a finite piece whose atoms it must take from its
+# own grains (closed).
+#
 # **Open.** A large reservoir fixes $x$. A Ni atom arriving at a filled boundary
 # site pushes a Cu atom out, so the exchange uses **both** chemical potentials,
 # $\mu_{Ni}-\mu_{Cu}=g_b'(x)$. The boundary minimises
 #
 # $$\phi(y)=g_s(y)-(1-y)\mu_{Cu}-y\,\mu_{Ni},\qquad\text{so}\qquad g_b'(y)+\delta=g_b'(x).$$
 #
+# Step by step: $\phi$ is the boundary's Gibbs energy minus what its atoms are
+# worth in the reservoir, where each mole of Cu "costs" $\mu_{Cu}$ and each mole
+# of Ni $\mu_{Ni}$. At the minimum $d\phi/dy=0$:
+# $g_s'(y)+\mu_{Cu}-\mu_{Ni}=0$. With $g_s'(y)=g_b'(y)+\delta$ and
+# $\mu_{Ni}-\mu_{Cu}=g_b'(x)$ this is the equation on the right: the swap of
+# one Cu for one Ni must cost the same on the boundary as in the bulk.
+#
 # For an ideal bulk this is the odds formula
 # $\frac{y}{1-y}=\frac{x}{1-x}\,e^{-\delta/RT}$; the published bulk has extra
 # terms, so the code solves the equation itself.
+#
+# (With $g_b'=RT\ln\frac{x}{1-x}$, the equation reads
+# $RT\ln\frac{y}{1-y}+\delta=RT\ln\frac{x}{1-x}$; divide by $RT$ and take the
+# exponential.)
 #
 # **Closed.** One mole of sites with overall Ni fraction $z$: 0.98 mol bulk and
 # 0.02 mol boundary. Both Ni and Cu are conserved:
@@ -160,15 +213,34 @@ print("Bulk used in the code cells:", BULK)
 # $$\Gamma_{Cu}=\sigma\,[(1-y)-(1-x)]=10\,(x-y)\ \ \mathrm{atoms/nm^2},$$
 #
 # times $10^{18}/N_{\rm Av}$ for mol/m². In the closed case use the **final** $x$.
+#
+# The unit change: 1 nm² = $10^{-18}$ m², so $n$ atoms/nm² = $n\cdot10^{18}$
+# atoms/m², and dividing by $N_{\rm Av}$ (atoms per mol) gives mol/m².
+#
+# **The code.** `brentq(f, lo, hi, xtol=...)` finds the $y$ between `lo` and `hi`
+# where `f(y) = 0`. It needs `f` to have opposite signs at the two ends, and
+# halves the interval step by step (with some speed-ups) until $y$ is known to
+# `xtol`. The ends $10^{-9}$ and $1-10^{-9}$ keep the logarithms away from 0 and
+# 1. `lambda y: ...` is a short one-line function. The functions are:
+#
+# - `open_y(x)`: boundary Ni occupancy $y$ next to a reservoir of bulk fraction $x$.
+# - `closed_xy(z)`: final bulk $x$ and boundary $y$ of a closed piece of overall
+#   composition $z$; the balance gives $x$ for each trial $y$.
+# - `cu_excess(x, y)`: $\Gamma_{Cu}$ in atoms/nm² and in mol/m².
+#
+# The cell then prints the code's results for the bulk in use and, below them,
+# the saved results of the course run with the published bulk. Use the saved
+# ones for the exercises.
 
 # %%
 def open_y(x, delta=DELTA):
     """Boundary Ni occupancy in contact with a reservoir of Ni fraction x."""
+    # root of g_b'(y) + δ − g_b'(x) = 0 for y between 0 and 1
     return brentq(lambda y: dg_bulk(y) + delta - dg_bulk(x), 1e-9, 1 - 1e-9, xtol=1e-14)
 
 def closed_xy(z, delta=DELTA, f=F_BOUNDARY):
     """Final bulk x and boundary y of a closed piece with overall Ni fraction z."""
-    bulk_x = lambda y: (z - f * y) / (1 - f)
+    bulk_x = lambda y: (z - f * y) / (1 - f)   # Ni balance solved for the bulk fraction
     y = brentq(lambda y: dg_bulk(y) + delta - dg_bulk(bulk_x(y)), 1e-9, 1 - 1e-9, xtol=1e-14)
     return bulk_x(y), y
 
@@ -182,7 +254,7 @@ for z in (0.2, 0.8):
     print(f"  z = {z}: open y = {open_y(z):.6f}; closed x = {x:.6f}, y = {y:.6f}")
 print("\nSaved course run, published bulk (use these for the exercises):")
 print("  z     open y          closed x        closed y")
-for row in SAVED["rows"]:
+for row in SAVED["rows"]:  # one row each for z = 0.2, 0.5 and 0.8
     print(f"  {row['overall_or_open_reservoir_x_NI']:.1f}   {row['open_y_NI']:.10f}   "
           f"{row['closed_bulk_x_NI']:.10f}   {row['closed_y_NI']:.10f}")
 
@@ -201,6 +273,10 @@ for row in SAVED["rows"]:
 #
 # For mol/m² use $N_{\rm Av}$ = 6.02214076 × 10²³ /mol (the variable `N_AV`).
 # Give every number to at least 4 significant figures.
+#
+# The three cells below hold the answers to items 1, 2 and 3. Answers given as
+# words go in quotes, for example `"Cu"`. The Cu occupancy of the boundary is
+# $1-y$.
 
 # %%
 ni_below_bulk = None          # True or False
@@ -242,6 +318,11 @@ check(open_excess_atoms, "task04_open_excess_atoms")
 # 5. Set $\delta=0$. What is the open $y$ for a reservoir at $x=0.5$, the closed
 #    $x$ and $y$ for $z=0.5$, and the excess? (You can test it with
 #    `open_y(0.5, delta=0.0)` and `closed_xy(0.5, delta=0.0)`.)
+#
+# Item 4 is pure bookkeeping: the excess formula needs only $x$, $y$ and
+# $\sigma$, whether or not the state is in equilibrium. Item 5 asks what the
+# exchange equation says when the boundary has no preference; `delta=0.0` in the
+# call overrides the default value `DELTA` for that one call.
 
 # %%
 trial_excess_atoms = None     # atoms/nm²
@@ -268,6 +349,14 @@ check(zero_excess, "task04_zero_excess")
 # bulk. With the database it is rerun here; without it the saved run is checked
 # for its balances and limits. Tolerances are the packet's: 1e-10 for fractions
 # and balances, 1e-6 J/mol sites for the exchange equation.
+#
+# The cell checks, in order: the Ni and Cu balances of the closed piece, the
+# excesses, the packet's answers at $z=0.5$, the trial state and the zero
+# preference. With the database it also reruns the module and confirms that the
+# exchange equation holds. The two panels plot the boundary Cu fraction $1-y$
+# (left) and the Cu excess (right) against the Ni fraction; the dotted line on
+# the left is the bulk Cu fraction, where a boundary without preference would
+# lie. Points above it mean Cu enrichment.
 
 # %% cellView="form"
 #@title After your attempt: saved run, course module and pictures
@@ -279,8 +368,9 @@ for row in SAVED["rows"]:
     confirm((1 - f) * x + f * y, z, f"Closed Ni balance at z = {z}", tol=1e-10)
     confirm((1 - f) * (1 - x) + f * (1 - y), 1 - z, f"Closed Cu balance at z = {z}", tol=1e-10)
     confirm(cu_excess(x, y)[0], row["closed_CU_excess"]["atoms_per_nm2"], f"Closed excess at z = {z}", tol=1e-10)
+    # open case: the reservoir fraction z is the bulk x
     confirm(cu_excess(z, row["open_y_NI"])[1], row["open_CU_excess"]["mol_per_m2"], f"Open excess in mol/m² at z = {z}", tol=1e-16)
-mid = SAVED["rows"][1]
+mid = SAVED["rows"][1]  # the z = 0.5 row
 confirm(mid["open_y_NI"], 0.1775730682, "Open y at 0.5 (packet answer)", tol=1e-10)
 confirm(mid["closed_bulk_x_NI"], 0.5065438265, "Closed x at 0.5 (packet answer)", tol=1e-10)
 confirm(mid["closed_y_NI"], 0.1793525022, "Closed y at 0.5 (packet answer)", tol=1e-10)
@@ -292,7 +382,7 @@ confirm(max(abs(c - 0.5) for c in closed_xy(0.5, delta=0.0)), 0.0, f"Zero prefer
 
 if tdb is not None:
     from course.materials.boundaries import segregation
-    bulk = segregation.make_bulk_model(load_source(tdb))
+    bulk = segregation.make_bulk_model(load_source(tdb))  # the module's own published bulk
     for row in SAVED["rows"]:
         z = row["overall_or_open_reservoir_x_NI"]
         x, y = closed_xy(z)
@@ -302,18 +392,18 @@ if tdb is not None:
         confirm(x, row["closed_bulk_x_NI"], f"Closed x at z = {z} (code above)", tol=1e-10)
         confirm(y, row["closed_y_NI"], f"Closed y at z = {z} (code above)", tol=1e-10)
         confirm(my, row["closed_y_NI"], f"Closed y at z = {z} (module)", tol=1e-10)
-        confirm(dg_bulk(y) + DELTA - dg_bulk(x), 0.0, f"Exchange equation at z = {z}", tol=1e-6)
+        confirm(dg_bulk(y) + DELTA - dg_bulk(x), 0.0, f"Exchange equation at z = {z}", tol=1e-6)  # J/mol sites
     print(f"Slope of g_b' at x = 0.5: published {bulk['d2g'](0.5):.0f} J/mol, ideal 4RT = {4 * R * T:.0f} J/mol")
 else:
     print("No-database mode: the published-bulk rerun is skipped; the saved run was checked above.")
-    odds = 0.5 / 0.5 * np.exp(-DELTA / (R * T))
+    odds = 0.5 / 0.5 * np.exp(-DELTA / (R * T))  # y/(1 − y) at x = 0.5 for the ideal stand-in
     confirm(open_y(0.5), odds / (1 + odds), "Ideal stand-in: solver equals the odds formula", tol=1e-10)
     print(f"Ideal stand-in at x = 0.5: y = {open_y(0.5):.6f}; published bulk (saved): y = {mid['open_y_NI']:.6f}.")
     print("The published bulk's slope g_b' changes more slowly with x than the ideal one, so the same δ moves y further.")
 
 # Pictures: boundary Cu fraction and Cu excess against Ni fraction.
 xs = np.linspace(0.01, 0.99, 101) if tdb is not None else np.linspace(0.01, 0.99, 197)
-ys = np.array([open_y(x) for x in xs])
+ys = np.array([open_y(x) for x in xs])  # open boundary occupancy at each reservoir fraction
 curve = "open boundary, published bulk" if tdb is not None else "open boundary, ideal stand-in (not the published bulk)"
 style = "-" if tdb is not None else "--"
 zs = [row["overall_or_open_reservoir_x_NI"] for row in SAVED["rows"]]
@@ -325,7 +415,7 @@ left.plot(zs, [1 - row["closed_y_NI"] for row in SAVED["rows"]], "ks", mfc="none
 left.set(xlabel="reservoir Ni fraction x (open) or overall z (closed)", ylabel="boundary Cu fraction 1 − y",
          title="Invented boundary, T = 1000 K")
 left.legend(fontsize=8)
-right.plot(xs, SIGMA * (xs - ys), style, label=curve)
+right.plot(xs, SIGMA * (xs - ys), style, label=curve)  # Γ_Cu = σ(x − y), atoms/nm²
 right.plot(zs, [row["open_CU_excess"]["atoms_per_nm2"] for row in SAVED["rows"]], "o", label="open, published bulk (saved)")
 right.plot(zs, [row["closed_CU_excess"]["atoms_per_nm2"] for row in SAVED["rows"]], "ks", mfc="none", ms=9,
            label="closed, published bulk (saved); uses final x")

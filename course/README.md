@@ -31,4 +31,7 @@ lessons and self-study steps.
 ## Lesson library
 
 The optional [lesson library](assembled_route.md) and its notebooks f0–f8 give
-more depth; nothing in it is required before a task.
+more depth; nothing in it is required before a task. To see what a CALPHAD
+program does inside an equilibrium calculation, work through
+[f4b](../notebooks/f4b_lens_from_scratch.ipynb): one phase diagram from scratch
+in numpy/SciPy, then the same in pycalphad.

@@ -13095,6 +13095,12 @@ div#notebook {
 is the difference between <em>loading</em>, <em>calculating</em> and <em>finding the equilibrium</em>?</p>
 <p>Used in: Day 1 W7 (demonstration), Lesson 2, Task 00 (second part), self-study
 step 01 (optional). Do <a href="f1_unary_by_hand_and_code.ipynb">f1</a> first.</p>
+<p><strong>The plan.</strong> In f1 you wrote the two Gibbs lines yourself in Python. A CALPHAD
+program does the same job, but reads the model from a <em>database file</em> (a TDB
+file) instead of from your code. Here the database holds exactly the f1 model,
+so every number pycalphad gives must agree with f1. That makes this notebook a
+safe place to learn the three pycalphad steps before they are used on real
+databases: load the model, evaluate one phase, and minimise over all phases.</p>
 </div>
 </div>
 </div>
@@ -13107,7 +13113,7 @@ step 01 (optional). Do <a href="f1_unary_by_hand_and_code.ipynb">f1</a> first.</
 <span class="c1"># downloads the tested course release and the locked package versions.</span>
 <span class="c1"># In Colab, the first run then restarts the session on purpose and Colab reports</span>
 <span class="c1"># a crash: that is expected. Run this cell again, then the rest of the notebook.</span>
-<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.1"</span>
+<span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"v0.1.2"</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pathlib</span><span class="o">,</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="o">*</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span>
              <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"pyproject.toml"</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s2">"course"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
@@ -13146,7 +13152,7 @@ step 01 (optional). Do <a href="f1_unary_by_hand_and_code.ipynb">f1</a> first.</
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Course release v0.1.1 · Python 3.12.14
+<pre>Course release v0.1.2 · Python 3.12.14
   numpy       2.5.3
   scipy       1.18.1
   matplotlib  3.11.2
@@ -13171,6 +13177,26 @@ step 01 (optional). Do <a href="f1_unary_by_hand_and_code.ipynb">f1</a> first.</
 one phase's Gibbs energy: a lower temperature limit, the expression, the upper
 limit, <code>N</code> (no further range) and <code>!</code> (end of record). Compare with f1:
 SOLID 1000 − 10T, LIQUID 7000 − 16T.</p>
+<p><strong>The Python.</strong> <code>Path</code> (from Python's built-in <code>pathlib</code>) represents a file name.
+The path is relative to the course folder, which the setup cell made the working
+folder. <code>TDB.read_text()</code> reads the whole file as text and <code>print</code> shows it.</p>
+<p><strong>How to read the file.</strong> A TDB file is plain text made of <em>records</em>, each ending
+with <code>!</code>.</p>
+<ul>
+<li>Lines starting with <code>$</code> are comments.</li>
+<li><code>ELEMENT A …</code> declares the element A. The other entries on that line (a
+reference phase name, an atomic mass and two reference values) are
+placeholders here.</li>
+<li><code>TYPE_DEFINITION % …</code> defines the code letter <code>%</code> that the PHASE lines refer
+to; here it adds nothing special.</li>
+<li><code>PHASE SOLID % 1 1 !</code> declares a phase named SOLID with one <em>sublattice</em> (a set
+of equivalent atom sites) holding 1 site per formula unit.</li>
+<li><code>CONSTITUENT SOLID :A: !</code> says which species may sit on that sublattice: only A.</li>
+<li><code>PARAMETER G(SOLID,A;0) 800 1000-10*T; 1200 N !</code> gives the Gibbs energy G of
+SOLID filled with A, in J/mol, as the expression <code>1000-10*T</code>, valid from 800 K
+to 1200 K. The <code>;0</code> is an order number, which matters only for mixtures (f3
+onwards).</li>
+</ul>
 </div>
 </div>
 </div>
@@ -13181,8 +13207,8 @@ SOLID 1000 − 10T, LIQUID 7000 − 16T.</p>
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="n">TDB</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"course/foundations/one_component_model.tdb"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">TDB</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+<span class="n">TDB</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"course/foundations/one_component_model.tdb"</span><span class="p">)</span>   <span class="c1"># relative to the course folder</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">TDB</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>   <span class="c1"># show the database file exactly as stored</span>
 </pre></div>
 </div>
 </div>
@@ -13241,6 +13267,23 @@ PARAMETER G(LIQUID,A;0) 800 7000-16*T; 1200 N !
 </table>
 <p>Conditions: T in K, p = 100000 Pa, N = 1 mol of atoms. <code>GM</code> is the molar Gibbs
 energy in J/mol. The first pycalphad call takes a few seconds.</p>
+<p><strong>The pycalphad names in the next cell.</strong></p>
+<ul>
+<li><code>Database(str(TDB))</code> reads the file into a Python object that holds the phase
+models. (<code>str(...)</code> turns the <code>Path</code> into a plain text file name.)</li>
+<li><code>components</code> lists the elements taking part, <code>phases</code> the phase names to
+consider. Both must match names in the database.</li>
+<li><code>calculate(database, components, "SOLID", T=..., P=..., output="GM")</code> evaluates
+the molar Gibbs energy of the SOLID phase at each listed temperature, at
+P = 100000 Pa. It does <strong>not</strong> ask which phase is stable; it simply evaluates
+the one phase it is given. pycalphad writes pressure as <code>P</code> (in Pa).</li>
+<li>The result is an <em>xarray Dataset</em>: a set of labelled arrays. <code>solid_result.GM</code>
+picks the array of molar Gibbs energies. Its dimensions are named
+<code>(N, P, T, points)</code>: one entry per amount, pressure, temperature and sampled
+internal state of the phase. Here the shape is (1, 1, 5, 1), because only the
+temperature takes several values. <code>.values</code> gives the plain NumPy array and
+<code>.reshape(-1)</code> flattens it to a simple row of 5 numbers.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -13249,15 +13292,16 @@ energy in J/mol. The first pycalphad call takes a few seconds.</p>
 <div class="prompt input_prompt">In [3]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pycalphad</span><span class="w"> </span><span class="kn">import</span> <span class="n">Database</span><span class="p">,</span> <span class="n">calculate</span><span class="p">,</span> <span class="n">equilibrium</span><span class="p">,</span> <span class="n">variables</span> <span class="k">as</span> <span class="n">v</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pycalphad</span><span class="w"> </span><span class="kn">import</span> <span class="n">Database</span><span class="p">,</span> <span class="n">calculate</span><span class="p">,</span> <span class="n">equilibrium</span><span class="p">,</span> <span class="n">variables</span> <span class="k">as</span> <span class="n">v</span>   <span class="c1"># v holds the condition names v.T, v.P, v.N</span>
 
-<span class="n">database</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">TDB</span><span class="p">))</span>
-<span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">]</span>
-<span class="n">phases</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SOLID"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">]</span>
-<span class="n">temperatures</span> <span class="o">=</span> <span class="p">[</span><span class="mf">800.0</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1100.0</span><span class="p">,</span> <span class="mf">1200.0</span><span class="p">]</span>
+<span class="n">database</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">TDB</span><span class="p">))</span>            <span class="c1"># load: read the phase models, nothing calculated yet</span>
+<span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">]</span>                       <span class="c1"># the only element</span>
+<span class="n">phases</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SOLID"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">]</span>             <span class="c1"># the phases the minimiser may use later</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="p">[</span><span class="mf">800.0</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1100.0</span><span class="p">,</span> <span class="mf">1200.0</span><span class="p">]</span>   <span class="c1"># K</span>
 
+<span class="c1"># evaluate SOLID only: molar Gibbs energy GM (J/mol) at each temperature, P in Pa</span>
 <span class="n">solid_result</span> <span class="o">=</span> <span class="n">calculate</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">"GM"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"SOLID GM:"</span><span class="p">,</span> <span class="n">solid_result</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"SOLID GM:"</span><span class="p">,</span> <span class="n">solid_result</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>   <span class="c1"># shape (1, 1, 5, 1) flattened to 5 values</span>
 </pre></div>
 </div>
 </div>
@@ -13277,6 +13321,8 @@ energy in J/mol. The first pycalphad call takes a few seconds.</p>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=7616b594"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>What to look at.</strong> The five numbers are J/mol, one per temperature from 800 K
+to 1200 K. Compare them with the SOLID column of the table in f1 section 2.</p>
 <h3 id="Your-turn">Your turn<a class="anchor-link" href="#Your-turn">¶</a></h3><p>Before running the next cell, predict the LIQUID value at 1200 K (J/mol).
 Why is it fine to <em>evaluate</em> the liquid at 900 K, where it is not stable?</p>
 </div>
@@ -13305,13 +13351,22 @@ Why is it fine to <em>evaluate</em> the liquid at 900 K, where it is not stable?
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=75049a92"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next cell is the same <code>calculate</code> call for the LIQUID phase. It prints
+LIQUID values at all five temperatures, including those where LIQUID is not the
+lower of the two.</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=91b38020">
 <div class="input">
 <div class="prompt input_prompt">In [5]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">liquid_result</span> <span class="o">=</span> <span class="n">calculate</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">"GM"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"LIQUID GM:"</span><span class="p">,</span> <span class="n">liquid_result</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"LIQUID GM:"</span><span class="p">,</span> <span class="n">liquid_result</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>   <span class="c1"># J/mol, 800 … 1200 K</span>
 </pre></div>
 </div>
 </div>
@@ -13333,6 +13388,27 @@ Why is it fine to <em>evaluate</em> the liquid at 900 K, where it is not stable?
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="3.-Ask-for-the-equilibrium">3. Ask for the equilibrium<a class="anchor-link" href="#3.-Ask-for-the-equilibrium">¶</a></h2><p><code>equilibrium</code> returns the minimum molar Gibbs energy and the phases it uses, with
 their amounts <code>NP</code>. With N = 1 mol the amounts are also the fractions.</p>
+<p><strong>From evaluating to minimising.</strong> <code>calculate</code> answered "what is g of this phase
+here?". <code>equilibrium</code> answers the f1 question "which combination of the allowed
+phases, in which amounts, gives the lowest total G?", like the <code>linprog</code> step in
+f1.</p>
+<p><strong>The arguments.</strong> The conditions are given as a <em>dictionary</em> <code>{key: value, ...}</code>.
+The keys are pycalphad's state variables: <code>v.T</code> temperature (K), <code>v.P</code> pressure
+(Pa) and <code>v.N</code> total amount of atoms (mol). The phases argument lists which
+phases the minimiser may use.</p>
+<p><strong>The result</strong> is again an xarray Dataset. The ones used here:</p>
+<ul>
+<li><code>GM</code>: the minimum molar Gibbs energy (J/mol), with dimensions <code>(N, P, T)</code>, here
+shape (1, 1, 1). <code>.squeeze()</code> drops the length-1 dimensions, and <code>float(...)</code>
+turns the single remaining value into an ordinary number.</li>
+<li><code>Phase</code>: the name of each phase present, one per <em>vertex</em>. pycalphad reserves
+room for several coexisting phases; unused slots hold an empty name <code>''</code>.</li>
+<li><code>NP</code>: the amount of each of those phases, in the same order (NaN, "not a
+number", in unused slots).</li>
+</ul>
+<p>The loop uses <code>zip</code>, which walks through two arrays in step, giving one
+(phase, amount) pair at a time. <code>if phase:</code> skips the empty names, because an
+empty text counts as False in Python.</p>
 </div>
 </div>
 </div>
@@ -13341,12 +13417,12 @@ their amounts <code>NP</code>. With N = 1 mol the amounts are also the fractions
 <div class="prompt input_prompt">In [6]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">conditions</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="mf">900.0</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">P</span><span class="p">:</span> <span class="mf">100000.0</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">N</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
-<span class="n">answer</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">phases</span><span class="p">,</span> <span class="n">conditions</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">conditions</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="mf">900.0</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">P</span><span class="p">:</span> <span class="mf">100000.0</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">N</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>   <span class="c1"># K, Pa, mol of atoms</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">phases</span><span class="p">,</span> <span class="n">conditions</span><span class="p">)</span>   <span class="c1"># minimise G over SOLID and LIQUID</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"GM at 900 K:"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()),</span> <span class="s2">"J/mol"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">phase</span><span class="p">,</span> <span class="n">amount</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">Phase</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">answer</span><span class="o">.</span><span class="n">NP</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
-    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>                      <span class="c1"># skip unused slots (empty name)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span>   <span class="c1"># phase name and its amount in mol (= fraction, since N = 1)</span>
 </pre></div>
 </div>
 </div>
@@ -13367,6 +13443,9 @@ their amounts <code>NP</code>. With N = 1 mol the amounts are also the fractions
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=ecb651eb"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>What to look at.</strong> The minimum GM and the phase list. Compare them with f1: at
+900 K the minimiser should report the phase you found to be lower there, with
+the whole mole of atoms in it.</p>
 <h3 id="Your-turn-(W7)">Your turn (W7)<a class="anchor-link" href="#Your-turn-(W7)">¶</a></h3><p>What happens at 1100 K if LIQUID is <strong>not allowed</strong>? Predict the minimum GM
 (J/mol) with only SOLID, then run the next cell. Why is that not the equilibrium
 of the full model?</p>
@@ -13396,12 +13475,21 @@ of the full model?</p>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=860394e2"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next cell runs <code>equilibrium</code> twice at 1100 K. The <code>for</code> loop goes through a
+tuple of two phase lists: first both phases are allowed, then only SOLID. Only
+the phases argument changes between the two runs.</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=4ed796b1">
 <div class="input">
 <div class="prompt input_prompt">In [8]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">allowed</span> <span class="ow">in</span> <span class="p">([</span><span class="s2">"SOLID"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"SOLID"</span><span class="p">]):</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">allowed</span> <span class="ow">in</span> <span class="p">([</span><span class="s2">"SOLID"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"SOLID"</span><span class="p">]):</span>   <span class="c1"># first both phases, then SOLID alone</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">allowed</span><span class="p">,</span> <span class="p">{</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="mf">1100.0</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">P</span><span class="p">:</span> <span class="mf">100000.0</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">N</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">})</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"1100 K with </span><span class="si">{</span><span class="n">allowed</span><span class="si">}</span><span class="s2">: GM = </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">GM</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">)</span>
 </pre></div>
@@ -13426,6 +13514,22 @@ of the full model?</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="After-your-attempt:-compare-pycalphad-with-the-plain-model">After your attempt: compare pycalphad with the plain model<a class="anchor-link" href="#After-your-attempt:-compare-pycalphad-with-the-plain-model">¶</a></h2><p>Both routes use the same model, so they must agree at every temperature: the
 phase energies, the minimum, and HM and SM (1000 and 7000 J/mol; 10 and 16 J/(mol K)).</p>
+<p><strong>How the comparison works.</strong> Two small course modules do the work:</p>
+<ul>
+<li><code>plain.gibbs(T)</code> is the f1 model in plain Python; it returns the pair
+(g_SOLID, g_LIQUID).</li>
+<li><code>tools.equilibrium_at(T)</code> runs pycalphad's <code>equilibrium</code> at one temperature and
+returns a dictionary with <code>"GM"</code> and the phase <code>"fractions"</code>.</li>
+<li><code>tools.phase_properties(temperatures)</code> runs <code>calculate</code> for both phases and
+returns a dictionary of tables for <code>"GM"</code>, <code>"HM"</code> (molar enthalpy, J/mol) and
+<code>"SM"</code> (molar entropy, J/(mol K)). Each table has one row per temperature and
+two columns, SOLID then LIQUID.</li>
+</ul>
+<p><code>enumerate(temperatures)</code> gives a counter <code>i</code> together with each temperature.
+<code>np.max(np.abs(a - b))</code> is the largest difference between two tables, ignoring
+its sign; a value of 0 means they agree everywhere. In
+<code>properties["HM"] - [1000.0, 7000.0]</code> NumPy subtracts 1000 from the SOLID column
+and 7000 from the LIQUID column of every row ("broadcasting").</p>
 </div>
 </div>
 </div>
@@ -13435,19 +13539,20 @@ phase energies, the minimum, and HM and SM (1000 and 7000 J/mol; 10 and 16 J/(mo
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: run to compare pycalphad with f1's plain model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations</span><span class="w"> </span><span class="kn">import</span> <span class="n">one_component_manual</span> <span class="k">as</span> <span class="n">plain</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations</span><span class="w"> </span><span class="kn">import</span> <span class="n">one_component_tools</span> <span class="k">as</span> <span class="n">tools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations</span><span class="w"> </span><span class="kn">import</span> <span class="n">one_component_manual</span> <span class="k">as</span> <span class="n">plain</span>   <span class="c1"># f1's model in plain Python</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course.foundations</span><span class="w"> </span><span class="kn">import</span> <span class="n">one_component_tools</span> <span class="k">as</span> <span class="n">tools</span>    <span class="c1"># the same model through pycalphad</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="n">properties</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">phase_properties</span><span class="p">(</span><span class="n">temperatures</span><span class="p">)</span>
+<span class="n">properties</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">phase_properties</span><span class="p">(</span><span class="n">temperatures</span><span class="p">)</span>   <span class="c1"># {"GM", "HM", "SM"}: rows = temperatures, columns = SOLID, LIQUID</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">" T (K)   SOLID GM   LIQUID GM   minimum   pycalphad minimum"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temperatures</span><span class="p">):</span>
-    <span class="n">gs</span><span class="p">,</span> <span class="n">gl</span> <span class="o">=</span> <span class="n">plain</span><span class="o">.</span><span class="n">gibbs</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
-    <span class="n">found</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">equilibrium_at</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">gs</span><span class="p">,</span> <span class="n">gl</span> <span class="o">=</span> <span class="n">plain</span><span class="o">.</span><span class="n">gibbs</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>               <span class="c1"># J/mol, plain-Python values</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">equilibrium_at</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>       <span class="c1"># pycalphad equilibrium at this T</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">6.0f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gs</span><span class="si">:</span><span class="s2">10.0f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gl</span><span class="si">:</span><span class="s2">11.0f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span><span class="w"> </span><span class="n">gl</span><span class="p">)</span><span class="si">:</span><span class="s2">9.0f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">found</span><span class="p">[</span><span class="s1">'GM'</span><span class="p">]</span><span class="si">:</span><span class="s2">12.1f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">found</span><span class="p">[</span><span class="s1">'fractions'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">confirm</span><span class="p">(</span><span class="n">found</span><span class="p">[</span><span class="s2">"GM"</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span> <span class="n">gl</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"pycalphad minimum at </span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> K"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+<span class="c1"># largest difference between the pycalphad and plain GM tables, over both phases and all temperatures</span>
 <span class="n">confirm</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="s2">"GM"</span><span class="p">]</span> <span class="o">-</span> <span class="n">plain</span><span class="o">.</span><span class="n">gibbs</span><span class="p">(</span><span class="n">temperatures</span><span class="p">)))),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"GM of both phases at all five temperatures"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"HM (J/mol):"</span><span class="p">,</span> <span class="n">properties</span><span class="p">[</span><span class="s2">"HM"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">" SM (J/(mol K)):"</span><span class="p">,</span> <span class="n">properties</span><span class="p">[</span><span class="s2">"SM"</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"HM (J/mol):"</span><span class="p">,</span> <span class="n">properties</span><span class="p">[</span><span class="s2">"HM"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">" SM (J/(mol K)):"</span><span class="p">,</span> <span class="n">properties</span><span class="p">[</span><span class="s2">"SM"</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>   <span class="c1"># row 0 = 800 K</span>
 <span class="n">confirm</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="s2">"HM"</span><span class="p">]</span> <span class="o">-</span> <span class="p">[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">7000.0</span><span class="p">]))),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"HM of SOLID and LIQUID at all five temperatures"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
 <span class="n">confirm</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="s2">"SM"</span><span class="p">]</span> <span class="o">-</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">]))),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"SM of SOLID and LIQUID at all five temperatures"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
 </pre></div>
