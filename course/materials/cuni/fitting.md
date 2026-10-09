@@ -1,6 +1,6 @@
 # Task 02 — fit two Cu–Ni interaction values at one temperature
 
-**Notebook:** [task02_cuni_activity_fit](../../../notebooks/task02_cuni_activity_fit.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.2.0/notebooks/task02_cuni_activity_fit.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
+**Notebook:** [task02_cuni_activity_fit](../../../notebooks/task02_cuni_activity_fit.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.2.1/notebooks/task02_cuni_activity_fit.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
 
 Use this compact example after [Task 01](README.md) or either primer.
 Read nine published Ni activities, improve a declared residual objective, and

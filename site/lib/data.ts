@@ -3,7 +3,7 @@
 export const REPO_WEB = 'https://github.com/ukerzel/CalphadIntro';
 export const REPO_BLOB = `${REPO_WEB}/blob`;
 /** Reference for file links: null = the commit recorded in the data receipt (development); a release tag in releases. */
-export const REPO_FILE_REF: string | null = 'v0.2.0';
+export const REPO_FILE_REF: string | null = 'v0.2.1';
 /** GitHub repository that Colab opens notebooks from: the public one (development opens its latest release, the main branch). */
 export const COLAB_REPO = 'ukerzel/CalphadIntro';
 /** Source files not in this copy of the course (the release build lists them); their links are left out. */

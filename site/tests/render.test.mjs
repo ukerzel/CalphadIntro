@@ -349,6 +349,30 @@ test('slim rail: only the main line; on a branch a chip says so',async()=>{
  const main=renderToStaticMarkup(createElement(Nav,{current:'menu',onLearn(){}}));assert.equal((main.match(/<li /g)||[]).length,16);assert.doesNotMatch(main,/On a branch/);
  const branch=renderToStaticMarkup(createElement(Nav,{current:'lp-primer',onLearn(){}}));assert.match(branch,/On a branch: LP primer/);assert.match(branch,/is-join/);
 });
+test('home video: a local placeholder, nothing loaded from YouTube before play',async()=>{
+ const {default:Home}=await server.ssrLoadModule('/components/home.tsx');
+ const html=renderToStaticMarkup(createElement(Home,{bundle,onLearn(){},onLab(){}}));
+ assert.match(html,/The course in one short video/);assert.match(html,/Play “[^”]+” \(loads the YouTube player\)/);
+ assert.doesNotMatch(html,/<iframe|ytimg|youtube-nocookie|<img[^>]+youtube/,'no third-party request before the learner presses play');
+ assert.match(html,/href="https:\/\/youtu\.be\/2bX2GEzmYt8"/);
+});
+test('step videos: each sits on an existing stage, as a play row that loads nothing before play',async()=>{
+ const {stepVideos}=await server.ssrLoadModule('/lib/media.ts');const {stages}=await server.ssrLoadModule('/lib/lesson-meta.ts');const {lessons}=await server.ssrLoadModule('/lib/learning.ts');
+ const {default:LearningPage}=await server.ssrLoadModule('/components/learning-page.tsx');
+ const ids=new Set();
+ for(const [id,list] of Object.entries(stepVideos)){
+  const lesson=lessons.find(l=>l.id===id);assert.ok(lesson,id);const keys=stages(lesson).map(s=>s.key);
+  const html=renderToStaticMarkup(createElement(LearningPage,{lesson}));
+  for(const {stage,video} of list){
+   assert.ok(keys.includes(stage),`${id}: no stage ${stage}`);assert.match(video.youtube,/^[\w-]{11}$/);assert.ok(!ids.has(video.youtube),'each video once');ids.add(video.youtube);
+   const at=html.indexOf(`id="${id}-${stage}"`),next=html.indexOf('<section',at+1);
+   assert.ok(html.slice(at,next<0?undefined:next).includes(`href="https://youtu.be/${video.youtube}"`),`${id}: video at ${stage}`);
+  }
+  assert.doesNotMatch(html,/<iframe|youtube-nocookie|ytimg/,`${id}: nothing from YouTube before play`);
+  assert.doesNotMatch(renderToStaticMarkup(createElement(LearningPage,{lesson,variant:'reference'})),/youtu/,`${id}: no video in the reference view`);
+ }
+ assert.equal(ids.size,9);
+});
 test('prepared course tutor builds an OpenAI-compatible request and reads the reply',async()=>{
  const T=await server.ssrLoadModule('/lib/tutor.ts');const {lessons}=await server.ssrLoadModule('/lib/learning.ts');
  const context=T.tutorContext(lessons.find(l=>l.id==='binary'),'attempt');

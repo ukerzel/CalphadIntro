@@ -37,7 +37,7 @@ SETUP_CELL = '''\
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.2.0"
+RELEASE = "v0.2.1"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)

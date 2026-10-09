@@ -1,6 +1,6 @@
 # Task 03 — a Ni twin curve, its fit and its area/site basis
 
-**Notebook:** [task03_ni_twin](../../../notebooks/task03_ni_twin.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.2.0/notebooks/task03_ni_twin.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
+**Notebook:** [task03_ni_twin](../../../notebooks/task03_ni_twin.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.2.1/notebooks/task03_ni_twin.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
 
 Use this compact example after either primer or [Task 01](../cuni/README.md).
 Read one published boundary-energy curve, fit a line and turn J/m² into

@@ -2,6 +2,8 @@
 import type { ReactNode, RefObject } from 'react';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import HeroGraphic from '@/components/hero-graphic';
+import VideoEmbed from '@/components/video-embed';
+import { overviewVideo } from '@/lib/media';
 import { lessons } from '@/lib/learning';
 import type { LearningID } from '@/lib/learning';
 import { isAdvanced, isOptional, isPrimer, labViews, meta, pageLabel, question } from '@/lib/lesson-meta';
@@ -59,6 +61,12 @@ export default function Home({ bundle, onLearn, onLab, headingRef, resume, route
         <ul className="hero-facts"><li><strong>{numbered}</strong>steps, 00–{meta[lessons.at(-1)!.id].number}, and an optional LP primer</li><li><strong>{labs}</strong>interactive labs</li><li><strong>{explorers}</strong>real-alloy explorers</li><li><strong>0</strong>logins, grades or locks</li></ul>
       </div>
       <HeroGraphic bundle={bundle} />
+    </section>
+
+    <section className="home-video" aria-labelledby="video-title">
+      <h2 id="video-title">The course in one short video</h2>
+      <VideoEmbed youtube={overviewVideo.youtube} title={overviewVideo.title} />
+      <p className="caption">Steps 01–06, 10 and 14 have their own short video at the top of the page.</p>
     </section>
 
     <section className="home-section" id="route" aria-labelledby="route-title">

@@ -1108,3 +1108,24 @@ rect.act-prune, rect.act-split, rect.act-todo, rect.act-dip-found, rect.act-open
   .route-map-v { display: block; }
   .route-map-card { position: static; }
 }
+
+/* Course video: a local placeholder until the learner presses play (no YouTube request before that). */
+.home-video { max-width: 900px; margin: 0 auto 3rem; padding: 0 var(--gutter); }
+.home-video h2 { font-family: var(--serif); font-size: 1.5rem; margin: 0 0 .8rem; }
+.video-embed { margin: 0; display: grid; gap: .5rem; }
+.video-frame { position: relative; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden; border: 1px solid var(--rule); background: var(--slab); }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-poster { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .8rem; padding: 1.5rem; text-align: center; color: var(--slab-ink); background: radial-gradient(circle at 30% 20%, color-mix(in oklab, var(--advanced) 45%, var(--slab)), var(--slab) 70%); cursor: pointer; border: 0; width: 100%; }
+.video-play { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; background: var(--liquid); color: #fff; transition: transform .2s var(--ease); }
+.video-play svg { width: 32px; height: 32px; margin-left: 4px; }
+.video-poster:hover .video-play, .video-poster:focus-visible .video-play { transform: scale(1.08); }
+.video-title { font-family: var(--serif); font-size: clamp(1.1rem, 2.6vw, 1.6rem); max-width: 28ch; }
+.video-note { font-size: .8rem; opacity: .8; max-width: 44ch; }
+.video-embed.is-compact { margin: 0 0 1.1rem; max-width: 760px; }
+.video-row { display: flex; align-items: center; gap: .85rem; width: 100%; padding: .6rem .9rem; text-align: left; color: inherit; background: var(--card); border: 1px solid var(--rule); border-radius: 14px; cursor: pointer; font: inherit; }
+.video-row:hover, .video-row:focus-visible { border-color: var(--liquid); }
+.video-row .video-play { width: 40px; height: 40px; flex: none; }
+.video-row .video-play svg { width: 18px; height: 18px; margin-left: 2px; }
+.video-row:hover .video-play, .video-row:focus-visible .video-play { transform: scale(1.08); }
+.video-row-text { display: grid; gap: .15rem; min-width: 0; }
+.video-row-title { font-weight: 600; }

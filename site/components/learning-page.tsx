@@ -20,6 +20,8 @@ import { PipelineFigure, TdbLineFigure } from '@/components/calphad-figures';
 import { BoundaryTangentFigure, CommonTangentFigure, PhaseDiagramsFigure, SublatticeFigure, TangentSketch } from '@/components/lesson-figures';
 import { slug, splitTerms } from '@/lib/learning';
 import { fileURL, REPO_FILE_REF } from '@/lib/data';
+import VideoEmbed from '@/components/video-embed';
+import { stepVideos } from '@/lib/media';
 
 /** Narration text with its marked terms. */
 export function Rich({ text }: { text: string }) {
@@ -166,6 +168,7 @@ export default function LearningPage({ lesson, headingRef, dock, variant = 'page
         {list.map(stage => <section key={stage.key} id={id(stage.key)} className={`stage stage-${stage.kind}`} aria-labelledby={id(`${stage.key}-h`)}>
           <h2 id={id(`${stage.key}-h`)} className="stage-label" tabIndex={-1}><span className="stage-mark" aria-hidden />{stage.label}
             {deeperStages[lesson.id]?.includes(stage.key) && <span className="deeper-flag">Optional</span>}</h2>
+          {!reference && stepVideos[lesson.id]?.filter(item => item.stage === stage.key).map(({ video }) => <VideoEmbed key={video.youtube} compact {...video} />)}
           {deeperStages[lesson.id]?.includes(stage.key)
             ? <div className="reveal reveal-deeper"><details><summary>Dive deeper · {stage.label[0].toLowerCase() + stage.label.slice(1)} (optional section)</summary><div className="reveal-body"><Blocks blocks={stage.blocks} figures={stageFigures(lesson.id, stage)} stage={stage.label}
               ask={reference ? undefined : <AskChatGPT lesson={lesson} stageKey={stage.key} />} />
