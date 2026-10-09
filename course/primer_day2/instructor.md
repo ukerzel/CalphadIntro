@@ -91,6 +91,31 @@ Day 2 is denser than Day 1. Recover in this order (the same as the
    incomplete and revise a later offering rather than declaring the two-day
    sequence finished by the clock.
 
+## Operations-research asides (optional, at most 5 minutes each)
+
+For groups with operations-research learners, or when teaching with an operations-research
+colleague. Each aside connects the step to the advanced steps 07–18 of the website; none is needed
+for the day's outcomes.
+
+- **D1:** two balances, two unknown amounts: solving that two-by-two system is
+  the lever rule.
+- **D3:** the tangent's end heights are prices: what one more A or B atom costs
+  at this composition. In the advanced steps they reappear as the multipliers of a linear
+  programme.
+- **D5 and D6, the strongest joint moment:** the open cell is the closed problem
+  with its B balance removed and a fixed price ($\mu$) charged for B instead, a
+  Lagrangian relaxation; the closed cell is the constrained problem itself.
+  Iterating by hand (guess $x_b$, read $\theta$ from the odds, update $x_b$ from
+  the B balance) is price coordination. From $\theta_0=0.25$ it gives 0.16856,
+  0.17173, 0.17160: each round shrinks the error by a factor of about 0.04 and
+  flips its sign, because the 200 boundary sites are small next to the 8000
+  bulk sites. Such iterations are not guaranteed to converge in general.
+- **D7:** a discrete choice made after continuous minimization: each state is
+  minimized first, then the lower one is chosen. "Partly one state, partly the
+  other" would be a mixture whose energy, ignoring the walls between domains,
+  lies on the straight line between the two states: the chord argument the advanced steps
+  builds on.
+
 ## What the instructor may and may not infer
 
 The synthetic outputs were checked under the binary and boundary contracts

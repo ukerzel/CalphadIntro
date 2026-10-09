@@ -84,8 +84,11 @@ function Balance({ sample, element, other }: { sample: Sample; element: 'NI' | '
       {xsorted.length > 1 && <line className="tie" x1={X(xsorted[0].x)} x2={X(xsorted.at(-1)!.x)} y1="114" y2="114" />}
       {phases.map((p, i) => <g key={i} className={`phase-dot tone-${phaseTone(p.phase)}`} style={{ transform: `translate(${X(p.x)}px, 114px)` }}><circle r="8" /><text y="-14" textAnchor="middle">{p.phase}</text></g>)}
       <g className="fulcrum" style={{ transform: `translate(${X(bulk)}px, 118px)` }}><path d="M0,0 L7,13 L-7,13 Z" /><text y="30" textAnchor="middle">bulk {bulk.toFixed(4)}</text></g>
+      {phases.length === 2 && xsorted.map((p, i) => { const arm = Math.abs(bulk - p.x); return <g key={`arm${i}`} className={`lever-arm tone-${phaseTone(p.phase)}`}>
+        <line x1={X(bulk)} x2={X(p.x)} y1={i === 0 ? 94 : 98} y2={i === 0 ? 94 : 98} />
+        <text x={(X(bulk) + X(p.x)) / 2} y={i === 0 ? 89 : 93} textAnchor="middle">arm {arm.toFixed(3)}</text></g>; })}
     </svg>
-    <figcaption>Dots: composition of each phase. Triangle: overall alloy composition. Check the balance yourself: multiply each amount by its composition and add.</figcaption>
+    <figcaption>Dots: composition of each phase. Triangle: overall alloy composition. {phases.length === 2 ? 'Lever arms: each phase\'s amount is the opposite arm divided by the whole tie line. ' : ''}Check the balance yourself: multiply each amount by its composition and add.</figcaption>
   </figure>;
 }
 
@@ -106,6 +109,7 @@ export function CuNi({ data }: { data: CuNiResults }) {
   const [key, setKey] = useState('600');
   const sample = result.samples[key] ?? result.samples[keys[0]];
   const explore = <div className="material-grid">
+    <p className="how-to"><strong>Try it:</strong> click a point inside the two-FCC region and predict the two compositions and amounts before you read them. Then switch the magnetic contribution off: does the region shrink, move or vanish?</p>
     <h3 className="panel-title" id="lab-map">The phase diagram, point by point</h3>
     <PhaseMap path="self_study/generated/cuni_grid.json" modeLabels={{ magnetic_on: 'Magnetic on', magnetic_off: 'Magnetic off' }} />
     <h3 className="panel-title" id="lab-samples">Saved samples at x(Ni) = 0.5</h3>
@@ -139,6 +143,7 @@ export function NiNb({ data }: { data: NiNbResults }) {
     { name: 'μ phase · all Ni', ratio: [2, 2, 2, 6, 1], tone: 'mu', value: data.energy_checks.mu_all_NI },
   ];
   const explore = <div className="material-grid">
+    <p className="how-to"><strong>Try it:</strong> click a point in a two-phase region and note the phase amounts in moles of atoms. Predict how they change when you count formula units instead, then switch the basis and check: which numbers change, and which stay?</p>
     <h3 className="panel-title" id="lab-map">The phase diagram, point by point</h3>
     <PhaseMap path="self_study/generated/ninb_grid.json" />
     <h3 className="panel-title" id="lab-formula">One division, on the right basis</h3>

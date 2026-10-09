@@ -1,0 +1,37 @@
+{
+ "f4f_x_of_z": {
+  "value": 0.4,
+  "tol": 1e-06,
+  "hint": "X = x_B + x_C/2 with x_B = 0.30 and x_C = 0.20."
+ },
+ "f4f_menu_used": {
+  "value": 3,
+  "tol": 0,
+  "hint": "Count the rows printed with 'uses'."
+ },
+ "f4f_mu_c_menu": {
+  "value": -34722.53338,
+  "tol": 0.05,
+  "hint": "mu_C = pi_0 + pi_C: the plane's height at the C corner, printed as mu_C."
+ },
+ "f4f_V": {
+  "value": 0.770823,
+  "tol": 0.0001,
+  "hint": "The liquid amount V printed by the Rachford–Rice cell."
+ },
+ "f4f_xb_liquid": {
+  "value": 0.274229,
+  "tol": 0.0001,
+  "hint": "The second entry of the liquid composition (A, B, C) from Rachford–Rice."
+ },
+ "f4f_cb_liquid": {
+  "value": 0.15358,
+  "tol": 0.0001,
+  "hint": "The liquid value printed for the C–B edge."
+ },
+ "f4f_hidden_depth": {
+  "value": -727.059548,
+  "tol": 0.5,
+  "hint": "The gap printed by the full-scan cell; it is negative."
+ }
+}

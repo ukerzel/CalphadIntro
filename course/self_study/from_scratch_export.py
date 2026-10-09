@@ -184,7 +184,12 @@ def grid(exact_gm: float) -> list[dict]:
         if abs(sum(c['f'] for c in chosen) - 1) > 1e-9 or abs(sum(c['f'] * c['x'] for c in chosen) - Z0) > 1e-9:
             raise ValueError('grid split does not balance')
         drawn = n <= DRAWN_UP_TO
-        frames.append({'id': f'grid-{n}', 'spacing': 1 / n, 'points': m, 'x': [_f(v) for v in xs] if drawn else [],
+        # The two multipliers draw the line under the grid's dots (mu_A at x = 0, mu_B at x = 1), relative to the reference.
+        mu_a, d_mu = (_f(v) for v in result.eqlin.marginals)
+        line_rel = [_f(mu_a - reference(0.0)), _f(mu_a + d_mu - reference(1.0))]
+        pivots = any(abs(c['x'] - Z0) < 1e-12 for c in chosen)     # z on a used dot: the line can pivot, the solver returns one
+        frames.append({'id': f'grid-{n}', 'spacing': 1 / n, 'points': m, 'line_relative': line_rel, 'line_can_pivot': pivots,
+                       'x': [_f(v) for v in xs] if drawn else [],
                        'g_relative': {phase: [g_rel(phase, v, T0) for v in xs] if drawn else [] for phase in ('SOLID', 'LIQUID')},
                        'chosen': chosen, 'GM': _f(result.fun), 'GM_relative': _f(result.fun - reference(Z0, T0)),
                        'above_exact': _f(result.fun - exact_gm)})

@@ -5,9 +5,13 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import katex from 'katex';
 const repo=fileURLToPath(new URL('../../',import.meta.url));
-const moduleAssets={cuni:['course/materials/cuni/phase_diagram.png','course/materials/cuni/energy_magnetism.png','course/materials/cuni/results.json','course/self_study/generated/cuni_grid.json'],ninb:['course/materials/ninb/phase_diagram.png','course/materials/ninb/results.json','course/self_study/generated/ninb_grid.json','course/self_study/generated/mu_structure.json'],twophase:['course/self_study/generated/two_phase.json','course/self_study/generated/from_scratch.json'],boundary:['course/self_study/generated/boundary_views.json']};
-export const assetPaths=Object.values(moduleAssets).flat();
-const ids=['start','unary','binary','twophase','boundary','cuni','ninb'];
+const sheetFigures=['twophase_tangent','twophase_lens','twophase_regular'].map(name=>`course/primer_day2/figures/${name}.png`);
+const day3Data=['course/self_study/generated/day3.json'];
+const prework=['course/self_study/generated/day3_prework.json'];
+const lpPrimer=['course/self_study/generated/lp_primer.json'];
+const moduleAssets={start:prework,binary:[...prework,'course/primer_day2/figures/d3_tangent.png'],'from-materials':[...sheetFigures,...prework],'from-or':prework,'or-prices':prework,'lp-primer':lpPrimer,'menu':day3Data,'price-line':day3Data,'gap-curve':day3Data,'column-generation':day3Data,'bounds':day3Data,'local-global':day3Data,'branch-and-bound':day3Data,'two-questions':day3Data,'three-components':['course/self_study/generated/day3_ternary.json'],cuni:['course/materials/cuni/phase_diagram.png','course/materials/cuni/energy_magnetism.png','course/materials/cuni/results.json','course/self_study/generated/cuni_grid.json'],ninb:['course/materials/ninb/phase_diagram.png','course/materials/ninb/results.json','course/self_study/generated/ninb_grid.json','course/self_study/generated/mu_structure.json'],twophase:['course/self_study/generated/two_phase.json','course/self_study/generated/from_scratch.json',...prework],boundary:['course/self_study/generated/boundary_views.json']};
+export const assetPaths=[...new Set(Object.values(moduleAssets).flat())];
+const ids=['start','unary','binary','twophase','boundary','cuni','ninb','from-materials','from-or','or-prices','lp-primer','menu','price-line','gap-curve','column-generation','bounds','local-global','branch-and-bound','two-questions','three-components'];
 const publicAsset=path=>'/learning/'+path.replace('course/','');
 const validLink=href=>typeof href==='string' && (ids.map(id=>'#'+id).includes(href)||assetPaths.map(publicAsset).includes(href)||/^https:\/\/[^\s]+$/.test(href));
 function exactKeys(value,required,optional=[]){
@@ -19,9 +23,9 @@ const token=/\{\{([a-z][a-z_]*)\|([^{}|]+)\}\}/g;
 /** Formulas: $TeX$ spans, parsed by KaTeX at sync time so a broken formula fails the build. */
 const math=/\$([^$\n]+)\$/g;
 export function checkTeX(tex){katex.renderToString(tex,{throwOnError:true,strict:'error'});}
-/** Cross-references: [[step|text]], [[step#stage|text]], [[step/lab/view|text]] or [[glossary#row|text]]; stage, view and row names are checked by the site tests. */
+/** Cross-references: [[step|text]], [[step#stage|text]], [[step/lab/view|text]], [[glossary#row|text]] or [[card#id|text]]; stage, view and row names are checked by the site tests, card ids here. */
 const xref=/\[\[([a-z][a-z0-9#/-]*)\|([^\[\]|$]+)\]\]/g;
-const xrefTarget=/^(?:glossary#[a-z0-9-]+|(start|unary|binary|twophase|boundary|cuni|ninb)(?:#[a-z0-9-]+|\/lab(?:\/[a-z][a-z-]*)?)?)$/;
+const xrefTarget={test:target=>/^(?:glossary|card)#[a-z0-9-]+$/.test(target)||(()=>{const m=/^([a-z][a-z0-9-]*?)(?:#[a-z0-9-]+|\/lab(?:\/[a-z][a-z-]*)?)?$/.exec(target);return !!m&&ids.includes(m[1]);})()};
 function rich(value,terms){string(value);for(const [,tex] of value.matchAll(math))checkTeX(tex);const prose=value.replace(math,'');for(const [,target] of prose.matchAll(xref))if(!xrefTarget.test(target))throw Error('Malformed cross-reference: '+target);const rest=prose.replace(xref,'');for(const [,id] of rest.matchAll(token))if(!terms.has(id))throw Error('Unknown term: '+id);if(/[{}|$]|\[\[|\]\]/.test(rest.replace(token,'')))throw Error('Malformed term, cross-reference or formula token');}
 export function validateContent(content){
  exactKeys(content,['schema_version','modules'],['terms']);
@@ -51,11 +55,50 @@ export function validateContent(content){
  for(const mod of content.modules)for(const b of mod.blocks){const blocks=b.type==='reveal'?b.blocks:[b];for(const item of blocks)for(const link of item.links??[])if(link.href.startsWith('#')&&!seen.has(link.href.slice(1)))throw Error('Unavailable local link');}
  return content;
 }
+/** Side cards: one question, one claim, at most about 120 words, one level of card-to-card links. */
+/** Card pages are step numbers, plus LP for the optional linear-programming primer. */
+export const cardPages=[...Array.from({length:19},(_,i)=>String(i).padStart(2,'0')),'LP'];
+const cardLinks=text=>[...text.replace(math,'').matchAll(xref)].map(m=>m[1]).filter(t=>t.startsWith('card#')).map(t=>t.slice(5));
+const words=text=>text.replace(math,'X').replace(xref,'$2').split(/\s+/).filter(Boolean).length;
+export function validateCards(cards,content){
+ exactKeys(cards,['schema_version','closing','cards']);
+ if(cards.schema_version!==1||!Array.isArray(cards.cards)||!cards.cards.length)throw Error('Unsupported cards');
+ string(cards.closing);
+ const terms=new Set((content.terms??[]).map(t=>t.id)),ids=new Set(),links=new Map();
+ for(const card of cards.cards){
+  exactKeys(card,['id','deck','kind','title','core','pages','symbols','blocks']);
+  if(!/^[a-z][a-z0-9-]*$/.test(card.id)||ids.has(card.id))throw Error('Invalid/duplicate card id');ids.add(card.id);
+  if(!['M','O','both'].includes(card.deck))throw Error('Invalid card deck');
+  if(!['term','hang-on','maths','thermo'].includes(card.kind))throw Error('Invalid card kind');
+  string(card.title);if(!card.title.trim().endsWith('?'))throw Error('A card title is the learner\'s question: '+card.id);
+  if(typeof card.core!=='boolean')throw Error('Invalid card core flag');
+  if(!Array.isArray(card.pages)||!card.pages.length||card.pages.some(p=>!cardPages.includes(p)))throw Error('Unknown card page: '+card.id);
+  if(!Array.isArray(card.symbols))throw Error('Invalid card symbols');card.symbols.forEach(string);
+  if(!Array.isArray(card.blocks)||!card.blocks.length)throw Error('Empty card');
+  let count=0;const texts=[];
+  for(const b of card.blocks){
+   if(b.type==='paragraph'){exactKeys(b,['type','text']);texts.push(b.text);if(!b.text.startsWith('Where you met it: '))count+=words(b.text);}
+   else if(b.type==='list'){exactKeys(b,['type','items']);if(!Array.isArray(b.items)||!b.items.length)throw Error('Empty card list');texts.push(...b.items);count+=b.items.reduce((n,i)=>n+words(i),0);}
+   else throw Error('Cards hold paragraphs and lists only');
+  }
+  texts.forEach(t=>rich(t,terms));
+  if(count>130)throw Error(`Card too long (${count} words): `+card.id);
+  links.set(card.id,texts.flatMap(cardLinks));
+ }
+ for(const [id,targets] of links)for(const target of targets){
+  if(!ids.has(target))throw Error('Unknown card link: '+target);
+  if(target===id||links.get(target).length)throw Error('Cards link at most one level deep: '+id+' → '+target);
+ }
+ return cards;
+}
 export function syncContent({check=false,destination=resolve(repo,'site/public/learning')}={}){
- const input='course/self_study/lessons.json';
+ const input='course/self_study/lessons.json',cardInput='course/self_study/cards.json';
  const content=validateContent(JSON.parse(readFileSync(resolve(repo,input),'utf8')));
- const assets=content.modules.flatMap(m=>moduleAssets[m.id]??[]);
- const entries=[{canonical:input,public:'lessons.json'},...assets.map(p=>({canonical:p,public:p.replace('course/','')}))];
+ const cards=validateCards(JSON.parse(readFileSync(resolve(repo,cardInput),'utf8')),content);
+ const cardIds=new Set(cards.cards.map(c=>c.id));
+ for(const target of JSON.stringify(content.modules).matchAll(/\[\[card#([a-z0-9-]+)\|/g))if(!cardIds.has(target[1]))throw Error('Unknown card link: '+target[1]);
+ const assets=[...new Set(content.modules.flatMap(m=>moduleAssets[m.id]??[]))];
+ const entries=[{canonical:input,public:'lessons.json'},{canonical:cardInput,public:'cards.json'},...assets.map(p=>({canonical:p,public:p.replace('course/','')}))];
  const receipt={schema_version:1,files:entries.map(entry=>({...entry,sha256:createHash('sha256').update(readFileSync(resolve(repo,entry.canonical))).digest('hex')}))};
  const expected=new Set(['content_receipt.json',...entries.map(e=>e.public)]);
  function inventory(folder){if(!existsSync(folder))return [];return readdirSync(folder).flatMap(name=>{const path=resolve(folder,name);return statSync(path).isDirectory()?inventory(path):[relative(destination,path)];});}

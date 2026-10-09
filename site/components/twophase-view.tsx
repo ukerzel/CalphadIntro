@@ -96,7 +96,7 @@ export function TwoPhaseLab({ data, initialPart = 'a', initialIndex = 49 }: { da
       <p className="how-to"><strong>How to read it:</strong> left, the mixing part of g(x) for one phase at the selected temperature; the straight reference line is removed so the shape is visible. Switch to the full g(x): the tangent tilts, but it touches at the same two compositions (dotted lines). Below Tc the curve has a hump, and the gold tangent touches it twice. Right, those two compositions plotted against temperature draw the miscibility gap.</p>
       <Segmented label="Curve shown" value={curveView} onChange={setCurveView} options={[['mix', 'Mixing part'], ['full', 'Full g(x)']]} />
       <div className="twin">
-        <Plot compact title={`${full ? 'Full' : 'Mixing part of the'} Gibbs energy at ${row.T_K} K`} desc={full ? "One phase's full molar Gibbs energy; when two compositions coexist, the common tangent from mu_A to mu_B touches the curve at both." : "Mixing part of one phase's molar Gibbs energy; when two compositions coexist, the horizontal common tangent touches the curve at both."}
+        <Plot compact title={`${full ? 'Full' : 'Mixing part of the'} Gibbs energy at ${row.T_K} K`} desc={full ? "One phase model's full molar Gibbs energy; when two compositions coexist, the common tangent from mu_A to mu_B touches the curve at both." : "Mixing part of one phase's molar Gibbs energy; when two compositions coexist, the horizontal common tangent touches the curve at both."}
           height={300} xDomain={[0, 1]} yDomain={[lo - pad, hi + pad]} yTicks={ticks(lo - pad, hi + pad, 4)} xLabel="x" yLabel={full ? 'g (kJ/mol atoms)' : 'mixing part of g (kJ/mol atoms)'} yFormat={value => num(value / 1000, 1)}>
           {({ x, y, top, bottom }) => <>
             <path className="line line-solid" d={path(B.x.map((v, i) => [x(v), y(curve[i])]))} />
@@ -142,7 +142,7 @@ export function TwoPhaseLab({ data, initialPart = 'a', initialIndex = 49 }: { da
   </div>;
 
   const explore = <>
-    <Segmented label="Part" value={part} onChange={setPart} options={[['a', 'A · two different phases'], ['b', 'B · one phase, two compositions'], ['c', 'C · melting and the lens'], ['d', 'D · from scratch and pycalphad']]} />
+    <Segmented label="Part" value={part} onChange={setPart} options={[['a', 'A · two different phases'], ['b', 'B · one phase model, two phases'], ['c', 'C · melting and the lens'], ['d', 'D · from scratch and pycalphad']]} />
     <div className="part-body">{part === 'a' ? partA : part === 'b' ? partB : part === 'c' ? <LensPart data={data.part_c} index={ic} onChange={setIc} /> : <ScratchPart />}</div>
   </>;
 
@@ -155,7 +155,7 @@ export function TwoPhaseLab({ data, initialPart = 'a', initialIndex = 49 }: { da
       <Eq label="Parts C and D, ideal solid and liquid (φ = SOLID or LIQUID)" tex={String.raw`g_\varphi = (1-x)\,g^\circ_{\mathrm A,\varphi} + x\,g^\circ_{\mathrm B,\varphi} + RT\,q(x), \qquad g^\circ = h - T s`} />
       <Eq label="Part D, the two equations Newton solves" tex={String.raw`\mu_{\mathrm A}^{S} - \mu_{\mathrm A}^{L} = g^\circ_{\mathrm A,S} - g^\circ_{\mathrm A,L} + RT\ln\frac{1-x_S}{1-x_L} = 0, \qquad \mu_{\mathrm B}^{S} - \mu_{\mathrm B}^{L} = g^\circ_{\mathrm B,S} - g^\circ_{\mathrm B,L} + RT\ln\frac{x_S}{x_L} = 0`} />
     </div>
-    <p>Parts A and B use the course’s invented models of foundations lessons 5–7; parts C and D use an invented ideal solid and liquid, with A from step 01. Part D solves the part C model at 1400 K four ways and also with pycalphad from a short database. The curves, tangents, compositions and amounts in the lab come from a calculation stored in the repository; nothing is recalculated in your browser.</p>
+    <p>Parts A and B use the course’s invented models of steps 02–03; parts C and D use an invented ideal solid and liquid, with A from step 01. Part D solves the part C model at 1400 K four ways and also with pycalphad from a short database. The curves, tangents, compositions and amounts in the lab come from a calculation stored in the repository; nothing is recalculated in your browser.</p>
   </div>;
 
   return <LabFrame kicker="Step 03 · interactive lab" title="Why two phases?"

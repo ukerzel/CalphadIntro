@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 /** Text for a polite live region that only updates once a value stops changing, so sweeps stay silent. */
 export function useSettled<T>(value: T, delay = 700): T {
@@ -15,13 +15,19 @@ import type { ReactNode } from 'react';
 import { Tabs } from 'radix-ui';
 import { Pause, Play, StepBack, StepForward } from 'lucide-react';
 
+/** The step's own names for its lab (lesson-meta's lab title and view labels), so a lab has one name wherever it
+ *  appears: dock card, lab heading and view buttons. Labs used outside a step keep their own names. */
+export const LabNames = createContext<{ title: string | null; views: Record<string, string> } | null>(null);
+const InLabActions = createContext(false);
+
 export default function LabFrame({ kicker, title, conditions, actions, explore, model, record }: {
   kicker: string; title: string; conditions: string[]; actions?: ReactNode; explore: ReactNode; model: ReactNode; record: ReactNode;
 }) {
-  return <section className="lab" aria-label={`${title} · interactive lab`}>
+  const heading = useContext(LabNames)?.title ?? title;
+  return <section className="lab" aria-label={`${heading} · interactive lab`}>
     <header className="lab-head">
-      <div><p className="lab-kicker">{kicker}</p><h2 className="lab-title">{title}</h2></div>
-      {actions && <div className="lab-actions">{actions}</div>}
+      <div><p className="lab-kicker">{kicker}</p><h2 className="lab-title">{heading}</h2></div>
+      {actions && <div className="lab-actions"><InLabActions.Provider value={true}>{actions}</InLabActions.Provider></div>}
     </header>
     <ul className="chips" aria-label="Conditions">{conditions.map(item => <li key={item}>{item}</li>)}</ul>
     <Tabs.Root defaultValue="explore" className="lab-tabs">
@@ -37,8 +43,10 @@ export default function LabFrame({ kicker, title, conditions, actions, explore, 
   </section>;
 }
 
-/** Steps through the exported rows one by one. */
-export function Player({ index, max, onChange, label, interval = 40 }: { index: number; max: number; onChange: (index: number) => void; label: string; interval?: number }) {
+/** The one stepper of every lab: back and forward around "Round 2 of 3", or around a Play button when a sweep can run by itself. */
+export function Stepper({ index, count, onChange, unit, label, status, play, interval = 40, nextDisabled = false }: {
+  index: number; count: number; onChange: (index: number) => void; unit: string; label: string; status?: ReactNode; play?: boolean; interval?: number; nextDisabled?: boolean;
+}) {
   const [playing, setPlaying] = useState(false);
   const state = useRef({ index, direction: 1, last: 0 });
   const change = useRef(onChange);
@@ -52,7 +60,7 @@ export function Player({ index, max, onChange, label, interval = 40 }: { index: 
       if (time - s.last >= interval) {
         s.last = time;
         let next = s.index + s.direction;
-        if (next > max || next < 0) { s.direction *= -1; next = s.index + s.direction; }
+        if (next > count - 1 || next < 0) { s.direction *= -1; next = s.index + s.direction; }
         s.index = next;
         change.current(next);
       }
@@ -60,19 +68,26 @@ export function Player({ index, max, onChange, label, interval = 40 }: { index: 
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [playing, max, interval]);
-  return <div className="player" role="group" aria-label={label}>
-    <button type="button" className="icon-button" onClick={() => onChange(Math.max(0, index - 1))} aria-label="Previous step"><StepBack aria-hidden /></button>
-    <button type="button" className="play-button" aria-pressed={playing} onClick={() => setPlaying(value => !value)}>
+  }, [playing, count, interval]);
+  return <div className="stepper" role="group" aria-label={label}>
+    <button type="button" className="icon-button" disabled={index <= 0} onClick={() => onChange(Math.max(0, index - 1))} aria-label={`Previous ${unit}`}><StepBack aria-hidden /></button>
+    {play ? <button type="button" className="play-button" aria-pressed={playing} onClick={() => setPlaying(value => !value)}>
       {playing ? <Pause aria-hidden /> : <Play aria-hidden />}<span>{playing ? 'Pause' : 'Play sweep'}</span>
-    </button>
-    <button type="button" className="icon-button" onClick={() => onChange(Math.min(max, index + 1))} aria-label="Next step"><StepForward aria-hidden /></button>
+    </button> : <span className="stepper-status" aria-live="polite">{status ?? `${unit[0].toUpperCase()}${unit.slice(1)} ${index + 1} of ${count}`}</span>}
+    <button type="button" className="icon-button" disabled={index >= count - 1 || nextDisabled} onClick={() => onChange(Math.min(count - 1, index + 1))} aria-label={`Next ${unit}`}><StepForward aria-hidden /></button>
   </div>;
 }
 
+/** Steps through the exported rows one by one, or plays them as a sweep. */
+export function Player({ index, max, onChange, label, interval = 40 }: { index: number; max: number; onChange: (index: number) => void; label: string; interval?: number }) {
+  return <Stepper index={index} count={max + 1} onChange={onChange} unit="step" label={label} play interval={interval} />;
+}
+
 export function Segmented<T extends string>({ value, options, onChange, label }: { value: T; options: [T, string][]; onChange: (value: T) => void; label: string }) {
+  const inActions = useContext(InLabActions), labNames = useContext(LabNames);
+  const names = inActions ? labNames?.views : undefined;   // a lab's view switch uses the step's view labels
   return <div className="segmented" role="group" aria-label={label}>
-    {options.map(([key, text]) => <button key={key} type="button" aria-pressed={value === key} onClick={() => onChange(key)}>{text}</button>)}
+    {options.map(([key, text]) => <button key={key} type="button" aria-pressed={value === key} onClick={() => onChange(key)}>{names?.[key] ?? text}</button>)}
   </div>;
 }
 

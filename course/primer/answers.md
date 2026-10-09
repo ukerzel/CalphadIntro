@@ -68,6 +68,9 @@ Reading a supplied table is a legitimate paper route but is not personal executi
 The five energies at fL=0,0.25,0.5,0.75,1 are respectively
 −8000, −7850, −7700, −7550, −7400 J/mol. All solid minimizes energy at 900 K.
 fL=−0.2 implies a negative liquid amount, and fS=1.2; it is infeasible.
+A straight-line objective on 0 ≤ fL ≤ 1 is lowest at an end. At a tie (equal
+g, as at 1000 K) every fraction on the segment is optimal, so two correct
+solvers may return different fractions with the same energy.
 
 `c` holds objective coefficients; `A_eq` and `b_eq` require fS+fL=1;
 `bounds` keep each fraction in [0,1]. These explicit bounds aid the physical

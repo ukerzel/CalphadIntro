@@ -1,8 +1,10 @@
 # CALPHAD self-study companion
 
-A static web companion to the introductory CALPHAD course: seven short steps
-(00–06) from the energy refresher to the published Cu–Ni and Ni–Nb databases,
-each with an attempt-first task, hints, a worked answer and an interactive lab.
+A static web companion to the introductory CALPHAD course: steps 00–06 from the
+energy refresher to the published Cu–Ni and Ni–Nb databases, advanced steps
+07–18 that read the calculation as an optimisation, and an optional LP primer;
+each step has an attempt-first task, hints, a worked answer and an interactive
+lab, and a route map shows the main line and its branches.
 The course repository owns the science and the text; this directory only
 presents them. `npm run build` copies the narration and the exported lab data
 from `course/` into `public/`, and the static export in `dist/client` is what

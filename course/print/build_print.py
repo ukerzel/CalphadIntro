@@ -27,6 +27,11 @@ DOCUMENTS = [  # (source, output name, title, part: 'all' or 'reference')
     ('course/primer_day2/worksheet.md', 'day2_worksheet', 'Day 2 primer — learner worksheet', 'all'),
     ('course/primer_day2/answers.md', 'day2_answers', 'Day 2 primer — answers and staged hints', 'all'),
     ('course/primer_day2/worksheet.md', 'day2_reference_card', 'Day 2 primer — reference card', 'reference'),
+    ('course/primer_day2/two_phase_sheet.md', 'two_phase_sheet', 'Two phases: a recap sheet', 'all'),
+    ('course/day3/lp_primer_sheet.md', 'lp_primer_sheet', 'Linear programmes — a primer sheet', 'all'),
+    ('course/day3/picture_sheet.md', 'day3_picture_sheet', 'Advanced steps 07–18 — picture sheet', 'all'),
+    ('course/day3/card_deck.md', 'day3_card_deck', 'Advanced steps 07–18 — card deck', 'all'),
+    ('course/day3/game_kit.md', 'day3_game_kit', 'Advanced steps 07–18 — column-generation game', 'all'),
 ]
 SPECIALS = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}', '$': r'\$', '&': r'\&', '#': r'\#',
             '^': r'\textasciicircum{}', '_': r'\_', '%': r'\%', '~': r'\textasciitilde{}'}
@@ -38,6 +43,9 @@ def escape(text: str) -> str:
 
 class Latex:
     """Render mistune's AST (renderer='ast') to LaTeX."""
+
+    def __init__(self, base: Path = ROOT) -> None:
+        self.base = base  # folder of the Markdown source, for relative image paths
 
     def inline(self, nodes: list[dict]) -> str:
         return ''.join(self.node(n) for n in nodes)
@@ -64,6 +72,9 @@ class Latex:
                 return label + r'\footnote{\url{' + url.replace('%', r'\%').replace('#', r'\#') + '}}'
             return label  # repository-relative links: the printed text stands alone
         if kind == 'image':
+            path = (self.base / n['attrs']['url']).resolve()
+            if not n['attrs']['url'].startswith('http') and path.suffix == '.png' and path.is_file():
+                return r'\begin{center}\includegraphics[width=0.6\linewidth]{' + path.as_posix() + r'}\end{center}'
             return '[figure: ' + self.inline(children) + ']'
         if kind in ('inline_html', 'block_html'):
             return ''
@@ -117,7 +128,7 @@ PREAMBLE = r'''\documentclass[11pt,a4paper]{article}
 \setsansfont{DejaVu Sans}
 \setmonofont{DejaVu Sans Mono}[Scale=0.85]
 \setmathfont{DejaVu Math TeX Gyre}
-\usepackage{xltabular,colortbl,xcolor,amsmath}
+\usepackage{xltabular,colortbl,xcolor,amsmath,graphicx}
 \usepackage[normalem]{ulem}
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
@@ -143,7 +154,7 @@ def build(source: str, name: str, title: str, part: str, workdir: Path) -> Path:
     if part == 'reference':
         markdown = reference_part(markdown)
     tokens = mistune.create_markdown(renderer='ast', plugins=['table', 'math', 'strikethrough'])(markdown)
-    body = ''.join(Latex().node(t) for t in tokens)
+    body = ''.join(Latex((ROOT / source).parent).node(t) for t in tokens)
     tex = PREAMBLE.replace('TITLE', escape(title) + r' \textperiodcentered{} CALPHAD School 2026') + body + '\\end{document}\n'
     (workdir / f'{name}.tex').write_text(tex, encoding='utf-8')
     for _ in range(2):  # xltabular needs two passes for column widths

@@ -13,11 +13,11 @@ import BoundaryViews from '@/components/boundary-views';
 
 type Mode = 'compare' | 'open' | 'closed';
 
-export default function BoundaryView({ bundle, index, onChange, initialView = 'cells' }: { bundle: Bundle; index: number; onChange: (index: number) => void; initialView?: 'cells' | 'tangent' | 'iteration' }) {
+export default function BoundaryView({ bundle, index, onChange, initialView = 'cells' }: { bundle: Bundle; index: number; onChange: (index: number) => void; initialView?: 'cells' | 'tangent' | 'iteration' | 'match' }) {
   const data = bundle.boundary, row = selectRecord(data.records, `boundary-${String(index).padStart(3, '0')}`);
   const panel = bundle.manifest.panels.find(p => p.id === 'boundary')!;
   const [mode, setMode] = useState<Mode>('compare');
-  const [view, setView] = useState<'cells' | 'tangent' | 'iteration'>(initialView);
+  const [view, setView] = useState<'cells' | 'tangent' | 'iteration' | 'match'>(initialView);
   const xs = data.records.map(r => r.x_initial_or_reservoir_B);
   const scrub = (value: number) => onChange(nearest(xs, value));
   const shown = (['open', 'closed'] as const).filter(m => mode === 'compare' || mode === m);
@@ -25,6 +25,7 @@ export default function BoundaryView({ bundle, index, onChange, initialView = 'c
   const cells = <>
     <div className="boundary-top">
       <div className="lab-main">
+        <p className="how-to"><strong>Try it:</strong> pick a starting B fraction and predict which cell puts more B on the boundary: the open one, where a reservoir keeps the bulk at that fraction, or the closed one, where the boundary takes its B from a fixed inventory. Then compare the two curves across the whole range.</p>
         <div className="legend-row">
           <div className="legend" aria-hidden><span className="key key-open">Open reservoir</span><span className="key key-closed">Closed inventory</span><span className="key key-diag">no preference (θ = x)</span></div>
           <Segmented label="Ensemble focus" value={mode} onChange={setMode} options={[['compare', 'Compare'], ['open', 'Open'], ['closed', 'Closed']]} />
@@ -65,7 +66,7 @@ export default function BoundaryView({ bundle, index, onChange, initialView = 'c
     </div>
   </>;
   const explore = <>
-    <Segmented label="View" value={view} onChange={setView} options={[['cells', 'Cells and ledgers'], ['tangent', 'Tangent picture · δ slider'], ['iteration', 'Closed cell by hand']]} />
+    <Segmented label="View" value={view} onChange={setView} options={[['cells', 'Cells and ledgers'], ['tangent', 'Tangent picture · δ slider'], ['iteration', 'Closed cell by hand'], ['match', 'Which reservoir matches?']]} />
     <div className="part-body">{view === 'cells' ? cells : <BoundaryViews mode={view} />}</div>
   </>;
 

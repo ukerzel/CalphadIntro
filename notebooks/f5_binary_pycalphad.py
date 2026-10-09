@@ -24,6 +24,10 @@
 #
 # Used in: Lesson 8; before Task 01 (Cu–Ni); self-study before step 05 (optional).
 # Do [f4](f4_two_phases_and_diagrams.ipynb) first: here pycalphad must reproduce it.
+# Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+# primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+# course in the repository. Working alone on the website, you only need the step
+# numbers.
 #
 # **The route through the notebook.** In f3 and f4 you calculated the A–B model with your own formulas.
 # Here the same model is handed to pycalphad, and every pycalphad number is
@@ -43,7 +47,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)

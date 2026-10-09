@@ -28,6 +28,14 @@ test('every cross-reference in the narration resolves to a real step, stage, lab
  assert.equal(describe(parseTarget('twophase#no-such-stage')),null);assert.equal(describe(parseTarget('glossary#no-such-row')),null);assert.equal(describe(parseTarget('ninb/lab/nowhere')),null);
  return refs.length;
 });
+test('every step cross-reference in the side cards resolves',async()=>{
+ const {splitTerms}=await server.ssrLoadModule('/lib/learning.ts');const {parseTarget,describe}=await server.ssrLoadModule('/lib/xref.ts');
+ const cards=JSON.parse(readFileSync(new URL('../public/learning/cards.json',import.meta.url),'utf8'));
+ const texts=cards.cards.flatMap(c=>c.blocks.flatMap(b=>b.type==='list'?b.items:[b.text]));
+ const refs=texts.flatMap(t=>splitTerms(t).filter(p=>typeof p==='object'&&'ref' in p&&!p.ref.startsWith('card#')));
+ assert.ok(refs.length>=10);
+ for(const ref of refs){const target=parseTarget(ref.ref);assert.ok(target&&describe(target),'unresolved card cross-reference: '+ref.ref);}
+});
 test('hash routes round-trip and accept only exact three-digit record IDs',()=>{
  for(const route of [{page:'home'},{page:'lesson',id:'start',lab:false},{page:'lesson',id:'boundary',lab:true,recordId:'boundary-040'},{page:'lesson',id:'cuni',lab:true}])
   assert.deepEqual(parseRoute(routeHash(route)),route);
@@ -43,8 +51,8 @@ test('stage grouping keeps every narration block, in order, with its label resto
  const restore=(stage,block,i)=>i||!stage.prefix?block:{...block,text:stage.prefix+block.text};
  for(const lesson of content.modules)assert.deepEqual(stages(lesson).flatMap(stage=>stage.blocks.map((block,i)=>restore(stage,block,i))),lesson.blocks,lesson.id);
  const unary=stages(content.modules.find(m=>m.id==='unary')).map(s=>s.kind);
- assert.deepEqual(unary.slice(0,4),['problem','approach','attempt','explore']);
- assert.deepEqual(stages(content.modules[0]).map(s=>s.label),['Why CALPHAD?','Refresher','Try it','Glossary']);
+ assert.deepEqual(unary.slice(0,5),['note','problem','approach','attempt','explore']);
+ assert.deepEqual(stages(content.modules[0]).map(s=>s.label),['Overview','Why CALPHAD?','Refresher','Try it','Glossary']);
 });
 
 test('two-phase data loads only with its receipt hash',async()=>{

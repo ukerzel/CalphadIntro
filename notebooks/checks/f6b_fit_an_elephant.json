@@ -1,0 +1,35 @@
+{
+ "f6b_tc": {
+  "value": 1202.718143,
+  "tol": 0.5,
+  "hint": "Omega/(2R) with Omega in J/mol and R = 8.3145 J/(mol K)."
+ },
+ "f6b_omega_fit": {
+  "value": 20024.038,
+  "tol": 2.0,
+  "hint": "The single parameter printed for the model 'Ω only' in section 4."
+ },
+ "f6b_n_cal": {
+  "value": 14,
+  "tol": 0,
+  "hint": "Two gap edges at each calibration temperature."
+ },
+ "f6b_best_cal": {
+  "value": [
+   "L0 + bT, L1, L2",
+   "L0+bT,L1,L2",
+   "the elephant",
+   "four parameters"
+  ],
+  "hint": "Read the calibration-error column of the section 5 table; copy the model name exactly, including Ω."
+ },
+ "f6b_also_best_held": {
+  "value": false,
+  "hint": "Compare the held-out column for the same model with the other three."
+ },
+ "f6b_n_parameters": {
+  "value": 4,
+  "tol": 0,
+  "hint": "One starting value per fitted parameter: len(MODELS[name][1])."
+ }
+}

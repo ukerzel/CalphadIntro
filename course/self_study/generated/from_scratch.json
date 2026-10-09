@@ -601,6 +601,11 @@
    "id": "grid-5",
    "spacing": 0.2,
    "points": 4,
+   "line_relative": [
+    -674.0410181183979,
+    1108.7278039631674
+   ],
+   "line_can_pivot": true,
    "x": [
     0.2,
     0.4,
@@ -637,6 +642,11 @@
    "id": "grid-10",
    "spacing": 0.1,
    "points": 9,
+   "line_relative": [
+    -100.3851290053135,
+    248.24397029354077
+   ],
+   "line_can_pivot": true,
    "x": [
     0.1,
     0.2,
@@ -688,6 +698,11 @@
    "id": "grid-20",
    "spacing": 0.05,
    "points": 19,
+   "line_relative": [
+    8.369950281288766,
+    -5.517881375199067
+   ],
+   "line_can_pivot": false,
    "x": [
     0.05,
     0.1,
@@ -775,6 +790,11 @@
    "id": "grid-50",
    "spacing": 0.02,
    "points": 49,
+   "line_relative": [
+    5.681760782146739,
+    -7.2169746144500095
+   ],
+   "line_can_pivot": false,
    "x": [
     0.02,
     0.04,
@@ -952,6 +972,11 @@
    "id": "grid-100",
    "spacing": 0.01,
    "points": 99,
+   "line_relative": [
+    0.5182162332566804,
+    -0.6451906431357202
+   ],
+   "line_can_pivot": false,
    "x": [
     0.01,
     0.02,
@@ -1279,6 +1304,11 @@
    "id": "grid-500",
    "spacing": 0.002,
    "points": 499,
+   "line_relative": [
+    0.000244974948145682,
+    0.014045503812667448
+   ],
+   "line_can_pivot": false,
    "x": [],
    "g_relative": {
     "SOLID": [],
@@ -1306,6 +1336,11 @@
    "id": "grid-1000",
    "spacing": 0.001,
    "points": 999,
+   "line_relative": [
+    0.0022445500871981494,
+    0.00963618426976609
+   ],
+   "line_can_pivot": false,
    "x": [],
    "g_relative": {
     "SOLID": [],
@@ -2373,11 +2408,11 @@
    ],
    "x_SOLID": 0.440517192455,
    "x_LIQUID": 0.312409778559,
-   "f_LIQUID": 0.316275157094,
+   "f_LIQUID": 0.316275157095,
    "GM": -20473.124218,
    "mu_A": -19760.016689,
    "mu_B": -21542.785511,
-   "GM_relative": 0.0,
+   "GM_relative": -0.0,
    "tangent_relative": [
     -0.0,
     0.0
@@ -2784,7 +2819,7 @@
  "difference": {
   "x_SOLID": -4.15e-14,
   "x_LIQUID": -1.24e-13,
-  "f_LIQUID": 5.39e-13,
+  "f_LIQUID": -4.61e-13,
   "GM": -2.02e-07,
   "mu_A": -3.69e-07,
   "mu_B": -4.51e-07,

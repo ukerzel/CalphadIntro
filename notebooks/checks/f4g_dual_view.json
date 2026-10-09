@@ -1,0 +1,35 @@
+{
+ "f4g_dual_menu_slope": {
+  "value": -20490.7222,
+  "tol": 0.01,
+  "hint": "dual(lens, Z_LENS, -1389.0) returns (d, touching state); d is the lowest g_p(x) - Δμ x over both phases, plus Δμ z.",
+  "strict": true
+ },
+ "f4g_floor_round2": {
+  "value": -20473.6125,
+  "tol": 0.005,
+  "hint": "Use the master's slope history[2].master.d_mu in dual(lens, Z_LENS, ...); the master's height μA does not enter.",
+  "strict": true
+ },
+ "f4g_onestate_gap": {
+  "value": 39.0665,
+  "tol": 0.01,
+  "hint": "The lower of g_SOLID(0.40) and g_LIQUID(0.40), minus the top of d (d_star). The answer is positive."
+ },
+ "f4g_bound_slope_2000": {
+  "value": -20492.5859,
+  "tol": 0.01,
+  "hint": "For each phase: x* from the formula, then g_p(x*) - Δμ x*; take the lower one and add Δμ z with Δμ = -2000.",
+  "strict": true
+ },
+ "f4g_slope_of_d": {
+  "value": -0.04887,
+  "tol": 0.0001,
+  "hint": "Find the touching state x* at Δμ = -1389.0 (SOLID near 0.449), then z - x* with z = 0.40."
+ },
+ "f4g_box750_rounds": {
+  "value": 7,
+  "tol": 0,
+  "hint": "Call box_step(reg, seed, Z_REG, d_mu_t, 750.0) and read the 'k' of its last row (round 0 is the tangent at 0.15)."
+ }
+}

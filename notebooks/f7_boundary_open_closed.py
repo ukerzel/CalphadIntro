@@ -24,6 +24,10 @@
 #
 # Used in: Day 2 D4–D6 and D9, Lessons 11–13, self-study step 04.
 # Work each "your turn" on paper first, then type your value.
+# Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+# primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+# course in the repository. Working alone on the website, you only need the step
+# numbers.
 #
 # **Background.** A grain boundary is the thin region where two crystals of
 # different orientation meet. Atoms there sit in a less regular environment than
@@ -49,7 +53,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)
@@ -422,6 +426,70 @@ check(x_b_round1, "f7_d6_x_b_round1")
 check(theta_closed, "f7_d6_theta_final")
 check(x_b_closed, "f7_d6_x_b_final")
 check(boundary_B_closed, "f7_d6_boundary_B_final")
+
+# %% [markdown]
+# ### Dive deeper (optimisation view): open versus closed is a Lagrangian relaxation
+#
+# Write the closed cell as an optimisation problem with an explicit constraint.
+# Count the sites as moles (8000 mol of bulk sites, 200 mol of boundary sites);
+# the unknowns are the B amounts in the bulk, $n_b$, and on the boundaries,
+# $n_s$. Minimise the total
+# $G=8000\,g_b(n_b/8000)+200\,g_s(n_s/200)$ subject to the B balance
+# $n_b+n_s=B_{\rm tot}$. With a multiplier $\lambda$ for that one constraint,
+# both parts must satisfy the same condition:
+#
+# $$g_b'(x_b)=\lambda,\qquad g_s'(\theta)=\lambda .$$
+#
+# For a *fixed* $\lambda$ each part can be solved alone, and that is exactly the
+# open cell: a reservoir that buys and sells B at the fixed exchange price
+# $\lambda=\mu_B-\mu_A$. The open cell is the closed cell with the B balance
+# relaxed and priced. The closed cell is then a one-unknown problem: find the
+# price $\lambda$ at which bulk and boundary together hold exactly $B_{\rm tot}$.
+# Both conditions have closed forms ($x_b$ and $\theta$ are logistic functions of
+# $\lambda$), so one bracketed root search finds it.
+
+# %%
+from scipy.optimize import brentq
+
+logistic = lambda u: 1 / (1 + np.exp(-u))
+x_of = lambda lam: logistic((lam - 12000.0) / RT)            # g_b'(x_b) = lam, solved for x_b
+theta_of = lambda lam: logistic((lam - 12000.0 - DELTA) / RT)   # g_s'(θ) = lam, solved for θ
+lam = brentq(lambda l: N_BULK * x_of(l) + K * S * theta_of(l) - B_total, -40000.0, 20000.0, xtol=1e-12)
+x_b_lam, theta_lam = x_of(lam), theta_of(lam)
+print(f"multiplier λ = {lam:.3f} J/mol;  x_b = {x_b_lam:.6f},  θ = {theta_lam:.6f}")
+print(f"μ_B − μ_A at that x_b = {mu_B(x_b_lam) - mu_A(x_b_lam):.3f} J/mol")
+assert abs(lam - (mu_B(x_b_lam) - mu_A(x_b_lam))) < 1e-6, "the multiplier should be the exchange price"
+
+# %% [markdown]
+# Three checks. The hand iteration of section 3 settles at the same θ. The open
+# cell, with a reservoir at the closed cell's final $x_b$, selects the same θ.
+# And the multiplier is a price in the everyday sense: adding a little B to the
+# closed cell changes its lowest total G by $\lambda$ per mole of B (a central
+# difference, with the cell's G found by a one-dimensional search).
+
+# %%
+from scipy.optimize import minimize_scalar
+
+x_hand = 0.10
+for _ in range(30):                                          # the hand iteration, run to the end
+    theta_hand, x_hand = hand_round(x_hand, B_total)
+print(f"hand iteration: θ = {theta_hand:.6f};  open cell at x_b = {x_b_lam:.6f}: θ = {theta_open(x_b_lam):.6f}")
+assert abs(theta_hand - theta_lam) < 1e-9 and abs(theta_open(x_b_lam) - theta_lam) < 1e-12, "the three routes should agree"
+
+def G_cell(B):                                               # lowest total G of a closed cell holding B
+    f = lambda t: N_BULK * g_bulk((B - K * S * t) / N_BULK) + K * S * g_site(t)
+    return minimize_scalar(f, bounds=(1e-9, 1 - 1e-9), method="bounded", options={"xatol": 1e-12}).fun
+h = 0.01
+print(f"dG/dB_tot ≈ {(G_cell(B_total + h) - G_cell(B_total - h)) / (2 * h):.2f} J/mol B, against λ = {lam:.2f}")
+
+# %% [markdown]
+# The hand iteration of section 3 is price coordination: guess the price (the
+# bulk's μ_B − μ_A), let the boundary answer at that price, update the price from
+# the inventory, repeat. It converges quickly here because the 200 boundary
+# sites barely move the 8000-site bulk; that is a property of this cell, not a
+# guarantee for every closed problem. The advanced steps read every equilibrium
+# calculation this way: constraints, their prices, and what a relaxed problem
+# can and cannot promise.
 
 # %% [markdown]
 # ## 4. A fresh card (D9) and more practice (self-study step 04)

@@ -12,8 +12,11 @@ published thermodynamic databases.
   phases.
 - **Notebooks** for every task and the computational lessons; they run locally
   or in Google Colab.
-- **A self-study website** (steps 00–06) that walks through the same ideas with
-  interactive labs.
+- **A self-study website** that walks through the same ideas with interactive
+  labs: steps 00–06 from Gibbs-energy basics to the published Cu–Ni and Ni–Nb
+  databases, then advanced steps 07–18 that read an equilibrium calculation as
+  an optimisation (menu, prices, column generation, bounds, branch-and-bound),
+  with an optional linear-programming primer and a route map.
 - An optional **lesson library** for learners who want more depth.
 
 ## Where to start
@@ -22,7 +25,7 @@ published thermodynamic databases.
 |---|---|
 | A learner in a course | [Course index](course/README.md), then [primer day 1](course/primer/README.md) |
 | A learner on your own | [Notebooks](notebooks/README.md) (Colab links in the table) or the self-study site (`site/`) |
-| Curious how an equilibrium calculation works inside | [f4b](notebooks/f4b_lens_from_scratch.ipynb): one phase diagram from scratch in numpy/SciPy, then the same in pycalphad |
+| Curious how an equilibrium calculation works inside | [f4b](notebooks/f4b_lens_from_scratch.ipynb): one phase diagram from scratch in numpy/SciPy, then the same in pycalphad; the advanced notebooks f4c–f4g follow the site's steps 10–17 |
 | An instructor | [Instructor overview](course/instructor_overview.md) |
 
 ## Setup

@@ -21,7 +21,7 @@ export type ScratchData = {
   answer: { x_SOLID: number; x_LIQUID: number; f_LIQUID: number; GM: number; GM_relative: number; mu_A: number; mu_B: number;
     tangent_relative: Line; g_relative: Pair; homogeneous_GM: Pair; homogeneous_GM_relative: Pair };
   brute: { id: string; x_SOLID: number; x_LIQUID: number; f_LIQUID: number; GM: number; GM_relative: number; g_relative: Pair }[];
-  grid: { id: string; spacing: number; points: number; x: number[]; g_relative: { SOLID: number[]; LIQUID: number[] }; chosen: Chosen[]; GM: number; GM_relative: number; above_exact: number }[];
+  grid: { id: string; spacing: number; points: number; line_relative: [number, number]; line_can_pivot: boolean; x: number[]; g_relative: { SOLID: number[]; LIQUID: number[] }; chosen: Chosen[]; GM: number; GM_relative: number; above_exact: number }[];
   newton: { start: Line; frames: { id: string; iteration: number; x_SOLID: number; x_LIQUID: number; residual_mu_A: number; residual_mu_B: number;
     g_relative: Pair; tangent_relative: { SOLID: Line; LIQUID: Line } }[] };
   continuation: { id: string; T_K: number; x_SOLID: number; x_LIQUID: number }[];
@@ -86,6 +86,7 @@ export function ScratchLab({ data, initialMethod = 'brute', initialFrame = 0 }: 
   const [ib, setIb] = useState(start('brute')), [ig, setIg] = useState(start('grid')), [inw, setIn] = useState(start('newton')), [iw, setIw] = useState(start('walk'));
   const { z, T_K } = data.conditions, ans = data.answer, pyc = data.pycalphad.result;
   const B = data.brute[ib], G = data.grid[ig], N = data.newton.frames[inw], W = data.continuation[iw];
+  const [priceLine, setPriceLine] = useState(false);
   const bestSoFar = data.brute.slice(0, ib + 1).reduce((a, b) => (b.GM < a.GM ? b : a));
   const walked = data.continuation.slice(0, iw + 1);
   const pycLens = new Map(data.pycalphad.lens.map(r => [r.T_K, r]));
@@ -134,13 +135,16 @@ export function ScratchLab({ data, initialMethod = 'brute', initialFrame = 0 }: 
         {two && <line className="chord" x1={x(liquid!.x)} y1={y(liquid!.g_relative)} x2={x(solid!.x)} y2={y(solid!.g_relative)} />}
          {G.chosen.map((c, i) => <Mark key={`${c.phase}${i}`} x={x(c.x)} y={y(c.g_relative)} r={5} className={`mark-${c.phase.toLowerCase()}`} />)}
         <Mark x={x(z)} y={y(G.GM_relative)} r={6} className="mark-min" label={two ? 'split' : 'one phase'} />
+        {priceLine && <line className="tangent" x1={x(0)} y1={y(G.line_relative[0])} x2={x(1)} y2={y(G.line_relative[1])} />}
       </>}
     </EnergyPlot>;
     right = <PycalphadAnswer data={data} samples top={top} />;
     controls = <>
       <label id="scratch-grid" className="control-label">Grid spacing <strong>1/{Math.round(1 / G.spacing)}</strong></label>
       <RecordSlider index={ig} max={data.grid.length - 1} onChange={setIg} labelId="scratch-grid" valueText={`spacing 1/${Math.round(1 / G.spacing)}`} />
-      <div className="control-row"><Player index={ig} max={data.grid.length - 1} onChange={setIg} label="Refine the grid" interval={900} /></div>
+      <div className="control-row"><Player index={ig} max={data.grid.length - 1} onChange={setIg} label="Refine the grid" interval={900} />
+        <label className="check"><input type="checkbox" checked={priceLine} onChange={e => setPriceLine(e.target.checked)} /> Show the price line (what the linear programme also returns)</label></div>
+      {priceLine && <p className="caption">The line through the chosen dots lies under every grid dot; its heights at x = 0 and x = 1 are the grid&apos;s prices of A and B. {G.line_can_pivot ? 'Here the sample sits on a used grid point, so many lines are optimal and the solver returned one of them: the line can rotate about that dot (step 11).' : 'Advanced step 11 reads it.'}</p>}
       <p className="caption">Grids 1/5 to 1/1000; points are drawn up to 1/100 · pycalphad evaluates {data.pycalphad.sample.SOLID.count} compositions per phase (every {data.pycalphad.sample_every}th in this window drawn).</p>
     </>;
     side = <dl className="readouts">

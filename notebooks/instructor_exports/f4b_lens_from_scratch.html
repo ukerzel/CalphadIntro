@@ -13747,7 +13747,13 @@ above 1 tell you?)</p>
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>f4b_f_liquid_1400: not attempted yet. Replace None with your value and run the cell again.
-f4b_phase_1600: not attempted yet. Replace None with your value and run the cell again.
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>f4b_phase_1600: not attempted yet. Replace None with your value and run the cell again.
 </pre>
 </div>
 </div>
@@ -13768,7 +13774,8 @@ candidates that give the lowest total energy while keeping all atoms and all
 B atoms: minimise $\sum_k f_k g_k$ subject to $\sum_k f_k = 1$ and
 $\sum_k f_k x_k = z$. The objective and both constraints are <em>linear</em> in the
 unknown amounts, so this is a <strong>linear programme</strong>, which has a reliable
-solver that needs no starting guess.</li>
+solver that needs no starting guess. Its answer is global only over the
+sampled points: a state between them can still be lower.</li>
 <li><strong>Local stage.</strong> Use the best candidates as the starting guess for the
 equations of section 4 and refine.</li>
 </ol>
@@ -13858,6 +13865,49 @@ It found this without any guess and without being told which phases appear.</p>
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Same answer as section 4, now reached the way a CALPHAD program reaches it.</p>
+<p><strong>What the linear programme also returns.</strong> Besides the amounts, <code>linprog</code>
+returns one multiplier per equation in <code>result.eqlin.marginals</code>: how much the
+minimum changes when that equation's right-hand side changes a little, while
+the same candidates stay in use. For our
+two rows (total amount, B balance) they are the height μ_A of a straight line
+at x = 0 and its slope μ_B − μ_A: a line through the two chosen candidates and
+under all the others. They are the grid's chemical potentials, close to the
+exact ones of section 4.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=e328c285">
+<div class="input">
+<div class="prompt input_prompt">In [14]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">mu_A_grid</span><span class="p">,</span> <span class="n">d_mu_grid</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">eqlin</span><span class="o">.</span><span class="n">marginals</span>              <span class="c1"># line height at x = 0, slope mu_B − mu_A</span>
+<span class="n">mu_exact</span> <span class="o">=</span> <span class="n">mu_phase</span><span class="p">(</span><span class="s2">"SOLID"</span><span class="p">,</span> <span class="n">refined</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">T</span><span class="p">)</span>                <span class="c1"># exact (mu_A, mu_B) at the refined split</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"grid line: mu_A = </span><span class="si">{</span><span class="n">mu_A_grid</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, mu_B = </span><span class="si">{</span><span class="n">mu_A_grid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">d_mu_grid</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"exact:     mu_A = </span><span class="si">{</span><span class="n">mu_exact</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, mu_B = </span><span class="si">{</span><span class="n">mu_exact</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mu_A_grid</span> <span class="o">+</span> <span class="n">d_mu_grid</span> <span class="o">*</span> <span class="n">z</span> <span class="o">-</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s2">"the line should pass through the grid answer at z"</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>grid line: mu_A = -19759.65, mu_B = -21543.25 J/mol
+exact:     mu_A = -19760.02, mu_B = -21542.79 J/mol
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=27c95260"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The advanced steps build on these two numbers: the line under the candidates,
+what it promises, and what it does not (notebook f4c).</p>
 </div>
 </div>
 </div>
@@ -13884,7 +13934,7 @@ $x_S = (1-a)/(b-a)$ and $x_L = b\,x_S$.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=b4ad18e5">
 <div class="input">
-<div class="prompt input_prompt">In [14]:</div>
+<div class="prompt input_prompt">In [15]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">walk</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">guess</span><span class="p">):</span>
@@ -13967,7 +14017,7 @@ B? Answer <code>"richer"</code> or <code>"poorer"</code>.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=9409b977">
 <div class="input">
-<div class="prompt input_prompt">In [15]:</div>
+<div class="prompt input_prompt">In [16]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">x_liquidus_1600</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># B atom fraction</span>
@@ -14025,7 +14075,7 @@ An interaction term (as in f4 part B's regular solution) would be one more line,
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=cbcce671">
 <div class="input">
-<div class="prompt input_prompt">In [16]:</div>
+<div class="prompt input_prompt">In [17]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pycalphad</span><span class="w"> </span><span class="kn">import</span> <span class="n">Database</span><span class="p">,</span> <span class="n">binplot</span><span class="p">,</span> <span class="n">equilibrium</span><span class="p">,</span> <span class="n">variables</span> <span class="k">as</span> <span class="n">v</span>
@@ -14086,7 +14136,7 @@ region of the split; unused vertices are empty strings);</li>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=83ea86ba">
 <div class="input">
-<div class="prompt input_prompt">In [17]:</div>
+<div class="prompt input_prompt">In [18]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">eq</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"SOLID"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">],</span>
@@ -14129,7 +14179,7 @@ the vertices.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=030ca37c">
 <div class="input">
-<div class="prompt input_prompt">In [18]:</div>
+<div class="prompt input_prompt">In [19]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">pyc</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">xb</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">xb</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">phases</span><span class="p">,</span> <span class="n">amounts</span><span class="p">,</span> <span class="n">x_B</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span><span class="p">}</span>   <span class="c1"># {phase name: (amount, x_B)}, used vertices only</span>
@@ -14180,7 +14230,7 @@ agree with what our lever rule says at 1200 K? Answer with the phase name, or
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=8bddd421">
 <div class="input">
-<div class="prompt input_prompt">In [19]:</div>
+<div class="prompt input_prompt">In [20]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Your equilibrium call; use a new name so the 1400 K result `eq` stays, e.g.</span>
@@ -14218,7 +14268,7 @@ lens on top of it as symbols.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=550de51a">
 <div class="input">
-<div class="prompt input_prompt">In [20]:</div>
+<div class="prompt input_prompt">In [21]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">binplot</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"SOLID"</span><span class="p">,</span> <span class="s2">"LIQUID"</span><span class="p">],</span>
@@ -14249,7 +14299,7 @@ lens on top of it as symbols.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=ec11412f">
 <div class="input">
-<div class="prompt input_prompt">In [21]:</div>
+<div class="prompt input_prompt">In [22]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: check the key numbers against the course values</span>

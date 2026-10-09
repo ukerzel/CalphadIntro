@@ -85,6 +85,22 @@ including blank lines and stop-on-error guidance. If software fails or time is
 short, walk through printed results and label the route “paper” or “watched.”
 No installation, hosted service or independent learner coding is assumed.
 
+## Operations-research asides (optional, at most 5 minutes each)
+
+For groups with operations-research learners, or when teaching with an operations-research
+colleague. Each aside connects the step to the advanced steps 07–18 of the website; none is needed
+for the day's outcomes.
+
+- **W6:** a linear objective on the segment $0\le f_L\le1$ is smallest at an
+  end; at 1000 K the objective is flat and every point of the segment ties.
+  Feasibility (bounds and the amount balance) comes before the objective, and a
+  solver's "success" still needs the balance and energy checks.
+- **W7:** leaving LIQUID out at 1100 K shrinks the candidate list, so the
+  minimum can only rise (−10000 instead of −10600 J/mol). The advanced steps call the best
+  mixture of a restricted list a *ceiling*.
+- **W8, report B:** it fails feasibility (the fractions sum to 1.2) before any
+  energy is looked at. Check the constraints first, then the objective.
+
 ## Recovery and incomplete outcomes
 
 First reduce W9 from 30 to 10 minutes: two minutes framing, five sorting cards

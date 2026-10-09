@@ -7,11 +7,18 @@ recorded author calculation, not evidence that you personally ran anything.
 
 ## W0 · Draw a boundary (09:00)
 
+> **In plain words.** Before any formula, you decide what belongs to the sample and what belongs to its surroundings. Everything later depends on what can cross that border: heat, work or atoms. Picture: a sealed specimen inside a furnace, with heat arrows crossing its wall and no atoms crossing.
+
 Draw a sealed specimen inside a furnace. Circle the specimen as the system and
 label the surroundings. Can atoms cross its boundary? Can heat? Is it closed or
 isolated? Write one question you hope CALPHAD might help answer. No grading.
 
 ## W1 · U and H (09:15)
+
+> **In plain words.** Energy can enter your sample as heat or as work, and the energy stored afterwards does not remember which way it came. Enthalpy adds the pressure-volume term to that stored energy, which makes the bookkeeping easy when the pressure stays fixed. Picture: an energy account with two kinds of deposit, heat and work, and one balance.
+
+*Dive deeper (optional): the sign convention for work below. If time is short,
+keep the idea that U and H describe the state of the sample and heat does not.*
 
 Internal energy U is a property of the sample's state. Heat q and work are energy
 transfers along a process. Take work **on** the sample as positive:
@@ -32,6 +39,11 @@ invented state, U=1498 J, p=100000 Pa, V=0.00002 m³: find pV and H.
 
 ## W2 · Entropy (10:00)
 
+> **In plain words.** Entropy belongs to the state of your sample; it is not another name for heat. A sample may lose entropy as long as its surroundings gain more, because only the total for both can never fall. Picture: the sample and its surroundings closed together in one box, with the total never going down.
+
+*Dive deeper (optional): the reversible-heat formula. If time is short, keep the
+idea that S describes the state and that sample plus surroundings never lose entropy.*
+
 Entropy S has units J/K. For a reversible heat transfer at constant absolute
 T, $\Delta S=q_{\mathrm{rev}}/T$. A reversible 600 J input at 300 K gives
 ΔS=2 J/K. Do not use actual irreversible heat divided by T as a general formula
@@ -42,6 +54,8 @@ Discuss: when a sample loses entropy, must the second law be violated? Consider
 the entropy change of sample plus surroundings, with that whole isolated.
 
 ## W3 · Choose the potential (10:45)
+
+> **In plain words.** Which energy counts as 'lowest' depends on what you hold fixed. A sample in a furnace keeps its atoms, its temperature and its pressure, and under those conditions it lowers its Gibbs energy G. Picture: the sample in a heat bath; heat may cross, atoms may not.
 
 For simple bulk systems with component amounts fixed and no additional surface,
 elastic, electrical or magnetic work constraints, equilibrium minimizes F at
@@ -62,12 +76,17 @@ Fill this map for W1(b)'s U=1498 J, pV=2 J at T=300 K, S=4 J/K:
 | H − TS → G | ____________________ |
 | G − F, compared with pV | ____________________ |
 
+*Dive deeper (optional): the F row and choice (b) at fixed T,V. The rest of the
+day uses G at fixed T,p.*
+
 Choose a criterion and justify it: (a) closed bulk sample at fixed T,p;
 (b) closed bulk sample at fixed T,V. Why does choosing the smallest H alone
 miss something? If g=−8000 J/mol, find total G for 2 mol; explain why comparing
 that directly with a one-mole total would be misleading.
 
 ## W4 · Two lines, one invented component (11:30)
+
+> **In plain words.** Each phase of the invented element is one straight line of Gibbs energy against temperature. Where the two lines cross, solid and liquid are equally good; on either side, the lower line wins. Picture: two straight lines on one graph, the steeper one taking over above the crossing.
 
 Our entire phase model is here. A is invented, not Ni. Closed bulk, one mole of
 A atoms, p=100000 Pa, 800–1200 K, only SOLID and LIQUID. Constant within-phase
@@ -99,6 +118,11 @@ Optional full-size source plot (the table/your sketch supplies the paper route):
 [full labelled vector plot](../foundations/figures/one_component_gibbs.svg).
 
 ## W5 · Recognize the arithmetic in code (13:15)
+
+> **In plain words.** The code does nothing you did not do by hand in the last section: it evaluates the same two lines at several temperatures and keeps the lower value. Reading it means matching each number in the code to a number in your table. Picture: the code and your table side by side, with arrows between matching numbers.
+
+*Dive deeper (optional): reading the code. The saved table at the end of this
+section repeats W4's numbers for everyone.*
 
 The following is a verbatim code cell from Lesson 1. It supplies an array of
 kelvin values, evaluates both expressions and prints one row per temperature, including the lower value.
@@ -137,7 +161,9 @@ change the model; changing only T asks another question of the same model.
 
 ## W6 · What may an optimizer change? (14:00)
 
-Let fL be the liquid mole fraction and fS=1−fL. Both must lie between 0 and 1.
+> **In plain words.** The computer may only decide how much is solid and how much is liquid. It may not change the energies, and it may not lose atoms. The best answer sits at an end, except exactly at the crossing, where every split is equally good. Picture: a straight line from all-solid to all-liquid.
+
+Let fL be the liquid phase amount fraction (mol of atoms in the liquid per mol of sample) and fS=1−fL. Both must lie between 0 and 1.
 These are phase amounts divided by the total, not image-area fractions.
 The objective to minimize at fixed T,p is
 $g_{\mathrm{mix}}=(1-f_L)g_S+f_Lg_L$ subject to $0\le f_L\le1$.
@@ -164,7 +190,11 @@ minimum=−8000 J/mol. (Signed floating-point zero is still zero.)
 At 1000 K, try fL=0, 0.5 and 1 by hand. Can two solvers return different valid
 fractions there? State the energy and balance checks that still matter.
 
+*The advanced steps read this same problem with many candidate states instead of two.*
+
 ## W7 · Load, evaluate, minimize (14:45)
+
+> **In plain words.** A database file only stores the energy formulas; loading it computes nothing. Evaluating gives the energy of each phase, and only the minimization picks the answer, so a calculation that leaves a phase out can only end higher. Picture: three separate buttons, load, evaluate and minimize, pressed in that order.
 
 The course's tiny TDB file stores the same expressions. These are its exact
 energy records, not a complete database file:
@@ -211,6 +241,8 @@ Why is that not the unrestricted minimum? No database writing is needed today.
 
 ## W8 · Consolidate and catch an error (15:30)
 
+> **In plain words.** A low number alone does not make an answer right. Before you trust a result, check its units, its amount basis, and that its amounts are allowed and add up. Picture: a short checklist pinned beside every answer: units, basis, amounts.
+
 At **1050 K**, calculate both Gibbs energies, select the lower phase, write the
 allowed fraction range and amount balance, and predict the minimum energy.
 
@@ -222,6 +254,10 @@ Two fictional reports deliberately contain errors. Correct each and explain:
 Does observing a low objective alone establish a valid equilibrium result?
 
 ## W9 · A research map, not a new calculation (16:00)
+
+> **In plain words.** Today's invented lines answer questions about the invented element only. A real alloy and its grain boundaries need further inputs, and this section names them before anyone calculates anything. Picture: a map of three boxes, bulk composition, boundary sites and competing boundary structures, with an empty slot under each arrow.
+
+*Optional, short: Day 2 starts from this map.*
 
 A real Ni–X question adds a second element. We would need an assessed model
 for the chosen components, phases, temperature/composition range and conditions.
@@ -245,6 +281,8 @@ competing boundary structures. Add one missing input under each arrow.
 No segregation equation, binary equilibrium or real transition is calculated.
 
 ## W10 · Supported exit (16:30)
+
+> **In plain words.** This last section shows which ideas you can already use on your own and which still need help. Use it to choose what to practise next, not to collect a score. Picture: the four exit questions as four steps you tick off, with a note beside any step where you needed a hint.
 
 Use the reference sheet and calculator if useful, but first try without the
 answer sheet. Mark any hint, partner help or supplied result you use. This is
@@ -272,11 +310,11 @@ first next time? Agree a continuation using the README routes.
 | U | Internal energy of sample, J; ΔU=q+work on sample |
 | H | Enthalpy, U+pV, J; not a universal synonym for heat |
 | S; T | Entropy, J/K; absolute temperature, K |
-| F (also A) | Helmholtz energy, U−TS, J; fixed T,V comparison |
+| F | Helmholtz energy, U−TS, J; fixed T,V comparison (some texts write A; here A is a component) |
 | G | Gibbs energy, H−TS, J; fixed T,p comparison |
 | n; g=G/n | Amount, mol of atoms; molar Gibbs energy, J/mol |
 | h; s | Molar enthalpy J/mol; molar entropy J/(mol K) |
-| fS, fL | Nonnegative mole fractions of phases, summing to one |
+| fS, fL | Nonnegative phase amount fractions (not composition mole fractions), summing to one |
 | Equilibrium | Minimum appropriate potential among allowed states under constraints; not a rate |
 | Model / algorithm / output | Physical expressions and parameters / calculation procedure / numerical result to check |
 | CALPHAD | CALculation of PHAse Diagrams; phase models and equilibrium calculations, with model assessment requiring evidence |

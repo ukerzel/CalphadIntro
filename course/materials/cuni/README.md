@@ -1,16 +1,25 @@
 # Task 01 — Cu–Ni equilibrium and a lightweight magnetic comparison
 
-**Notebook:** [task01_cuni_equilibria](../../../notebooks/task01_cuni_equilibria.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.1.4/notebooks/task01_cuni_equilibria.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
+**Notebook:** [task01_cuni_equilibria](../../../notebooks/task01_cuni_equilibria.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ukerzel/CalphadIntro/blob/v0.2.0/notebooks/task01_cuni_equilibria.ipynb): the same steps with try-first checks; locally `poetry run jupyter lab`.
 
 For detailed download/member/hash and paper-access steps, use the
 [source guide](../../sources/README.md). Only open-source software and the
 published database are needed.
+
+**First:** the [two-phase sheet](../../primer_day2/two_phase_sheet.md)
+(common tangent, lever rule, tie line), or self-study step 03 parts A–C;
+about 30 minutes. Optional: notebook f4, sections 1, 3 and 4.
 
 Run Hallstedt's adapted Mey input in **pycalphad 0.11.2 / Python 3.12.14**.
 Plot energies, read equilibrium phase amounts, and compare one explicit magnetic
 contribution-off variant. This is a compact worked example after either primer.
 Physical validity and exact reproduction of the original assessment
 are not claimed.
+
+Optional, with the advanced steps 12–13: [task01b_cuni_gap_curve](../../../notebooks/task01b_cuni_gap_curve.ipynb)
+reads the gap curve and the driving force from the same database. Its saved numbers
+(no-database mode) are [gap_curve.json](gap_curve.json), written by
+[gap_curve.py](gap_curve.py) (`python -m course.materials.cuni.gap_curve --tdb …`).
 
 Continue with [Task 02 — fit two isothermal FCC interaction values](fitting.md)
 for a compact published-activity exercise using the same learner-fetched input.
@@ -125,7 +134,8 @@ sets without calling them exact melting-point tests.
 The scatter shows sampled equilibrium phase compositions, including single-phase
 fields, rather than exact smooth boundary traces. Grid/sampling, source adaptations,
 magnetic edge cases, regularization, extrapolation and gas-constant conventions
-limit reproduction. The critical point is not refined, and no second solver
+limit reproduction. The critical point is not refined here (notebook task01b
+refines the top of the FCC gap to about 642 K), and no second solver
 is used for comparison. This evaluates one database in one pinned
 implementation; it does not validate physics or show equivalence with Mey's
 original files or other software.

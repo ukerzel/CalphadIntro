@@ -1,0 +1,37 @@
+{
+ "f4d_f_solid_round1": {
+  "value": 0.671727,
+  "tol": 0.001,
+  "hint": "Lever rule: (0.40 − 0.3)/(0.44887 − 0.3)."
+ },
+ "f4d_ceiling_round1": {
+  "value": -20470.63899,
+  "tol": 0.05,
+  "hint": "The amount-weighted sum of the two used energies, −20290.64 and −20558.60."
+ },
+ "f4d_d_mu_round1": {
+  "value": -1799.952552,
+  "tol": 0.5,
+  "hint": "The rise between the two used states divided by their distance in x, 0.14887."
+ },
+ "f4d_closed_form_x": {
+  "value": 0.448871,
+  "tol": 0.0001,
+  "hint": "x* = 1/(1 + exp(−(d_mu − b)/RT)) with d_mu = −1389.0, b = 1000 and RT = 11640.3."
+ },
+ "f4d_remaining_round3": {
+  "value": 0.0027199,
+  "tol": 0.0001,
+  "hint": "The deepest dip printed for round 3, without its minus sign."
+ },
+ "f4d_more_states": {
+  "value": 2,
+  "tol": 0,
+  "hint": "Count the rounds after round 1 until the deepest dip is below 0.003 J/mol atoms."
+ },
+ "f4d_unresolved_remaining": {
+  "value": 3.993105,
+  "tol": 0.01,
+  "hint": "Ceiling minus best floor of the last round the stopped run printed."
+ }
+}

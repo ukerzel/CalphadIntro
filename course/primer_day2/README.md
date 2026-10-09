@@ -76,7 +76,7 @@ Each task is independent and runs on a laptop:
 | Here | Next worked example |
 |---|---|
 | Day 1 potentials and unary comparison | Task 00: the same unary model in pycalphad |
-| D1–D3 composition, mixing and exchange | Task 01: Cu–Ni equilibria from a published database |
+| D1–D3 composition, mixing and exchange | Task 01: Cu–Ni equilibria from a published database (first: the [two-phase sheet](two_phase_sheet.md), or self-study step 03 parts A–C, about 30 minutes; optional f4 sections 1, 3 and 4) |
 | D4–D6 boundary sites, open and closed inventory | Task 04: Cu–Ni segregation with an open reservoir and a finite inventory |
 | D7 competing boundary states | Task 03 (Ni twin-boundary energies, area/site accounting) and Task 04 |
 
@@ -85,4 +85,6 @@ learners whose own work needs them. For more depth on any step, the optional
 [lesson library](../assembled_route.md) has detailed lessons and exercises;
 the [source map](source_map.md) lists them step by step. The two days are an
 introduction to the research question, not a validated real
-Ni–Cu case.
+Ni–Cu case. Optional [advanced steps 07–18](../day3/README.md) read the
+equilibrium calculation as an optimisation problem, for materials and
+operations-research learners alike.

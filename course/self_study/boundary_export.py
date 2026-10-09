@@ -72,11 +72,32 @@ def hand_iteration(x0: float = 0.10, theta0: float = 0.25, delta: float = -5000.
             'closed_theta_direct': _f(final['theta']), 'closed_theta_root': _f(final['theta_root'])}
 
 
+def closed_match(x0: float = 0.10, theta0: float = 0.25, delta: float = -5000.0) -> dict:
+    """Which reservoir composition makes the open boundary hold what the closed cell holds?
+
+    A scan of reservoir compositions x_b with the open occupancy θ at each, the
+    closed cell's final bulk x_b and θ, and the exchange price μB − μA there:
+    the closed cell's multiplier for its B balance (per mole of B).
+    """
+    nb, ns = 8000, closed.BOUNDARY_SITES
+    final = closed.closed_equilibrium(x0, delta, nb)
+    theta_c = _f(final['theta_root'])
+    x_c = (nb * x0 + ns * theta0 - ns * theta_c) / nb
+    scan = [round(0.095 + 0.0005 * i, 4) for i in range(25)]
+    theta_open = [_f(opened.open_equilibrium(x, delta)['theta_analytic']) for x in scan]
+    at_closed = _f(opened.open_equilibrium(x_c, delta)['theta_analytic'])
+    if abs(at_closed - theta_c) > 1e-6:
+        raise ValueError('the open boundary at the closed bulk composition differs from the closed result')
+    d = bf.ideal_derivatives(T, x_c, 'ALPHA')
+    return {'delta': delta, 'x_scan': scan, 'theta_open': theta_open, 'x_b_closed': _f(x_c), 'theta_closed': theta_c,
+            'exchange_price': _f(d['mu_B'] - d['mu_A'])}
+
+
 def build() -> dict:
     data = {'schema_version': 1, 'T_K': T, 'units': {'energy': 'J/mol sites', 'x': 'B fraction', 'delta': 'J/mol boundary sites'},
             'source': 'course/foundations/binary_family.py, boundary_one_state.py, boundary_closed.py',
             'x': GRID, 'gb': [gb(x) for x in GRID], 'reservoirs': [reservoir(x) for x in RESERVOIRS],
-            'iteration': hand_iteration()}
+            'iteration': hand_iteration(), 'closed_match': closed_match()}
     json.dumps(data, allow_nan=False)
     return data
 

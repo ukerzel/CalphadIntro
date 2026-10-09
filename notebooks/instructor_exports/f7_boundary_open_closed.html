@@ -13095,7 +13095,11 @@ div#notebook {
 take up, where do those atoms come from, and does the answer change when the
 cell can exchange atoms with a large reservoir or is closed?</p>
 <p>Used in: Day 2 D4–D6 and D9, Lessons 11–13, self-study step 04.
-Work each "your turn" on paper first, then type your value.</p>
+Work each "your turn" on paper first, then type your value.
+Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+course in the repository. Working alone on the website, you only need the step
+numbers.</p>
 <p><strong>Background.</strong> A grain boundary is the thin region where two crystals of
 different orientation meet. Atoms there sit in a less regular environment than
 in the bulk crystal, so some kinds of atoms are more comfortable there. When the
@@ -13671,6 +13675,118 @@ f7_d6_boundary_B_final: not attempted yet. Replace None with your value and run 
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=bfd89a13"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Dive-deeper-(optimisation-view):-open-versus-closed-is-a-Lagrangian-relaxation">Dive deeper (optimisation view): open versus closed is a Lagrangian relaxation<a class="anchor-link" href="#Dive-deeper-(optimisation-view):-open-versus-closed-is-a-Lagrangian-relaxation">¶</a></h3><p>Write the closed cell as an optimisation problem with an explicit constraint.
+Count the sites as moles (8000 mol of bulk sites, 200 mol of boundary sites);
+the unknowns are the B amounts in the bulk, $n_b$, and on the boundaries,
+$n_s$. Minimise the total
+$G=8000\,g_b(n_b/8000)+200\,g_s(n_s/200)$ subject to the B balance
+$n_b+n_s=B_{\rm tot}$. With a multiplier $\lambda$ for that one constraint,
+both parts must satisfy the same condition:</p>
+<p>$$g_b'(x_b)=\lambda,\qquad g_s'(\theta)=\lambda .$$</p>
+<p>For a <em>fixed</em> $\lambda$ each part can be solved alone, and that is exactly the
+open cell: a reservoir that buys and sells B at the fixed exchange price
+$\lambda=\mu_B-\mu_A$. The open cell is the closed cell with the B balance
+relaxed and priced. The closed cell is then a one-unknown problem: find the
+price $\lambda$ at which bulk and boundary together hold exactly $B_{\rm tot}$.
+Both conditions have closed forms ($x_b$ and $\theta$ are logistic functions of
+$\lambda$), so one bracketed root search finds it.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=698c1322">
+<div class="input">
+<div class="prompt input_prompt">In [8]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">brentq</span>
+
+<span class="n">logistic</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">u</span><span class="p">))</span>
+<span class="n">x_of</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">lam</span><span class="p">:</span> <span class="n">logistic</span><span class="p">((</span><span class="n">lam</span> <span class="o">-</span> <span class="mf">12000.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">RT</span><span class="p">)</span>            <span class="c1"># g_b'(x_b) = lam, solved for x_b</span>
+<span class="n">theta_of</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">lam</span><span class="p">:</span> <span class="n">logistic</span><span class="p">((</span><span class="n">lam</span> <span class="o">-</span> <span class="mf">12000.0</span> <span class="o">-</span> <span class="n">DELTA</span><span class="p">)</span> <span class="o">/</span> <span class="n">RT</span><span class="p">)</span>   <span class="c1"># g_s'(θ) = lam, solved for θ</span>
+<span class="n">lam</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">N_BULK</span> <span class="o">*</span> <span class="n">x_of</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="n">K</span> <span class="o">*</span> <span class="n">S</span> <span class="o">*</span> <span class="n">theta_of</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">-</span> <span class="n">B_total</span><span class="p">,</span> <span class="o">-</span><span class="mf">40000.0</span><span class="p">,</span> <span class="mf">20000.0</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+<span class="n">x_b_lam</span><span class="p">,</span> <span class="n">theta_lam</span> <span class="o">=</span> <span class="n">x_of</span><span class="p">(</span><span class="n">lam</span><span class="p">),</span> <span class="n">theta_of</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"multiplier λ = </span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> J/mol;  x_b = </span><span class="si">{</span><span class="n">x_b_lam</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">,  θ = </span><span class="si">{</span><span class="n">theta_lam</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"μ_B − μ_A at that x_b = </span><span class="si">{</span><span class="n">mu_B</span><span class="p">(</span><span class="n">x_b_lam</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mu_A</span><span class="p">(</span><span class="n">x_b_lam</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> J/mol"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">lam</span> <span class="o">-</span> <span class="p">(</span><span class="n">mu_B</span><span class="p">(</span><span class="n">x_b_lam</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu_A</span><span class="p">(</span><span class="n">x_b_lam</span><span class="p">)))</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s2">"the multiplier should be the exchange price"</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>multiplier λ = -6089.326 J/mol;  x_b = 0.101960,  θ = 0.171608
+μ_B − μ_A at that x_b = -6089.326 J/mol
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=3bcae580"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Three checks. The hand iteration of section 3 settles at the same θ. The open
+cell, with a reservoir at the closed cell's final $x_b$, selects the same θ.
+And the multiplier is a price in the everyday sense: adding a little B to the
+closed cell changes its lowest total G by $\lambda$ per mole of B (a central
+difference, with the cell's G found by a one-dimensional search).</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered" id="cell-id=a2e00fda">
+<div class="input">
+<div class="prompt input_prompt">In [9]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize_scalar</span>
+
+<span class="n">x_hand</span> <span class="o">=</span> <span class="mf">0.10</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>                                          <span class="c1"># the hand iteration, run to the end</span>
+    <span class="n">theta_hand</span><span class="p">,</span> <span class="n">x_hand</span> <span class="o">=</span> <span class="n">hand_round</span><span class="p">(</span><span class="n">x_hand</span><span class="p">,</span> <span class="n">B_total</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"hand iteration: θ = </span><span class="si">{</span><span class="n">theta_hand</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">;  open cell at x_b = </span><span class="si">{</span><span class="n">x_b_lam</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">: θ = </span><span class="si">{</span><span class="n">theta_open</span><span class="p">(</span><span class="n">x_b_lam</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta_hand</span> <span class="o">-</span> <span class="n">theta_lam</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-9</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta_open</span><span class="p">(</span><span class="n">x_b_lam</span><span class="p">)</span> <span class="o">-</span> <span class="n">theta_lam</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="s2">"the three routes should agree"</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">G_cell</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>                                               <span class="c1"># lowest total G of a closed cell holding B</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">N_BULK</span> <span class="o">*</span> <span class="n">g_bulk</span><span class="p">((</span><span class="n">B</span> <span class="o">-</span> <span class="n">K</span> <span class="o">*</span> <span class="n">S</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="n">N_BULK</span><span class="p">)</span> <span class="o">+</span> <span class="n">K</span> <span class="o">*</span> <span class="n">S</span> <span class="o">*</span> <span class="n">g_site</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">minimize_scalar</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-9</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"bounded"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">"xatol"</span><span class="p">:</span> <span class="mf">1e-12</span><span class="p">})</span><span class="o">.</span><span class="n">fun</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"dG/dB_tot ≈ </span><span class="si">{</span><span class="p">(</span><span class="n">G_cell</span><span class="p">(</span><span class="n">B_total</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">h</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">G_cell</span><span class="p">(</span><span class="n">B_total</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">h</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> J/mol B, against λ = </span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>hand iteration: θ = 0.171608;  open cell at x_b = 0.101960: θ = 0.171608
+dG/dB_tot ≈ -6089.33 J/mol B, against λ = -6089.33
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered" id="cell-id=6b9db8c9"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The hand iteration of section 3 is price coordination: guess the price (the
+bulk's μ_B − μ_A), let the boundary answer at that price, update the price from
+the inventory, repeat. It converges quickly here because the 200 boundary
+sites barely move the 8000-site bulk; that is a property of this cell, not a
+guarantee for every closed problem. The advanced steps read every equilibrium
+calculation this way: constraints, their prices, and what a relaxed problem
+can and cannot promise.</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered" id="cell-id=4f4120c5"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -13698,7 +13814,7 @@ sites.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=bf379658">
 <div class="input">
-<div class="prompt input_prompt">In [8]:</div>
+<div class="prompt input_prompt">In [10]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">odds_020</span> <span class="o">=</span> <span class="kc">None</span>            <span class="c1"># dimensionless</span>
@@ -13776,7 +13892,7 @@ reservoir tangent line.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=0c8dce82">
 <div class="input">
-<div class="prompt input_prompt">In [9]:</div>
+<div class="prompt input_prompt">In [11]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: open cell, numbers and the tangent picture</span>
@@ -13909,7 +14025,7 @@ the closed minimum (dashed), not the open result (dotted).</li>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=3868a8cf">
 <div class="input">
-<div class="prompt input_prompt">In [10]:</div>
+<div class="prompt input_prompt">In [12]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: closed cell, the hand iteration and both cells side by side</span>
@@ -14051,7 +14167,7 @@ energy is expressed per mole of all 8200 cell sites.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered" id="cell-id=b998eb12">
 <div class="input">
-<div class="prompt input_prompt">In [11]:</div>
+<div class="prompt input_prompt">In [13]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">#@title After your attempt: the D9 card and the step 04 practice</span>

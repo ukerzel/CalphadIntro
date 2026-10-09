@@ -1,0 +1,49 @@
+{
+ "f5b_t_melt_a": {
+  "value": 1200.0,
+  "tol": 0.5,
+  "hint": "Subtract the two lines: GHSERA cancels and 12000 - 10*T is left. Set it to zero."
+ },
+ "f5b_g_fcc_a_1000": {
+  "value": -58229.39064844622,
+  "tol": 0.05,
+  "strict": true,
+  "hint": "Use only the range of GHSERA whose limits enclose 1000 K (the one that starts at 900 K); LN is the natural logarithm. The other range gives a close but wrong value."
+ },
+ "f5b_gex_03": {
+  "value": 1932.0,
+  "tol": 0.5,
+  "hint": "L0 = 15000 - 5*T and L1 = -4000 + 2*T at T = 1000 K; then x_A x_B [L0 + L1 (x_A - x_B)] with x_A = 0.7, x_B = 0.3."
+ },
+ "f5b_gm_03": {
+  "value": -61788.095869408426,
+  "tol": 0.5,
+  "hint": "Reference line 0.7 G_A + 0.3 G_B, plus R T (0.7 ln 0.7 + 0.3 ln 0.3) with R = 8.3145, plus the excess; all at 1000 K.",
+  "strict": true
+ },
+ "f5b_atoms_bcc": {
+  "value": 1,
+  "tol": 0,
+  "hint": "Count the sites that hold atoms: the three interstitial sites hold vacancies, which are not atoms."
+ },
+ "f5b_g_a3b_atoms": {
+  "value": -64572.452299718556,
+  "tol": 0.5,
+  "hint": "The parameter 3 GHSERA + GHSERB - 30000 + 6 T is per formula unit A3B1, which holds four atoms. Divide by the atoms per formula unit.",
+  "strict": true
+ },
+ "f5b_asym_flip": {
+  "value": 375.0,
+  "tol": 0.5,
+  "hint": "x_A x_B = 0.1875 at both compositions; the factor (x_A - x_B) is +0.5 at x_B = 0.25 and -0.5 at x_B = 0.75. Subtract the two excess values."
+ },
+ "f5b_l1_sign": {
+  "value": "positive",
+  "hint": "Look at the sign of your asymmetry: a positive value means the excess is larger on the A-rich side."
+ },
+ "f5b_gmag_600": {
+  "value": -518.9714771243919,
+  "tol": 0.05,
+  "hint": "tau = 600/800 is below 1, so use the first branch of g; A = 518/1125 + 11692/15975 (1/p - 1) with p = 0.28; then R T ln(BMAGN + 1) g(tau) with R = 8.3145."
+ }
+}

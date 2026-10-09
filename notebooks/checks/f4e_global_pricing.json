@@ -1,0 +1,46 @@
+{
+ "f4e_gap_0958": {
+  "value": -2082.021889,
+  "tol": 0.1,
+  "hint": "g(0.958) minus the tangent's height there, mu_A + 0.958 d_mu; it is negative."
+ },
+ "f4e_state_015": {
+  "value": "metastable",
+  "hint": "The curve bends up at 0.15 (positive curvature), but a split is lower."
+ },
+ "f4e_x_rich": {
+  "value": 0.929909,
+  "tol": 0.0005,
+  "hint": "The larger of the two used states after the last round; compare with the binodal."
+ },
+ "f4e_floor_interval": {
+  "value": -1.220104,
+  "tol": 0.002,
+  "strict": true,
+  "hint": "The value printed by the by-hand cell of section 3 (it is negative)."
+ },
+ "f4e_looseness": {
+  "value": 1.220703,
+  "tol": 0.002,
+  "strict": true,
+  "hint": "20000 times the interval's width squared, divided by 4; the width is 0.015625."
+ },
+ "f4e_decision": {
+  "value": "split",
+  "hint": "Compare the floor with −ε = −1."
+ },
+ "f4e_g_low": {
+  "value": -5585.53106,
+  "tol": 0.01,
+  "hint": "The line's height at z plus the lowest leaf floor m (if m is negative)."
+ },
+ "f4e_remaining": {
+  "value": 0.425986,
+  "tol": 0.005,
+  "hint": "Ceiling minus floor; it must be at most ε."
+ },
+ "f4e_covers": {
+  "value": true,
+  "hint": "Sort the intervals; the first must start at 0, the last end at 1, and each must start where the previous one ends."
+ }
+}

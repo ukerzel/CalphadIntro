@@ -4,7 +4,22 @@
     {
       "canonical": "course/self_study/lessons.json",
       "public": "lessons.json",
-      "sha256": "d7752230576a7efc514541fa516910d8913729c0d2ba545c6cc6007a8ae623b6"
+      "sha256": "5fc02abf4399e5bee7381f46c469e355044be95b279d5069db15424da222a7c6"
+    },
+    {
+      "canonical": "course/self_study/cards.json",
+      "public": "cards.json",
+      "sha256": "819f93758d61dc2a2cb3291491d323b6b1cc12c4df14ceee2efd62d851333bec"
+    },
+    {
+      "canonical": "course/self_study/generated/day3_prework.json",
+      "public": "self_study/generated/day3_prework.json",
+      "sha256": "6e7f7cf19fe65d1d24e69aee4dbe2e64fe6a6ec8dd720056ee5f984139f47e22"
+    },
+    {
+      "canonical": "course/primer_day2/figures/d3_tangent.png",
+      "public": "primer_day2/figures/d3_tangent.png",
+      "sha256": "82d095334fdf328441eb96d7bc911b44c8f80ea336f3d5e509e15acb42459192"
     },
     {
       "canonical": "course/self_study/generated/two_phase.json",
@@ -14,12 +29,12 @@
     {
       "canonical": "course/self_study/generated/from_scratch.json",
       "public": "self_study/generated/from_scratch.json",
-      "sha256": "648a1b7292a25651cc36f599442d3909186e62c116cf785fd0e0037202d34976"
+      "sha256": "3a1446498b4109aad11a1be23ffd4a32f9c791664b7ee54122d0a43f57607d5e"
     },
     {
       "canonical": "course/self_study/generated/boundary_views.json",
       "public": "self_study/generated/boundary_views.json",
-      "sha256": "75715b2e0e003737b858ecf3867b0d778be000b46b2b6b9983f11c304a4661df"
+      "sha256": "13eecaa7fc72a94aa4a5f1bc126dcf107252dc130da6d864b95d890bf3961589"
     },
     {
       "canonical": "course/materials/cuni/phase_diagram.png",
@@ -60,6 +75,36 @@
       "canonical": "course/self_study/generated/mu_structure.json",
       "public": "self_study/generated/mu_structure.json",
       "sha256": "6c33981831cb0d21c129932f176f1f1542842a7d22d86d3ff008ead8574039ee"
+    },
+    {
+      "canonical": "course/primer_day2/figures/twophase_tangent.png",
+      "public": "primer_day2/figures/twophase_tangent.png",
+      "sha256": "5be51bd5be940b3db02fe4dc0ee9995fbc688ddf6f2f2f470b09327aa9d3cc9a"
+    },
+    {
+      "canonical": "course/primer_day2/figures/twophase_lens.png",
+      "public": "primer_day2/figures/twophase_lens.png",
+      "sha256": "512546665da3e07f856bee80451716c797677aa72325adc3d0a579906e7911d8"
+    },
+    {
+      "canonical": "course/primer_day2/figures/twophase_regular.png",
+      "public": "primer_day2/figures/twophase_regular.png",
+      "sha256": "3b281f738e06c92227fd03e3021d27db8fa3c3f50a04b16ce752c98520101b52"
+    },
+    {
+      "canonical": "course/self_study/generated/lp_primer.json",
+      "public": "self_study/generated/lp_primer.json",
+      "sha256": "17a23b2584bf95901d39bc2fa537dd18655574371ddbee10c7e82446675d6034"
+    },
+    {
+      "canonical": "course/self_study/generated/day3.json",
+      "public": "self_study/generated/day3.json",
+      "sha256": "00ea040174012e46effb0adfc3ef46221732198e1933f2aae916471439b312ea"
+    },
+    {
+      "canonical": "course/self_study/generated/day3_ternary.json",
+      "public": "self_study/generated/day3_ternary.json",
+      "sha256": "a041149131cf0ec4b4b0f4c71bd06f0a64c6fedc94ef79a13589e51dfc48813d"
     }
   ]
 }

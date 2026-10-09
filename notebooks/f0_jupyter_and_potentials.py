@@ -22,6 +22,10 @@
 # and G follow from each other?
 #
 # Used in: Day 1 W1–W3 (optional), Lesson 0, self-study step 00.
+# Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+# primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+# course in the repository. Working alone on the website, you only need the step
+# numbers.
 #
 # **How to use a notebook.** A notebook is a list of cells. Text cells (like this
 # one) explain; code cells run Python. Click a code cell and press **Shift+Enter**
@@ -45,7 +49,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)

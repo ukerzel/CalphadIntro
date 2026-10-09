@@ -161,7 +161,7 @@ test('site boxes count atoms per formula unit for δ and μ',async()=>{
 test('energy ladder starts at the Try-it state and shows G − F = pV',async()=>{
  const {default:Ladder}=await server.ssrLoadModule('/components/energy-ladder.tsx');
  const html=renderToStaticMarkup(createElement(Ladder));
- assert.match(html,/U 1,498, H 1,500, F 298, G 300 joules/);assert.match(html,/G − F \(equals pV\)/);assert.match(html,/type="range"/);
+ assert.match(html,/U 1,498, H 1,500, F 298, G 300 joules/);assert.match(html,/G − F \(equals pV\)/);assert.match(html,/role="slider"/);
 });
 test('step 04 tangent picture and hand iteration show the generated values',async()=>{
  const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/boundary_views.json',import.meta.url)));
@@ -217,26 +217,137 @@ test('the lab card links the step notebooks in Colab, after the attempt',async()
  assert.ok(at>attempt&&attempt>0);const {colabURL}=await server.ssrLoadModule('/lib/lesson-meta.ts');assert.ok(closed.includes(`class="colab-button" href="${colabURL('f3_binary_mixing_potentials')}"`));
  assert.equal((closed.match(/class="colab-button"/g)||[]).length,1);
  const open=renderToStaticMarkup(createElement(C.LessonScreen,{...props,id:'cuni',lab:true}));
- assert.equal((open.match(/class="colab-button"/g)||[]).length,3);assert.match(open,/task01_cuni_equilibria\.ipynb/);
+ assert.equal((open.match(/class="colab-button"/g)||[]).length,4);assert.match(open,/f5b_tdb_anatomy\.ipynb/);assert.match(open,/task01_cuni_equilibria\.ipynb/);
 });
 test('Ask ChatGPT links carry the task and tutor rules, never hints or answers',async()=>{
  const {lessons,plainText}=await server.ssrLoadModule('/lib/learning.ts');const {default:Page}=await server.ssrLoadModule('/components/learning-page.tsx');
  let seen=0;
  for(const lesson of lessons){
   const html=renderToStaticMarkup(createElement(Page,{lesson}));
-  const links=[...html.matchAll(/href="https:\/\/chatgpt\.com\/\?q=([^"]+)"/g)];
+  const links=[...html.matchAll(/<a [^>]*data-ask="task"[^>]*>/g)].map(m=>/href="(https:\/\/chatgpt\.com\/\?q=([^"]+))"/.exec(m[0])).map(m=>[m[1],m[2]]);
   if(!html.includes('help-ladder')){assert.equal(links.length,0,lesson.id);continue;}
   assert.ok(links.length>=1,lesson.id);
   const reveals=lesson.blocks.filter(b=>b.type==='reveal').flatMap(b=>b.blocks).filter(b=>b.type==='paragraph').map(b=>plainText(b.text).slice(0,70)).filter(t=>t.length>=40);
   for(const [url,q] of links){
    assert.ok(url.length<8000,lesson.id);
    const prompt=decodeURIComponent(q.replace(/&amp;/g,'&'));
-   assert.match(prompt,/do not give the full worked answer/);assert.match(prompt,/My attempt so far:/);assert.match(prompt,new RegExp(`Step \\d\\d`));
+   assert.match(prompt,/do not give the full worked answer/);assert.match(prompt,/My attempt so far:/);assert.match(prompt,/Step \d\d · |LP primer · /);
    for(const r of reveals)assert.ok(!prompt.includes(r),`${lesson.id}: prompt contains reveal text: ${r}`);
    seen++;
   }
  }
  assert.ok(seen>=6);
+});
+test('Ask ChatGPT step prompts carry the tables an attempt points to, and stay a safe link length',async()=>{
+ const T=await server.ssrLoadModule('/lib/tutor.ts');const {lessons}=await server.ssrLoadModule('/lib/learning.ts');const M=await server.ssrLoadModule('/lib/lesson-meta.ts');
+ let checked=0;
+ for(const lesson of lessons)for(const stage of M.stages(lesson)){
+  const context=T.tutorContext(lesson,stage.key);assert.ok(T.chatGPTLink(context).length<=7500,`${lesson.id}/${stage.key}: link too long`);
+  const own=T.taskText(stage.blocks);
+  if(!/table (above|of lots|of step)|numbers above|menu of step|setup above|from the \d+ K table/i.test(own))continue;
+  const data=T.dataText(lesson,stage);assert.ok(data,`${lesson.id}/${stage.key}: no data`);
+  const row=data.split('\n').find(line=>(line.includes(' | ')||/numbers|setup/.test(own))&&/\d/.test(line)&&!line.endsWith(':'));
+  assert.ok(row&&T.tutorPrompt(context).includes(row),`${lesson.id}/${stage.key}: prompt lacks ${row}`);
+  checked++;
+ }
+ assert.ok(checked>=8,`only ${checked} attempts point to tables`);
+});
+test('pager: both entry steps lead to step 10, step 07 offers the LP primer, and step 10 goes back to either entry',async()=>{
+ const {LessonScreen}=await server.ssrLoadModule('/components/companion.tsx');
+ const pager=id=>{const html=renderToStaticMarkup(createElement(LessonScreen,{id,lab:false,heading:{current:null},dock:{current:null},onOpen(){},onClose(){},onLearn(){},content:null}));return html.slice(html.indexOf('class="pager"'));};
+ const seven=pager('from-materials');assert.match(seven,/Optional first · LP primer/);assert.match(seven,/Next · Step 10/);
+ const ten=pager('menu');assert.match(ten,/Previous · Step 07[\s\S]*Previous · Step 09/);assert.doesNotMatch(ten,/Previous · LP primer/);
+ assert.match(pager('from-or'),/Previous · Step 06/);assert.match(pager('lp-primer'),/Previous · Step 07[\s\S]*Next · Step 10/);
+ assert.match(pager('three-components'),/Step 18 was optional/);
+});
+test('a step names its lab once: the dock title is the lab heading, and view buttons use the step\'s view labels',async()=>{
+ const {LabNames}=await server.ssrLoadModule('/components/lab-frame.tsx');const {Day3LineLab}=await server.ssrLoadModule('/components/day3-line-view.tsx');
+ const {meta,labViews}=await server.ssrLoadModule('/lib/lesson-meta.ts');const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/day3.json',import.meta.url)));
+ const views=labViews['gap-curve'];
+ const html=renderToStaticMarkup(createElement(LabNames.Provider,{value:{title:meta['gap-curve'].labTitle,views:Object.fromEntries(views.map(([k,l])=>[k,l]))}},createElement(Day3LineLab,{lens:data.lens,initialView:'gap',views:views.map(([k])=>k)})));
+ assert.match(html,new RegExp(`<h2 class="lab-title">${meta['gap-curve'].labTitle}</h2>`));
+ for(const [,label] of views)assert.ok(html.includes(`>${label}</button>`),label);
+});
+test('check, quiz and section prompts carry questions and course text, never hints or answers; the step button follows the hints',async()=>{
+ const {lessons,plainText}=await server.ssrLoadModule('/lib/learning.ts');const {default:Page}=await server.ssrLoadModule('/components/learning-page.tsx');
+ const count={check:0,quiz:0,section:0};
+ for(const lesson of lessons){
+  const html=renderToStaticMarkup(createElement(Page,{lesson}));
+  const isQuestionBox=(b,i)=>/^(Self-check|Check)\b/.test(b.label)&&!/answer/i.test(b.label)&&lesson.blocks[i+1]?.type==='reveal'&&/answer/i.test(lesson.blocks[i+1].label);
+  const answers=lesson.blocks.filter((b,i)=>b.type==='reveal'&&(/^(Hint \d|Worked answer|Answers)\b/.test(b.label)||(/^(Self-check|Check)\b/.test(b.label)&&!isQuestionBox(b,i)))).flatMap(b=>b.blocks).flatMap(b=>b.type==='paragraph'?[b.text]:b.type==='list'?b.items:[]).map(t=>plainText(t).slice(0,60)).filter(t=>t.length>=40);
+  for(const m of html.matchAll(/<a [^>]*data-ask="(check|quiz|section)"[^>]*>/g)){
+   const prompt=decodeURIComponent(/href="https:\/\/chatgpt\.com\/\?q=([^"]+)"/.exec(m[0])[1].replace(/&amp;/g,'&'));count[m[1]]++;
+   for(const a of answers)assert.ok(!plainText(prompt).includes(a),`${lesson.id} ${m[1]} prompt contains answer text: ${a}`);
+   if(m[1]==='check')assert.match(prompt,/Do not show model answers/);
+  }
+  const ladder=html.indexOf('help-ladder');if(ladder>=0)assert.ok(html.indexOf('data-ask="task"',ladder)>html.indexOf('Hint 1',ladder),`${lesson.id}: the step button comes after the hints`);
+ }
+ assert.ok(count.check>=6&&count.quiz>=10&&count.section>=10,JSON.stringify(count));
+});
+test('cards drawer: "This step" keeps only the cards offered on the current page',async()=>{
+ const {findCards}=await server.ssrLoadModule('/components/cards-drawer.tsx');
+ const lp=findCards('','this','LP');assert.ok(lp.length>=5&&lp.every(card=>card.pages.includes('LP')));assert.ok(lp.some(card=>card.id==='lp-names'));
+ assert.ok(findCards('','all').length>lp.length);assert.equal(findCards('','this').length,findCards('','all').length,'no page: every card');
+});
+test('one control design in every lab: no native range inputs or ad-hoc previous/next buttons; the gap curve has a probe',async()=>{
+ const {readdirSync}=await import('node:fs');
+ for(const name of readdirSync(new URL('../components/',import.meta.url)).filter(f=>f.endsWith('.tsx'))){
+  const src=readFileSync(new URL(`../components/${name}`,import.meta.url),'utf8');
+  assert.doesNotMatch(src,/type="range"/,`${name}: use ValueSlider or RecordSlider`);
+  assert.doesNotMatch(src,/>(Previous( round| stage)?|Next (swap|stage|interval|pivot|round))</,`${name}: use Stepper`);
+  if(/-view\.tsx$|^material-explorer\.tsx$|^energy-ladder\.tsx$/.test(name)&&!/^(boundary-figure|scratch-view)/.test(name))assert.match(src,/className="how-to"/,`${name}: every lab says what to try`);
+ }
+ const {Day3LineLab}=await server.ssrLoadModule('/components/day3-line-view.tsx');const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/day3.json',import.meta.url)));
+ const gap=renderToStaticMarkup(createElement(Day3LineLab,{lens:data.lens,initialView:'gap'}));
+ assert.doesNotMatch(gap,/Read the gaps at x/,'no probe before the curves are faded in');
+});
+test('stage labels may use any letters: step 08 has its own "The Ω bump" section',async()=>{
+ const {lessons}=await server.ssrLoadModule('/lib/learning.ts');const M=await server.ssrLoadModule('/lib/lesson-meta.ts');
+ assert.ok(M.stages(lessons.find(l=>l.id==='from-or')).some(st=>st.label==='The Ω bump'));
+});
+test('new attempts of steps 11, 13–16: their cases are not answered above, and the ChatGPT prompt carries the data but not the answers',async()=>{
+ const T=await server.ssrLoadModule('/lib/tutor.ts');const {lessons,plainText}=await server.ssrLoadModule('/lib/learning.ts');const M=await server.ssrLoadModule('/lib/lesson-meta.ts');
+ const cases={'price-line':[['z=0.60','−20568.44'],['5789.0','−23462.9','−19931.65']],'column-generation':[['0.31209','−20316.40'],['0.643','−1770.7','−19763.8']],
+  bounds:[['−1.547','−20472.07'],['−20473.61']],'local-global':[['z=0.10','4002.6'],['−1185.5','0.965','5188.1']],'branch-and-bound':[['−0.426'],['−5585.53']]};
+ for(const [id,[data,answers]] of Object.entries(cases)){
+  const lesson=lessons.find(l=>l.id===id),stage=M.stages(lesson).find(st=>st.kind==='attempt');
+  const prompt=plainText(T.tutorPrompt(T.tutorContext(lesson,stage.key))).replace(/-/g,'−');
+  for(const d of data)assert.ok(prompt.includes(d),`${id}: prompt lacks ${d}`);
+  for(const a of answers)assert.ok(!prompt.includes(a),`${id}: prompt gives away ${a}`);
+  const above=M.stages(lesson).slice(0,M.stages(lesson).indexOf(stage)).map(st=>T.taskText(st.blocks)).join(' ').replace(/-/g,'−');
+  for(const a of answers)assert.ok(!plainText(above).includes(a),`${id}: the text above the attempt already gives ${a}`);
+ }
+});
+test('route map: main line and branches as links, labs and notebooks as marks, you-are-here, and remembering is opt-in',async()=>{
+ const {default:RouteMap}=await server.ssrLoadModule('/components/route-map.tsx');const {mainLine,stations}=await server.ssrLoadModule('/lib/route-map.ts');
+ const M=await server.ssrLoadModule('/lib/lesson-meta.ts');
+ const props={current:'lp-primer',progress:{on:false,visited:[],last:null},onLearn(){},onAnchor(){},onLab(){},onRemember(){}};
+ const html=renderToStaticMarkup(createElement(RouteMap,props));
+ const h=html.slice(0,html.indexOf('route-map-v'));
+ assert.equal(mainLine.length,16);assert.equal((h.match(/class="rm-station is-main/g)||[]).length,16);
+ for(const st of stations)assert.ok(h.includes(`href="#/${st.id}${st.anchor?`/at/${st.anchor}`:''}"`),st.key);
+ assert.match(h,/class="rm-station is-detour[^"]*is-current/);assert.match(h,/aria-current="step"/);
+ const labs=stations.filter(st=>!st.anchor&&M.meta[st.id].lab).length,nbs=stations.filter(st=>!st.anchor).reduce((n,st)=>n+(M.notebooks[st.id]?.length??0),0);
+ assert.equal((h.match(/class="rm-extra rm-lab/g)||[]).length,labs);assert.equal((h.match(/class="rm-extra rm-notebooks/g)||[]).length,stations.filter(st=>!st.anchor&&(M.notebooks[st.id]?.length??0)>0).length);assert.ok(nbs>20);
+ assert.match(html,/Off: nothing about your visit is stored/);assert.doesNotMatch(html,/Forget my progress/);
+ const on=renderToStaticMarkup(createElement(RouteMap,{...props,progress:{on:true,visited:['start','unary'],last:'unary'}}));
+ assert.match(on,/2 of 16 main-line steps visited/);assert.match(on,/Forget my progress/);assert.match(on,/is-visited/);
+});
+test('progress is stored only after the learner opts in, and forgetting removes it',async()=>{
+ const store=new Map();globalThis.localStorage={getItem:k=>store.has(k)?store.get(k):null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
+ try{
+  const P=await server.ssrLoadModule('/lib/progress.ts');
+  store.set('calphad-last','unary');assert.deepEqual(P.loadProgress(),{on:false,visited:[],last:null});assert.equal(store.size,0,'an earlier automatic last step is dropped');
+  P.markVisited('binary');assert.equal(store.size,0,'nothing stored while off');
+  assert.deepEqual(P.setRemember(true,'binary').visited,['binary']);P.markVisited('twophase');
+  assert.deepEqual(P.loadProgress(),{on:true,visited:['binary','twophase'],last:'twophase'});
+  P.setRemember(false,null);assert.equal(store.size,0,'forget removes everything');
+ }finally{delete globalThis.localStorage;}
+});
+test('slim rail: only the main line; on a branch a chip says so',async()=>{
+ const {default:Nav}=await server.ssrLoadModule('/components/learning-navigation.tsx');
+ const main=renderToStaticMarkup(createElement(Nav,{current:'menu',onLearn(){}}));assert.equal((main.match(/<li /g)||[]).length,16);assert.doesNotMatch(main,/On a branch/);
+ const branch=renderToStaticMarkup(createElement(Nav,{current:'lp-primer',onLearn(){}}));assert.match(branch,/On a branch: LP primer/);assert.match(branch,/is-join/);
 });
 test('prepared course tutor builds an OpenAI-compatible request and reads the reply',async()=>{
  const T=await server.ssrLoadModule('/lib/tutor.ts');const {lessons}=await server.ssrLoadModule('/lib/learning.ts');
@@ -266,4 +377,157 @@ test('guided activities render closed help without mounting their explorers',asy
   assert.match(html,/<details><summary>Hint 1/);assert.match(html,/<details><summary>Worked answer/);
   assert.doesNotMatch(html,/<details[^>]* open|role="slider"|data-plot/);
  }
+});
+test('advanced steps 07–18 and the optional LP primer: step label, Advanced tag, plain-words box, card links and lane/deeper reveals',async()=>{
+ const {lessons}=await server.ssrLoadModule('/lib/learning.ts');
+ const {default:Page}=await server.ssrLoadModule('/components/learning-page.tsx');
+ const {isAdvanced,isPrimer}=await server.ssrLoadModule('/lib/lesson-meta.ts');
+ const advanced=lessons.filter(l=>isAdvanced(l.id));
+ assert.deepEqual(advanced.map(l=>l.id),lessons.slice(7).map(l=>l.id),'advanced steps follow steps 00–06');
+ assert.deepEqual(advanced.filter(l=>isPrimer(l.id)).map(l=>l.id),['lp-primer']);
+ assert.equal(lessons[lessons.findIndex(l=>l.id==='lp-primer')+1].id,'menu','the primer sits just before step 10');
+ for(const [i,lesson] of advanced.filter(l=>!isPrimer(l.id)).entries()){
+  const html=renderToStaticMarkup(createElement(Page,{lesson}));
+  assert.match(html,new RegExp(`<span class="lesson-number">Step ${String(7+i).padStart(2,'0')}</span><span class="advanced-tag">Advanced</span>`),lesson.id);
+  assert.match(html,new RegExp(`Step ${String(7+i).padStart(2,'0')} of 18 · advanced`),lesson.id);
+  assert.equal((html.match(/class="plain-words"/g)||[]).length,1,lesson.id+': one plain-words box per page');
+  assert.match(html,/class="cards-needed"/,lesson.id);
+  const cards=(html.match(/class="cards-needed"[\s\S]*?<\/aside>/)[0].match(/data-xref="card#/g)||[]).length;
+  assert.ok(cards>=1&&cards<=5,`${lesson.id}: ${cards} cards in "Cards you may need"`);
+  assert.doesNotMatch(html,/\bS\d+\b(?![^<]*<\/annotation>)/,lesson.id+': plan step names stay out of learner text');
+ }
+ const primer=renderToStaticMarkup(createElement(Page,{lesson:lessons.find(l=>l.id==='lp-primer')}));
+ assert.match(primer,/<span class="lesson-number">LP primer<\/span><span class="advanced-tag">Advanced<\/span><span class="optional-tag">Optional<\/span>/);
+ assert.match(primer,/Optional primer, after step 07, before step 10 · advanced · about 60 minutes/);
+ assert.equal((primer.match(/class="plain-words"/g)||[]).length,1);assert.match(primer,/class="cards-needed"/);
+ for(const word of ['subject to','feasible','objective','variables','constraints'])assert.match(primer,new RegExp(word),'the primer explains '+word);
+ const m=renderToStaticMarkup(createElement(Page,{lesson:lessons.find(l=>l.id==='from-materials')}));
+ assert.match(m,/class="reveal reveal-deeper"/);assert.match(m,/primer_day2\/figures\/twophase_regular\.png/);
+});
+test('LP primer lab renders every view from the exported data, with the reference answers',async()=>{
+ const {LpPrimerLab}=await server.ssrLoadModule('/components/lp-primer-view.tsx');
+ const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/lp_primer.json',import.meta.url),'utf8'));
+ for(const view of ['chords','swap','nudge','polygon']){
+  const html=renderToStaticMarkup(createElement(LpPrimerLab,{data,initialView:view}));
+  assert.match(html,new RegExp(`id="lab-${view}"`),view);assert.match(html,/data-plot/,view);
+  assert.doesNotMatch(html,/NaN|Infinity|undefined/,view);
+ }
+ const swap=renderToStaticMarkup(createElement(LpPrimerLab,{data,initialView:'swap'}));
+ assert.match(swap,/Round 1 of 3/);assert.match(swap,/Monel lies 2\.47 € below the line: it comes in, Ni \(same side of 0\.40\) goes out/);
+ const nudge=renderToStaticMarkup(createElement(LpPrimerLab,{data,initialView:'nudge'}));
+ assert.match(nudge,/Price of nickel content: 5\.14 € per unit, while CuNi30 and Monel stay in use/);
+ const polygon=renderToStaticMarkup(createElement(LpPrimerLab,{data,initialView:'polygon'}));
+ assert.equal((polygon.match(/class="lp-rule /g)||[]).length,4);assert.equal((polygon.match(/role="slider"/g)||[]).length,2);
+ assert.match(polygon,/5 corners/);assert.match(polygon,/Ties at a Monel price of €8\.40 and €18\.20/);
+});
+test('Day 3 line lab renders every view from the exported data',async()=>{
+ const {Day3LineLab}=await server.ssrLoadModule('/components/day3-line-view.tsx');
+ const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/day3.json',import.meta.url),'utf8'));
+ for(const view of ['menu','line','gap','move-z','temperature']){
+  const html=renderToStaticMarkup(createElement(Day3LineLab,{lens:data.lens,initialView:view}));
+  assert.match(html,new RegExp(`id="lab-${view}"`),view);assert.match(html,/data-plot/,view);
+  assert.doesNotMatch(html,/NaN|Infinity/,view);
+ }
+ const line=renderToStaticMarkup(createElement(Day3LineLab,{lens:data.lens,initialView:'line'}));
+ assert.equal((line.match(/role="slider"/g)||[]).length,2);assert.match(line,/Not a floor|A floor for these dots/);
+ const own=renderToStaticMarkup(createElement(Day3LineLab,{lens:data.lens,initialView:'gap',views:['gap','move-z','temperature']}));
+ assert.match(own,/Move z/);assert.doesNotMatch(own,/>Menu</,'a step shows only its own views');
+ assert.doesNotMatch(renderToStaticMarkup(createElement(Day3LineLab,{lens:data.lens,initialView:'menu',views:['menu']})),/aria-label="Lab view"/,'one view needs no switch');
+});
+test('Day 3 column-generation lab renders every view and every stage',async()=>{
+ const {Day3CgLab}=await server.ssrLoadModule('/components/day3-cg-view.tsx');
+ const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/day3.json',import.meta.url),'utf8'));
+ for(const view of ['player','bounds','spacing']){
+  const html=renderToStaticMarkup(createElement(Day3CgLab,{lens:data.lens,initialView:view}));
+  assert.match(html,new RegExp(`id="lab-${view}"`),view);assert.match(html,/data-plot/,view);assert.doesNotMatch(html,/NaN|Infinity/,view);
+ }
+});
+test('Day 3 regular-solution lab renders every view',async()=>{
+ const {Day3RegularLab}=await server.ssrLoadModule('/components/day3-regular-view.tsx');
+ const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/day3.json',import.meta.url),'utf8'));
+ for(const view of ['local','pricing','bnb','joint']){
+  const html=renderToStaticMarkup(createElement(Day3RegularLab,{reg:data.regular,initialView:view}));
+  assert.match(html,new RegExp(`id="lab-${view}"`),view);assert.match(html,/data-plot/,view);assert.doesNotMatch(html,/NaN|Infinity/,view);
+ }
+ const bnb=renderToStaticMarkup(createElement(Day3RegularLab,{reg:data.regular,initialView:'bnb'}));
+ assert.match(bnb,/Interval 1 of 27/);assert.match(bnb,/class="interval-bar act-split is-current"/);
+});
+test('Day 3 pre-work lab renders every view',async()=>{
+ const {Day3PreworkLab}=await server.ssrLoadModule('/components/day3-prework-view.tsx');
+ const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/day3_prework.json',import.meta.url),'utf8'));
+ for(const view of ['second-law','counter','builder','omega']){
+  const html=renderToStaticMarkup(createElement(Day3PreworkLab,{data,initialView:view}));
+  assert.match(html,new RegExp(`id="lab-${view}"`),view);assert.doesNotMatch(html,/NaN|Infinity/,view);
+ }
+ assert.match(renderToStaticMarkup(createElement(Day3PreworkLab,{data,initialView:'second-law'})),/Total entropy up, G down/);
+});
+test('advanced lane toggle opens only its own boxes; route strip and cards search work',async()=>{
+ const {lessons}=await server.ssrLoadModule('/lib/learning.ts');
+ const {default:Page}=await server.ssrLoadModule('/components/learning-page.tsx');
+ const {LaneContext}=await server.ssrLoadModule('/lib/lane.ts');
+ const lesson=lessons.find(l=>l.id==='price-line');
+ const render=lane=>renderToStaticMarkup(createElement(LaneContext.Provider,{value:{lane,setLane(){}}},createElement(Page,{lesson})));
+ const none=render(null),m=render('M'),o=render('O');
+ assert.doesNotMatch(none,/<details open/);assert.match(none,/class="route-strip"/);assert.match(none,/Step 11 of 18 · advanced · about 30–40 minutes without the optional boxes/);assert.match(none,/>materials science<\/button><button[^>]*>operations research</);
+ const openLabels=html=>[...html.matchAll(/<details open=""><summary>([^<]+)</g)].map(x=>x[1]);
+ assert.deepEqual(openLabels(m),['Coming from materials']);
+ assert.ok(openLabels(o).includes('Coming from operations research')&&openLabels(o).some(l=>l.startsWith('Dive deeper for operations research'))&&!openLabels(o).includes('Coming from materials'));
+ const plain=renderToStaticMarkup(createElement(Page,{lesson:lessons.find(l=>l.id==='twophase')}));assert.doesNotMatch(plain,/lane-toggle|advanced-tag/);assert.match(plain,/class="route-strip"/);assert.match(plain,/Step 03 of 18 · “Dive deeper” sections are optional</);assert.match(plain,/Part D</);
+ const odds=renderToStaticMarkup(createElement(Page,{lesson:lessons.find(l=>l.id==='boundary')}));assert.match(odds,/class="deeper-flag">Optional</);assert.match(odds,/<div class="reveal reveal-deeper"><details><summary>Dive deeper · where the odds formula comes from \(optional section\)/);
+ const {findCards}=await server.ssrLoadModule('/components/cards-drawer.tsx');
+ assert.ok(findCards('lever','all').some(c=>c.id==='lever-rule'));
+ assert.ok(findCards('Ω','all').some(c=>c.id==='regular-omega'));
+ assert.equal(findCards('','core').length,14);
+ assert.ok(findCards('','M').some(c=>c.deck==='both')&&!findCards('','M').some(c=>c.deck==='O'));
+ assert.equal(findCards('no such word anywhere','all').length,0);
+});
+test('Day 3 triangle lab renders every view',async()=>{
+ const {Day3TernaryLab}=await server.ssrLoadModule('/components/day3-ternary-view.tsx');
+ const data=JSON.parse(readFileSync(new URL('../public/learning/self_study/generated/day3_ternary.json',import.meta.url),'utf8'));
+ for(const view of ['triangle','landscape','harder']){
+  const html=renderToStaticMarkup(createElement(Day3TernaryLab,{data,initialView:view}));
+  assert.match(html,new RegExp(`id="lab-${view}"`),view);assert.doesNotMatch(html,/NaN|Infinity/,view);
+ }
+ const land=renderToStaticMarkup(createElement(Day3TernaryLab,{data,initialView:'landscape'}));
+ assert.equal((land.match(/<polygon points=/g)||[]).length,40*40);
+});
+test('home: one route 00–18 with the advanced junction, advanced lab cards, how-it-works item and printable pack',async()=>{
+ const {default:Home}=await server.ssrLoadModule('/components/home.tsx');
+ const html=renderToStaticMarkup(createElement(Home,{bundle,onLearn(){},onLab(){}}));
+ assert.doesNotMatch(html,/advanced-box|Day 3|Page [MOA]/);
+ assert.equal((html.match(/class="route-card /g)||[]).length,20);
+ assert.equal((html.match(/class="route-card group-advanced"/g)||[]).length,11);
+ assert.equal((html.match(/class="route-card group-advanced is-optional"/g)||[]).length,2,"the LP primer and step 18 are dashed and optional");
+ assert.match(html,/<strong>19<\/strong>steps, 00–18, and an optional LP primer/);
+ assert.ok(html.indexOf('LP primer · the cheapest mix')>html.indexOf('Prices and metastability · ')&&html.indexOf('LP primer · the cheapest mix')<html.indexOf('Menu · equilibrium'),'the primer card sits between steps 09 and 10');
+ const junction=html.indexOf('class="route-junction"'),seven=html.indexOf('From materials science · ');
+ assert.ok(junction>html.indexOf('Ni–Nb')&&junction<seven,'the junction sits between step 06 and step 07');
+ assert.match(html,/Know CALPHAD from materials science, or followed steps 00–06\?[\s\S]*?Step 07, then step 10/);
+ assert.match(html,/Know methods from operations research\?[\s\S]*?Steps 08 and 09, then step 10/);assert.match(html,/Coming from operations research\? Start at step 08/);
+ assert.ok((html.match(/class="lab-card lab-card-[a-z-]+ is-advanced"/g)||[]).length>=4);
+ assert.match(html,/Then the solver itself/);
+ assert.match(html,/Advanced on paper[\s\S]*?course\/day3\/lp_primer_sheet\.md[\s\S]*?course\/day3\/picture_sheet\.md/);
+});
+
+test('concept links: every step can ask about any term; dive-deeper and background boxes and cards ask about their concept, never with hints or answers',async()=>{
+ const {lessons,plainText}=await server.ssrLoadModule('/lib/learning.ts');const {default:Page}=await server.ssrLoadModule('/components/learning-page.tsx');
+ const {isAdvanced}=await server.ssrLoadModule('/lib/lesson-meta.ts');
+ const prompts=html=>[...html.matchAll(/<a [^>]*data-ask="concept"[^>]*>/g)].map(m=>/href="https:\/\/chatgpt\.com\/\?q=([^"]+)"/.exec(m[0])).map(m=>decodeURIComponent(m[1].replace(/&amp;/g,'&')));
+ for(const lesson of lessons){
+  const html=renderToStaticMarkup(createElement(Page,{lesson})),list=prompts(html);
+  assert.ok(list.some(p=>p.includes('Concept: a term of my choice')),lesson.id+': ask about another term');
+  if(isAdvanced(lesson.id))assert.ok(list.length>=2,lesson.id+': concept links in its boxes');
+  const help=lesson.blocks.filter(b=>b.type==='reveal'&&/^(Hint \d|Worked answer)/.test(b.label)).flatMap(b=>b.blocks).filter(b=>b.type==='paragraph').map(b=>plainText(b.text).slice(0,60)).filter(t=>t.length>=40);
+  for(const p of list){
+   assert.match(p,/Explain the concept below at the level of the course/);assert.match(p,/My question: $/);assert.ok(encodeURIComponent(p).length<8000,lesson.id);
+   for(const h of help)assert.ok(!p.includes(h),`${lesson.id}: concept prompt contains help text: ${h}`);
+  }
+ }
+ const or=prompts(renderToStaticMarkup(createElement(Page,{lesson:lessons.find(l=>l.id==='price-line')})));
+ assert.ok(or.some(p=>/My background: operations research\./.test(p)&&/Concept: /.test(p)));
+ assert.ok(or.some(p=>/My background: materials science\./.test(p)));
+ const {CardList}=await server.ssrLoadModule('/components/cards-drawer.tsx');
+ const cardsHtml=renderToStaticMarkup(createElement(CardList,{query:'lever',filter:'all'}));
+ assert.ok(prompts(cardsHtml).some(p=>p.includes('Concept: Hang on: what was the lever rule?')&&p.includes('What the course says:')));
+ const {default:Drawer}=await server.ssrLoadModule('/components/cards-drawer.tsx');assert.ok(Drawer);
 });

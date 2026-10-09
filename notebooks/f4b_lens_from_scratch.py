@@ -59,7 +59,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)
@@ -423,7 +423,8 @@ check(phase_at_1600, "f4b_phase_1600")
 #    B atoms: minimise $\sum_k f_k g_k$ subject to $\sum_k f_k = 1$ and
 #    $\sum_k f_k x_k = z$. The objective and both constraints are *linear* in the
 #    unknown amounts, so this is a **linear programme**, which has a reliable
-#    solver that needs no starting guess.
+#    solver that needs no starting guess. Its answer is global only over the
+#    sampled points: a state between them can still be lower.
 # 2. **Local stage.** Use the best candidates as the starting guess for the
 #    equations of section 4 and refine.
 #
@@ -465,6 +466,26 @@ print(f"grid start: x_S = {start['SOLID']:.4f}, x_L = {start['LIQUID']:.4f}"
 
 # %% [markdown]
 # Same answer as section 4, now reached the way a CALPHAD program reaches it.
+#
+# **What the linear programme also returns.** Besides the amounts, `linprog`
+# returns one multiplier per equation in `result.eqlin.marginals`: how much the
+# minimum changes when that equation's right-hand side changes a little, while
+# the same candidates stay in use. For our
+# two rows (total amount, B balance) they are the height μ_A of a straight line
+# at x = 0 and its slope μ_B − μ_A: a line through the two chosen candidates and
+# under all the others. They are the grid's chemical potentials, close to the
+# exact ones of section 4.
+
+# %%
+mu_A_grid, d_mu_grid = result.eqlin.marginals              # line height at x = 0, slope mu_B − mu_A
+mu_exact = mu_phase("SOLID", refined[0], T)                # exact (mu_A, mu_B) at the refined split
+print(f"grid line: mu_A = {mu_A_grid:.2f}, mu_B = {mu_A_grid + d_mu_grid:.2f} J/mol")
+print(f"exact:     mu_A = {mu_exact[0]:.2f}, mu_B = {mu_exact[1]:.2f} J/mol")
+assert abs(mu_A_grid + d_mu_grid * z - result.fun) < 1e-6, "the line should pass through the grid answer at z"
+
+# %% [markdown]
+# The advanced steps build on these two numbers: the line under the candidates,
+# what it promises, and what it does not (notebook f4c).
 
 # %% [markdown]
 # ## 6. Many temperatures: the phase diagram

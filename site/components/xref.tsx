@@ -4,6 +4,8 @@ import type { MouseEvent, PointerEvent, ReactNode } from 'react';
 import { Popover } from 'radix-ui';
 import { ArrowUpRight } from 'lucide-react';
 import { describe, parseTarget } from '@/lib/xref';
+import { conceptText } from '@/lib/tutor';
+import AskConcept from '@/components/ask-concept';
 import { routeHash } from '@/lib/route';
 import type { Route } from '@/lib/route';
 
@@ -25,15 +27,23 @@ export default function XRef({ target, shown, render }: { target: string; shown:
   const enter = (event: PointerEvent) => { if (event.pointerType !== 'mouse') return; window.clearTimeout(timer.current); if (!open) hovered.current = true; setOpen(true); };
   const leave = (event: PointerEvent) => { if (event.pointerType !== 'mouse') return; timer.current = window.setTimeout(() => { hovered.current = false; setOpen(false); }, 160); };
   const click = (event: MouseEvent) => { if (hovered.current && open) { event.preventDefault(); hovered.current = false; } };
-  const go = (event: MouseEvent) => { event.preventDefault(); const from = trigger.current ? origin(trigger.current) : ''; setOpen(false); follow(info.route, from); };
+  const go = (event: MouseEvent) => { event.preventDefault(); const from = trigger.current ? origin(trigger.current) : ''; setOpen(false); if (info.route) follow(info.route, from); };
   return <Popover.Root open={open} onOpenChange={setOpen}>
     <Popover.Trigger asChild><button ref={trigger} type="button" className={`xref xref-${parsed!.kind}`} data-xref={target} onPointerEnter={enter} onPointerLeave={leave} onClick={click}>
       {shown}<ArrowUpRight className="xref-mark" aria-hidden /><span className="sr-only"> (cross-reference: {info.title})</span>
     </button></Popover.Trigger>
     <Popover.Portal><Popover.Content className="term-pop xref-pop" sideOffset={6} collisionPadding={12} onPointerEnter={enter} onPointerLeave={leave} onOpenAutoFocus={event => { if (hovered.current) event.preventDefault(); }}>
-      <p className="xref-title">{info.title}</p>
-      {info.rich ? <p>{render(info.rich)}</p> : info.excerpt && <p className="xref-excerpt">{info.excerpt}</p>}
-      <a className="xref-go" href={routeHash(info.route)} onClick={go}>{info.action}<ArrowUpRight aria-hidden /></a>
+      {info.blocks ? <div className="card-pop">
+        <p className="card-deck">{info.excerpt}</p><p className="xref-title">{info.title}</p>
+        {info.blocks.map((block, i) => block.type === 'list' ? <ul key={i}>{block.items.map((text, k) => <li key={k}>{render(text)}</li>)}</ul>
+          : block.type === 'paragraph' ? <p key={i} className={/^Where you met it: /.test(block.text) ? 'card-met' : undefined}>{render(block.text)}</p> : null)}
+        <p className="card-closing">{info.closing}</p>
+        <p className="ask-concept-row"><AskConcept concept={info.title} text={conceptText(info.blocks)} /></p>
+      </div> : <>
+        <p className="xref-title">{info.title}</p>
+        {info.rich ? <p>{render(info.rich)}</p> : info.excerpt && <p className="xref-excerpt">{info.excerpt}</p>}
+      </>}
+      {info.route && <a className="xref-go" href={routeHash(info.route)} onClick={go}>{info.action}<ArrowUpRight aria-hidden /></a>}
       <Popover.Arrow className="term-arrow" />
     </Popover.Content></Popover.Portal>
   </Popover.Root>;

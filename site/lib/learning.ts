@@ -1,6 +1,6 @@
 /** Finite original narration; no evaluation of scientific expressions. */
 import content from '../public/learning/lessons.json';
-export type LearningID = 'start'|'unary'|'binary'|'twophase'|'boundary'|'cuni'|'ninb';
+export type LearningID = 'start'|'unary'|'binary'|'twophase'|'boundary'|'cuni'|'ninb'|'from-materials'|'from-or'|'or-prices'|'lp-primer'|'menu'|'price-line'|'gap-curve'|'column-generation'|'bounds'|'local-global'|'branch-and-bound'|'two-questions'|'three-components';
 export type Link = {label:string;href:string};
 export type PlainBlock = {type:'paragraph';text:string;links?:Link[];image?:{src:string;alt:string}} | {type:'list';items:string[]} | {type:'table';headers:string[];rows:string[][]};
 export type Block = PlainBlock | {type:'reveal';label:string;blocks:PlainBlock[]};

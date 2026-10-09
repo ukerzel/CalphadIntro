@@ -22,8 +22,12 @@
 # compositions do they take, how much of each forms, and how do these answers
 # at many temperatures draw a phase diagram?
 #
-# Used in: Lessons 5, 7; self-study step 03 (parts A, B, C).
+# Used in: Lessons 5, 7; self-study step 03 (parts A, B, C) and step 07 (optional).
 # Work each "your turn" on paper first, then type your value.
+# Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+# primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+# course in the repository. Working alone on the website, you only need the step
+# numbers.
 #
 # **The plan.** f3 built the Gibbs-energy curve of *one* phase and read chemical
 # potentials from its tangent. Here a sample may divide into two regions, and we
@@ -32,8 +36,9 @@
 # - **Part A** (sections 1 and 2): two different phases, ALPHA and BETA. The lever
 #   rule counts the atoms, the common tangent picks the compositions, and a
 #   linear programme shows how a computer finds them.
-# - **Part B** (section 3): one phase whose curve has a hump, so it splits into two
-#   regions of the *same* phase (a miscibility gap). Repeating the calculation at
+# - **Part B** (section 3): one phase model whose curve has a hump, so the sample
+#   splits into two coexisting phases described by the *same* phase model (a
+#   miscibility gap). Repeating the calculation at
 #   many temperatures draws a phase diagram.
 # - **Part C** (section 4): a SOLID and a LIQUID, which together give the melting
 #   "lens" diagram.
@@ -43,7 +48,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)
@@ -235,7 +240,7 @@ check(mu_A_best, "f4_mu_a_best")
 # trial compositions for each phase. Every phase/grid point is a possible region
 # with a known energy; the unknowns are the amount fractions f ≥ 0. Minimising
 # Σ f g subject to Σ f = 1 and Σ f x = z is a **linear programme**. Its result is
-# a feasible split, so its energy is an **upper bound** on the true minimum. A
+# a feasible split, so its energy is an **upper bound** (a ceiling) on the true minimum. A
 # finer grid that contains the old points cannot do worse.
 #
 # Here is the whole idea on a 5-point grid, with SciPy's `linprog`:
@@ -339,7 +344,37 @@ confirm(reference, -10762.730017, "Continuous minimum", tol=1e-6)
 # this on a database.
 
 # %% [markdown]
-# ## 3. Part B: one phase, two compositions (Lesson 7)
+# ### What the linear programme also returns: a line
+#
+# Besides the amounts, `linprog` returns one multiplier per equation in
+# `result.eqlin.marginals`: how much the minimum changes when that equation's
+# right-hand side changes a little, while the same grid points stay in use. For
+# our two rows (total 1, B balance z) they
+# are the height μ_A of a straight line at x = 0 and its slope Δμ = μ_B − μ_A.
+# That line passes through the used grid points and lies under all the others:
+# the chemical potentials *of this grid*. The cell reads them for the 5-point
+# grid at z = 0.5, then at z = 0.25, where the sample sits exactly on a used grid
+# point: there many lines touch that point, and two solver methods may return
+# different ones.
+
+# %%
+for z_try in (0.5, 0.25):
+    for method in ("highs-ds", "highs-ipm"):
+        r = linprog(energies, A_eq=[np.ones_like(x_all), x_all], b_eq=[1.0, z_try], bounds=(0, None), method=method)
+        mu_A, d_mu = (float(v) + 0.0 for v in r.eqlin.marginals)   # line height at x = 0, slope mu_B − mu_A (+ 0.0: no −0)
+        gaps = energies - (mu_A + d_mu * x_all)   # every grid point minus the line
+        assert gaps.min() > -1e-8, "a grid point lies below the line"
+        print(f"z = {z_try}, {method:9s}: G = {r.fun:.3f}  mu_A = {mu_A:.1f}  mu_B = {mu_A + d_mu:.1f}  slope = {d_mu:.1f}")
+
+# %% [markdown]
+# At z = 0.5 the line is flat, at −10675.5 J/mol: the grid's prices, above the
+# true common tangent at −10762.730. At z = 0.25 the energy is the same for both
+# methods but the line is not: the line can rotate about the used point, and every
+# line that stays under the other grid points is a correct answer. The advanced steps
+# continues this in notebook [f4c](f4c_master_and_dual.ipynb).
+
+# %% [markdown]
+# ## 3. Part B: one phase model, two phases (Lesson 7)
 #
 # Now only ALPHA is allowed, with one extra mixing term that penalises unlike
 # neighbours (a **regular solution**), Ω = 20000 J/mol:
@@ -464,6 +499,34 @@ check(x_left_900, "f4_x_left_900")
 # Parts A and B used one phase curve or two mirror-image ones. Part C applies the
 # same common-tangent idea to a solid and a liquid, which gives the most common
 # diagram for two metals that mix completely.
+
+# %% [markdown]
+# ### A search that looks only nearby
+#
+# How would a computer notice that a uniform sample at z = 0.15 and 800 K should
+# split? Take the tangent at 0.15 and subtract it from the curve: the *gap curve*.
+# Where it is below zero, a region of that composition would lower the energy.
+# The cell starts a downhill search on the gap curve at 0.15, then scans the whole
+# curve. The search and the scan come from the course module behind the
+# advanced steps.
+
+# %%
+from course.self_study import day3_core as d
+
+alpha = d.regular_models(800.0)["ALPHA"]            # the same regular solution, Omega = 20000 J/mol
+slope15 = float(alpha.slope(0.15))                  # tangent slope at 0.15
+mu_A15 = float(alpha.g(0.15)) - slope15 * 0.15      # tangent height at x = 0
+walk = d.local_descent(alpha, mu_A15, slope15, 0.15)   # downhill on the gap curve, from 0.15
+scan = d.price_scan(alpha, mu_A15, slope15)            # the deepest point of the whole gap curve
+print(f"local search from 0.15 ends at {walk[-1]:.3f}")
+print(f"full scan: deepest gap {scan.depth:.1f} J/mol atoms at x = {scan.x:.3f}")
+assert abs(walk[-1] - 0.15) < 1e-9 and scan.depth < 0, "expected the search to stay and the scan to find a dip"
+
+# %% [markdown]
+# The search never moves: next to 0.15 the gap curve rises on both sides. The
+# scan finds a dip about 2082 J/mol atoms deep near 0.958. A uniform sample at
+# 0.15 is metastable, but a calculation that promises equilibrium must find that
+# far valley. The advanced steps take this up on step 15.
 
 # %% [markdown]
 # ## 4. Part C: melting and the lens
@@ -681,7 +744,7 @@ table = np.array(rows)
 right.plot(table[:, 1], table[:, 0], "o-", ms=3, label="B-poor region")
 right.plot(table[:, 2], table[:, 0], "s--", ms=3, label="B-rich region")
 right.plot([0.5], [bf.TC_R1], "k*", ms=10, label=f"T_c ≈ {bf.TC_R1:.0f} K")
-right.set(xlabel="B atom fraction x", ylabel="T (K)", title="Miscibility gap (one ALPHA phase)", xlim=(0, 1))
+right.set(xlabel="B atom fraction x", ylabel="T (K)", title="Miscibility gap (one ALPHA phase model)", xlim=(0, 1))
 right.legend(fontsize=10)
 plt.show()
 print("T (K)   x_left    x_right")

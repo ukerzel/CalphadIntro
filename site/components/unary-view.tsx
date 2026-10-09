@@ -29,7 +29,7 @@ export default function UnaryView({ bundle, index, onChange }: { bundle: Bundle;
   const row = selectRecord(unary.records, `unary-${String(index).padStart(3, '0')}`);
   const panel = manifest.panels.find(p => p.id === 'unary')!;
   const temperatures = unary.records.map(r => r.T_K);
-  const [hover, setHover] = useState<number | null>(null);
+  const [hover, setHover] = useState<number | null>(null), [lpView, setLpView] = useState(false);
   const ghost = hover === null ? null : unary.records[hover];
   const crossing = unary.records.findIndex(r => r.T_K === unary.crossing_temperature_K);
   const equal = row.phase_status === 'equal_energy_fractions_underdetermined';
@@ -38,6 +38,7 @@ export default function UnaryView({ bundle, index, onChange }: { bundle: Bundle;
 
   const explore = <div className="lab-grid">
     <div className="lab-main">
+      <p className="how-to"><strong>Try it:</strong> before you drag, predict at which temperature the cheaper line changes, and how much of the sample is liquid just below and just above it. Then drag through that temperature and watch the minimum jump from one end of the phase-fraction line to the other.</p>
       <div className="legend" aria-hidden><span className="key key-solid">SOLID</span><span className="key key-liquid">LIQUID</span><span className="key key-min">selected minimum</span></div>
       <Plot title="Gibbs energies of SOLID and LIQUID by temperature" desc="Two straight lines cross at 1000 kelvin. The selected values are also listed beside the chart."
         height={380} xDomain={[800, 1200]} yDomain={Y} xLabel="Temperature (K)" yLabel="Gibbs energy (kJ/mol atoms)" xFormat={kelvin} yFormat={energy}
@@ -96,9 +97,13 @@ export default function UnaryView({ bundle, index, onChange }: { bundle: Bundle;
           <line className={`seesaw ${equal ? 'seesaw-equal' : ''}`} x1={x(0)} x2={x(1)} y1={y(row.gibbs_J_per_mol[0])} y2={y(row.gibbs_J_per_mol[1])} />
           <Mark x={x(0)} y={y(row.gibbs_J_per_mol[0])} r={5} className="mark-solid" />
           <Mark x={x(1)} y={y(row.gibbs_J_per_mol[1])} r={5} className="mark-liquid" />
+          {lpView && <><line className="lp-feasible" x1={x(0)} x2={x(1)} y1={bottom - 6} y2={bottom - 6} /><text className="hatch-label" x={x(0.5)} y={bottom - 12} textAnchor="middle">feasible: 0 ≤ fL ≤ 1</text>
+            <text className="hatch-label" x={x(0.5)} y={top + 16} textAnchor="middle">{equal ? 'objective flat: every fraction ties' : `objective falls towards fL = ${row.gibbs_J_per_mol[1] < row.gibbs_J_per_mol[0] ? 1 : 0}`}</text></>}
           <Mark x={x(row.equilibrium.fractions.LIQUID)} y={y(row.equilibrium.GM)} r={7} className="mark-min" label={equal ? 'one minimizer' : 'minimum'} />
         </>}
       </Plot>
+      <label className="check"><input type="checkbox" checked={lpView} onChange={e => setLpView(e.target.checked)} /> LP view: the feasible segment and the direction in which the objective falls</label>
+      {lpView && <p className="caption">A linear programme with one variable: minimise a straight-line objective over the segment 0 ≤ fL ≤ 1. The answer is an end of the segment, unless the objective is flat, when every point is optimal. Advanced step 10 grows this into many candidate states.</p>}
     </div>
   </div>;
 

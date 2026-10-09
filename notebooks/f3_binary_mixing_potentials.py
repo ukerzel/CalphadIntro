@@ -26,6 +26,10 @@
 # Work each "your turn" on paper first, then type your value. Give numbers to at
 # least four significant figures, or type the arithmetic itself and let Python
 # evaluate it.
+# Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+# primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+# course in the repository. Working alone on the website, you only need the step
+# numbers.
 #
 # **The plan.** f1 and f2 had one kind of atom, so the only question was *which
 # phase*. With two kinds of atoms, A and B, a phase can also have any
@@ -46,7 +50,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)
@@ -412,6 +416,37 @@ for x0 in (0.10, 0.50):   # two touching points
 # the slope; the tangent at x = 0 and μ_A; the tangent at x = 1 and μ_B. The last
 # check, (1 − x)μ_A + xμ_B = g_b, says the molar Gibbs energy is the
 # composition-weighted average of the two chemical potentials.
+
+# %% [markdown]
+# ### The D3 tangent as a picture
+#
+# Draw it once: the curve g_b, the tangent at the D3 composition x = 0.10, and
+# its two end heights. The numbers come from the course module that also made
+# the printed D3 figure, and the cell checks them against the formulas above.
+# The dashed line is the reference −9000 + 12000x: μ_B lies far below pure B's
+# reference value because a few B atoms among many A gain a large mixing term.
+
+# %%
+import matplotlib.pyplot as plt
+from course.print.paper_figures import d3_numbers   # the printed D3 figure's numbers
+
+d3 = d3_numbers()                                    # tangent at x = 0.10: mu_A, mu_B, slope
+confirm(mu_A(d3["x"]), d3["mu_A"], "mu_A at x = 0.10", tol=1e-6)
+confirm(mu_B(d3["x"]), d3["mu_B"], "mu_B at x = 0.10", tol=1e-6)
+xs = np.linspace(0.0, 1.0, 201)
+fig, ax = plt.subplots(figsize=(6.5, 3.8))
+ax.plot(xs, g_b(xs), "k-", lw=2, label="g_b at 1000 K")
+ax.plot([0, 1], [d3["ref_A"], d3["ref_B"]], "--", color="grey", label="reference −9000 + 12000x")
+ax.plot([0, 1], [d3["mu_A"], d3["mu_B"]], "-", color="tab:blue", label="tangent at x = 0.10")
+ax.plot([0, 1], [d3["mu_A"], d3["mu_B"]], "s", color="tab:blue")
+ax.annotate(f"μ_A ≈ {d3['mu_A']:.1f}", (0, d3["mu_A"]), (0.03, d3["mu_A"] - 2500), color="tab:blue")
+ax.annotate(f"μ_B ≈ {d3['mu_B']:.1f}", (1, d3["mu_B"]), (0.7, d3["mu_B"] + 2700), color="tab:blue")
+ax.set(xlabel="B atom fraction x", ylabel="J/mol atoms", title="The D3 tangent: its end heights are μ_A and μ_B")
+ax.legend(fontsize=9, loc="upper left"); plt.show()
+
+# %% [markdown]
+# The advanced steps show these two heights coming out of an optimisation: the line
+# a solver returns along with its answer.
 
 # %% [markdown]
 # ### Addition is not exchange: Lesson 6's finite differences

@@ -77,7 +77,7 @@ Choose a grid of compositions for each allowed phase. Each phase/grid point is
 a possible region with known energy. Unknowns are its nonnegative amount
 fractions. Minimize their weighted energy subject to total and B balance; these
 imply A balance, which we still check. This is a linear program: the coefficients
-are fixed once the grid is chosen [1]. It may use two compositions of one phase;
+are fixed once the grid is chosen [1]. It may use two compositions of one phase model;
 for the strictly convex ideal branches that cannot improve the continuous
 homogeneous state, but can interpolate a composition missing from the grid.
 

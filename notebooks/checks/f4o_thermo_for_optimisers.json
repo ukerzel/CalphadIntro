@@ -1,0 +1,52 @@
+{
+ "f4o_ds_total_1100": {
+  "value": 0.545455,
+  "tol": 0.001,
+  "hint": "Sample 16 − 10 = 6 J/(mol K), bath −ΔH/T with ΔH = 6000 J/mol; add them."
+ },
+ "f4o_lnw_per_n_100_40": {
+  "value": 0.647906,
+  "tol": 0.001,
+  "hint": "ln_W(100, 40) / 100: the counted value, not the large-N limit.",
+  "near_miss": false
+ },
+ "f4o_mixing_04": {
+  "value": -7834.057707,
+  "tol": 0.5,
+  "hint": "RT times d.q(0.4), with RT = R × 1400 K."
+ },
+ "f4o_g_liquid_03": {
+  "value": -20290.643735,
+  "tol": 0.01,
+  "hint": "End line 0.7 g°A + 0.3 g°B for LIQUID plus the mixing term at 0.3."
+ },
+ "f4o_mu_b_liquid_03": {
+  "value": -22014.604634,
+  "tol": 0.05,
+  "hint": "g°B of LIQUID at 1400 K plus RT ln 0.3."
+ },
+ "f4o_d_mu_shift": {
+  "value": 2000.0,
+  "tol": 1e-06,
+  "hint": "The exchange price moves by the slope b of the added line; mu_A moves by a."
+ },
+ "f4o_two_rt_800": {
+  "value": 13303.2,
+  "tol": 0.1,
+  "hint": "2 × 8.3145 × 800."
+ },
+ "f4o_class_050": {
+  "value": "unstable",
+  "hint": "Look at the sign of g'' at 0.50, or whether 0.50 lies inside the spinodal."
+ },
+ "f4o_mu_pair": {
+  "value": -20068.441126,
+  "tol": 0.05,
+  "hint": "mu_B = g°B + RT ln x with SOLID's g°B = m.a + m.b."
+ },
+ "f4o_x_star": {
+  "value": 0.44887081,
+  "tol": 1e-05,
+  "hint": "1/(1 + exp(−(d_mu − b)/RT)) with SOLID's b = 1000 J/mol and the step 10 line."
+ }
+}

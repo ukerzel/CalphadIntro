@@ -1,0 +1,43 @@
+{
+ "task01b_line_at_half": {
+  "value": -22882.10337647756,
+  "tol": 0.01,
+  "hint": "mu_A + d_mu × 0.5, or MU(Cu) × 0.5 + MU(Ni) × 0.5, with all printed digits; it is in J/mol of atoms.",
+  "strict": true
+ },
+ "task01b_gap_liquid_half": {
+  "value": 9705.638577920983,
+  "tol": 0.01,
+  "hint": "Use the grid index of x(Ni) = 0.5 (0.5 divided by the step), the LIQUID curve at 600 K, and the equilibrium line of section 2, not the tangent of section 4."
+ },
+ "task01b_driving_force": {
+  "value": 35.7314277012556,
+  "tol": 0.02,
+  "hint": "Minus the deepest dip printed above the plot: the gap curve against the tangent at 0.5, not against the equilibrium line."
+ },
+ "task01b_full_split_gain": {
+  "value": 6.997372763518797,
+  "tol": 0.005,
+  "hint": "The homogeneous alloy's G at x(Ni) = 0.5 (printed in section 4) minus the equilibrium GM of section 2.",
+  "strict": true
+ },
+ "task01b_inside_spinodal": {
+  "value": true,
+  "hint": "Inside the spinodal the curve bends down: what is the sign of the printed G''?"
+ },
+ "task01b_menu_uncertainty": {
+  "value": 15.506759855215932,
+  "tol": 0.01,
+  "hint": "Ceiling minus floor, where the floor is the ceiling plus the (negative) deepest dip below the menu's line."
+ },
+ "task01b_fcc_rows_650": {
+  "value": 1,
+  "tol": 0,
+  "hint": "Count the printed 650 K rows with phase FCC_A1."
+ },
+ "task01b_min_curvature_650": {
+  "value": 241.49371451432424,
+  "tol": 0.2,
+  "hint": "second_difference(G650[\"FCC_A1\"]) gives G'' on the interior grid; keep only the INNER points and take the smallest value. Use the 650 K curve, not the 600 K one."
+ }
+}

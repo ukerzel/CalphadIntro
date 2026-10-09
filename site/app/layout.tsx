@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "CALPHAD School 2026 · guided self-study",
-  description: "Six open steps from Gibbs-energy basics to assessed Cu–Ni and Ni–Nb calculations, with interactive labs that draw checked, exported teaching data.",
+  description: "Nineteen open steps, 00–18, from Gibbs-energy basics to real Cu–Ni and Ni–Nb calculations and on to how a program proves its equilibrium is the lowest, with an optional LP primer and interactive labs.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

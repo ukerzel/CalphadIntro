@@ -23,6 +23,10 @@
 #
 # Used in: Day 1 W7 (demonstration), Lesson 2, Task 00 (second part), self-study
 # step 01 (optional). Do [f1](f1_unary_by_hand_and_code.ipynb) first.
+# Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+# primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+# course in the repository. Working alone on the website, you only need the step
+# numbers.
 #
 # **The plan.** In f1 you wrote the two Gibbs lines yourself in Python. A CALPHAD
 # program does the same job, but reads the model from a *database file* (a TDB
@@ -36,7 +40,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)

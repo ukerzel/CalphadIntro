@@ -23,6 +23,10 @@
 #
 # Used in: Day 1 W4–W6 and W8 (W5 is the demonstration), Lesson 1, self-study step 01.
 # Work each "your turn" on paper first, then type your value.
+# Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+# primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+# course in the repository. Working alone on the website, you only need the step
+# numbers.
 #
 # **The plan.** f0 showed that at fixed T and p the equilibrium state has the lowest
 # Gibbs energy G. Here that idea is used on the simplest possible case: one kind of
@@ -39,7 +43,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)
@@ -288,6 +292,32 @@ plt.show()
 # g_mix is a straight line in f_L, so its lowest *allowed* point is at one end of
 # the allowed range; the crosses beyond the ends would be lower still, but they
 # need a negative amount of one phase.
+
+# %% [markdown]
+# ### At the crossing: does the solver's choice matter?
+#
+# At exactly 1000 K the two lines cross, so every split has the same energy
+# (W6: a tie gives a segment). Two of SciPy's methods, the dual simplex
+# (`"highs-ds"`) and the interior-point method (`"highs-ipm"`), may then return
+# different fractions. The cell asks both and checks what still matters: the
+# energy and the balance. Which fractions they return is something to look at,
+# not to assume.
+
+# %%
+from scipy.optimize import linprog   # the linear-programme solver used by the course code
+
+for method in ("highs-ds", "highs-ipm"):
+    r = linprog([g_solid(1000), g_liquid(1000)], A_eq=[[1, 1]], b_eq=[1], bounds=[(0, 1), (0, 1)], method=method)
+    print(f"{method:9s}: f_S = {r.x[0]:.3f}, f_L = {r.x[1]:.3f}, g_mix = {r.fun:.1f} J/mol")
+    assert abs(r.fun - g_mix(1000, 0.5)) < 1e-9, "at the crossing every split must have the same energy"
+    assert abs(r.x.sum() - 1) < 1e-12, "the fractions must add up to 1"
+
+# %% [markdown]
+# Both answers are right: any f_L between 0 and 1 gives the same g_mix at the
+# crossing, so a solver may report either end or anything between. What a
+# reader must check is the energy and the balance, never the particular split.
+# The advanced steps read this same problem with many candidate states instead of
+# two.
 
 # %% [markdown]
 # ## 4. Consolidate and catch an error (W8)

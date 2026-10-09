@@ -1,0 +1,37 @@
+{
+ "f4p_cu_monel": {
+  "value": 9.123077,
+  "tol": 0.005,
+  "hint": "Lever rule: the Monel share is (0.40 - 0.00)/(0.65 - 0.00); the copper share is the rest. Multiply each share by its price and add."
+ },
+ "f4p_lots_used": {
+  "value": 2,
+  "tol": 0,
+  "hint": "Count the non-zero amounts printed above. There are two rules."
+ },
+ "f4p_ni_worth": {
+  "value": 12.0,
+  "tol": 0.01,
+  "hint": "The line's height at w = 1: base + slope."
+ },
+ "f4p_offer_gap": {
+  "value": -0.228571,
+  "tol": 0.002,
+  "hint": "9.20 minus (base + slope × 0.50); a negative gap means the offer lies below the line."
+ },
+ "f4p_corner_cost": {
+  "value": 9.171429,
+  "tol": 0.005,
+  "hint": "Take the corner where the weight and iron rules are tight from the printed list, then 8.40 f_P + 10.20 f_Q."
+ },
+ "f4p_solder_cost": {
+  "value": 46.0,
+  "tol": 0.01,
+  "hint": "Variables f_A, f_B >= 0; rules f_A + f_B = 2 and 0.5 f_A + 0.7 f_B >= 1.2 (multiply this one by -1 for A_ub)."
+ },
+ "f4p_monel8_cost": {
+  "value": 8.228571,
+  "tol": 0.005,
+  "hint": "Price every corner with 8.00 for Monel, or call linprog with the new price; the cheapest corner changes."
+ }
+}

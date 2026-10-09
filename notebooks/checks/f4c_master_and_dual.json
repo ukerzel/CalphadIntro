@@ -1,0 +1,32 @@
+{
+ "f4c_g_menu_pair": {
+  "value": -20429.542431,
+  "tol": 0.01,
+  "hint": "Lever rule: 0.40 is halfway between 0.3 and 0.5, so both amounts are 0.5; the energy is the average of the two printed energies."
+ },
+ "f4c_mu_b_menu": {
+  "value": -21262.934603,
+  "tol": 0.05,
+  "hint": "mu_B = mu_A + d_mu: the line's height at x = 1."
+ },
+ "f4c_nudge": {
+  "value": -13.88987,
+  "tol": 0.02,
+  "hint": "The change is d_mu times the change of z; keep the sign."
+ },
+ "f4c_gap_solid_03": {
+  "value": 480.0,
+  "tol": 0.05,
+  "hint": "The dot's energy minus the line's height at x = 0.3, mu_A + 0.3 d_mu."
+ },
+ "f4c_deepest_dip": {
+  "value": -61.180449,
+  "tol": 0.02,
+  "hint": "The deeper of the two dips printed by the d.deepest cell; it is negative."
+ },
+ "f4c_line_from_basis": {
+  "value": -1388.986953,
+  "tol": 0.01,
+  "hint": "The slope is the rise between the two dots divided by their distance in x, 0.2."
+ }
+}

@@ -26,6 +26,10 @@
 # It continues [f7](f7_boundary_open_closed.ipynb): same cell, same bulk, closed
 # inventory. Work each "your turn" on paper first, then type your value; four
 # significant figures are enough unless a question asks for more.
+# Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+# primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+# course in the repository. Working alone on the website, you only need the step
+# numbers.
 #
 # **The idea.** A grain boundary can sometimes exist in more than one atomic
 # arrangement. Each arrangement has its own energy and its own liking for B. Which
@@ -49,7 +53,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)

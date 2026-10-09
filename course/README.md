@@ -8,7 +8,10 @@ Both have a paper route. For the runnable examples, use the
 The examples are independently usable; the detailed lesson library is optional.
 The [source/retrieval guide](sources/README.md) lists included excerpts, exact
 downloads and comparison pages. **Only open-source software and published
-inputs are needed.**
+inputs are needed.** The one-page [course map](course_map.md) shows the
+goals, the junctions and a short path per part; the optional
+[advanced steps 07–18](day3/README.md) read the equilibrium calculation as an
+optimisation problem.
 
 **Instructors:** the one-page [instructor overview](instructor_overview.md) lists what to
 print, run and hand out for each day and task; the [pilot protocol](primer/pilot.md)

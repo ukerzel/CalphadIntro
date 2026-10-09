@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import LabFrame, { Readout, RecordView } from '@/components/lab-frame';
+import { ValueSlider } from '@/components/record-slider';
 import { Eq } from '@/components/equation';
 import { num } from '@/lib/format';
 
@@ -34,11 +35,11 @@ export default function EnergyLadder() {
         </g>)}
       </svg>
       <div className="control-bar slider-stack">
-        {sliders.map(([key, label, min, max, step, show]) => <label key={key} className="range-row">
-          <span>{label}</span>
-          <input type="range" min={min} max={max} step={step} value={s[key]} onChange={event => set(key)(Number(event.target.value))} />
+        {sliders.map(([key, label, min, max, step, show]) => <div key={key} className="range-row">
+          <span id={`ladder-${key}`}>{label}</span>
+          <ValueSlider value={s[key]} min={min} max={max} step={step} onChange={set(key)} labelId={`ladder-${key}`} valueText={show(s[key])} />
           <strong>{show(s[key])}</strong>
-        </label>)}
+        </div>)}
         <div className="control-row">
           <button type="button" className="ghost-button" onClick={() => setS(TRY_IT)}>Try-it state (a solid)</button>
           <button type="button" className="ghost-button" onClick={() => setS({ ...s, T: 300, p: 100000, V: 0.02494 })}>Gas-like volume (1 mol, 300 K, 1 bar)</button>

@@ -21,6 +21,7 @@ import json
 import os
 import platform
 import sys
+import tempfile
 import urllib.request
 import zipfile
 from importlib import metadata
@@ -36,7 +37,7 @@ SETUP_CELL = '''\
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)
@@ -180,7 +181,11 @@ SOURCES = {
 def database_folder() -> Path:
     """Where downloaded databases are kept: outside the course checkout."""
     folder = Path('/content/databases') if IN_COLAB else Path.home() / '.cache' / 'calphad-course'
-    folder.mkdir(parents=True, exist_ok=True)
+    try:
+        folder.mkdir(parents=True, exist_ok=True)
+    except OSError:   # a read-only home folder, as on some lab machines: use the temporary folder instead
+        folder = Path(tempfile.gettempdir()) / 'calphad-course'
+        folder.mkdir(parents=True, exist_ok=True)
     return folder
 
 

@@ -88,10 +88,10 @@ export function PhaseDiagramsFigure({ given }: { given?: TwoPhaseData }) {
   const B = data.part_b, C = data.part_c, gap = B.rows.filter(r => r.compositions.length === 2), lens = C.rows.filter(r => r.x_SOLID !== null);
   const liquidus = [[0, C.melting_K.A], ...lens.map(r => [r.x_LIQUID!, r.T_K]), [1, C.melting_K.B]] as [number, number][];
   const solidus = [[0, C.melting_K.A], ...lens.map(r => [r.x_SOLID!, r.T_K]), [1, C.melting_K.B]] as [number, number][];
-  return <Figure title="Touching points against temperature: two phase diagrams" caption="Left, part B: the two compositions of one phase close at Tc, a miscibility gap. Right, part C: liquid and solid touching points draw a lens between the two melting points. Inside either outline the sample splits; a horizontal tie line joins the two compositions at one temperature."
+  return <Figure title="Touching points against temperature: two phase diagrams" caption="Left, part B: the two coexisting compositions of one phase model close at Tc, a miscibility gap. Right, part C: liquid and solid touching points draw a lens between the two melting points. Inside either outline the sample splits; a horizontal tie line joins the two compositions at one temperature."
     link={<><LabLink id="twophase" view="part-b">Part B in the lab</LabLink> · <LabLink id="twophase" view="part-c">Part C in the lab</LabLink></>}>
     <div className="twin">
-      <Plot compact title="Miscibility gap (part B)" desc="Coexisting compositions of one phase by temperature, closing at the critical temperature." height={240} xDomain={[0, 1]} yDomain={[580, 1320]} xLabel="x" yLabel="T (K)" yFormat={v => `${v}`}>
+      <Plot compact title="Miscibility gap (part B)" desc="Coexisting compositions of one phase model by temperature, closing at the critical temperature." height={240} xDomain={[0, 1]} yDomain={[580, 1320]} xLabel="x" yLabel="T (K)" yFormat={v => `${v}`}>
         {({ x, y }) => <>
           <path className="gap-area" d={`${path(gap.map(r => [x(r.compositions[0]), y(r.T_K)]))}L${x(0.5).toFixed(2)},${y(B.Tc_K).toFixed(2)}L${[...gap].reverse().map(r => `${x(r.compositions[1]).toFixed(2)},${y(r.T_K).toFixed(2)}`).join('L')}Z`} />
           <text className="hatch-label" x={x(0.5)} y={y(800)} textAnchor="middle">two compositions</text>

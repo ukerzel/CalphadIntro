@@ -27,6 +27,10 @@
 # possible. The data are invented on purpose: they were made without noise from
 # the same equation that is fitted, so the method can be tested against the value
 # used to make them (named in the Limits, after your attempt).
+# Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+# primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+# course in the repository. Working alone on the website, you only need the step
+# numbers.
 #
 # **Why fitting matters in CALPHAD.** The parameters in a database (such as the
 # interaction Ω of f3–f5) are not calculated from first principles; they are
@@ -46,7 +50,7 @@
 # downloads the tested course release and the locked package versions.
 # In Colab, the first run then restarts the session on purpose and Colab reports
 # a crash: that is expected. Run this cell again, then the rest of the notebook.
-RELEASE = "v0.1.4"
+RELEASE = "v0.2.0"
 import os, pathlib, subprocess, sys, time
 ROOT = next((p for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents)
              if (p / "pyproject.toml").is_file() and (p / "course").is_dir()), None)

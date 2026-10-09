@@ -1,7 +1,7 @@
 /** URL-addressable state: #/ · #/<lesson> · #/<lesson>/at/<anchor> · #/<lesson>/lab · #/<lesson>/lab/<exact record ID or view>. */
 import type { LearningID } from './learning';
 
-export const learningIDs: LearningID[] = ['start', 'unary', 'binary', 'twophase', 'boundary', 'cuni', 'ninb'];
+export const learningIDs: LearningID[] = ['start', 'unary', 'binary', 'twophase', 'boundary', 'cuni', 'ninb', 'from-materials', 'from-or', 'or-prices', 'lp-primer', 'menu', 'price-line', 'gap-curve', 'column-generation', 'bounds', 'local-global', 'branch-and-bound', 'two-questions', 'three-components'];
 export type Route = { page: 'home' } | { page: 'lesson'; id: LearningID; lab: boolean; recordId?: string; view?: string; anchor?: string };
 
 export function parseRoute(hash: string): Route {

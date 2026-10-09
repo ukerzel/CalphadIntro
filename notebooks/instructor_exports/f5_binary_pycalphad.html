@@ -13095,7 +13095,11 @@ div#notebook {
 f3 and f4, and how do you read what <code>equilibrium</code> returns, before using it on a
 real alloy?</p>
 <p>Used in: Lesson 8; before Task 01 (Cu–Ni); self-study before step 05 (optional).
-Do <a href="f4_two_phases_and_diagrams.ipynb">f4</a> first: here pycalphad must reproduce it.</p>
+Do <a href="f4_two_phases_and_diagrams.ipynb">f4</a> first: here pycalphad must reproduce it.
+Labels such as (W4), (D1), (Lesson 5) or Clinic D point to the printed one-day
+primers (Day 1 and Day 2 worksheets) and the detailed lessons of the classroom
+course in the repository. Working alone on the website, you only need the step
+numbers.</p>
 <p><strong>The route through the notebook.</strong> In f3 and f4 you calculated the A–B model with your own formulas.
 Here the same model is handed to pycalphad, and every pycalphad number is
 compared with a value you already know. You will</p>
@@ -13756,7 +13760,13 @@ the lines, pycalphad and the plain model agree.</li>
 ✓ Two-phase minimum at z = 0.5 (step 03) reproduces the lesson value.
 ✓ Gap composition at 1000 K, pycalphad vs plain model reproduces the lesson value.
 Three ways to answer a different question (Lesson 8.4):
-  BETA left out: -8763.172233 J/mol instead of -10762.730017
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  BETA left out: -8763.172233 J/mol instead of -10762.730017
 ✓ ALPHA-only result (a different question) reproduces the lesson value.
   Ω forgotten: homogeneous GM -8763.172233 instead of -3763.172233 (lower by 5000 J/mol)
 ✓ Ω·x(1−x) at x = 0.5 reproduces the lesson value.

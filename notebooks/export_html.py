@@ -22,7 +22,9 @@ OUTPUT = NOTEBOOKS / 'instructor_exports'
 NAMES = ['f0_jupyter_and_potentials', 'f1_unary_by_hand_and_code', 'f2_unary_pycalphad',
          'f3_binary_mixing_potentials', 'f4_two_phases_and_diagrams', 'f4b_lens_from_scratch',
          'f5_binary_pycalphad',
-         'f6_fitting_synthetic', 'f7_boundary_open_closed', 'f8_boundary_states']
+         'f6_fitting_synthetic', 'f7_boundary_open_closed', 'f8_boundary_states',
+         'f4o_thermo_for_optimisers', 'f4p_lp_primer', 'f4c_master_and_dual', 'f4g_dual_view', 'f4d_column_generation', 'f4e_global_pricing',
+         'f4f_ternary', 'f6b_fit_an_elephant']
 NOTE = ('<div style="border:2px solid #b45309;padding:.6em 1em;margin:1em 0;font-family:sans-serif">'
         '<strong>Instructor copy.</strong> Executed notebook with all results shown, including the '
         '"after your attempt" cells. Projector/offline fallback; learners should use the notebook itself.</div>')
